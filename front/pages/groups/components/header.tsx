@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import Image from "next/image";
+import Logo from "../../../assets/Logo.png";
+import Logo2 from "../../../assets/Logo_no_background.png";
 
 const HeaderStyle = styled.div`
   width: 100%;
@@ -23,8 +26,8 @@ const GroupIcon = styled.div`
   width: 4rem;
   height: 4rem;
   border-radius: 1.2rem;
-  font-family: "Nanum Gothic", sans-serif;
-  background-color: rgb(238, 237, 255);
+  font-family: "omyuPretty", sans-serif;
+  background-color: #f8c6d2;
   font-size: 1.5rem;
   font-weight: 700;
   color: white;
@@ -32,17 +35,22 @@ const GroupIcon = styled.div`
 `;
 
 const GroupName = styled.div`
-  font-family: "Nanum Gothic", sans-serif;
   margin-right: 10px;
 `;
 
 const Header = () => {
   return (
     <HeaderStyle>
-      <div>LogoImg</div>
+      <Image
+        style={{
+          width: "4rem",
+          height: "4rem",
+        }}
+        src={Logo2}
+        alt="Logo"
+      ></Image>
       <GroupDescription>
         <GroupName>🌎안녕</GroupName>
-
         <GroupIcon>안</GroupIcon>
       </GroupDescription>
     </HeaderStyle>

@@ -17,9 +17,8 @@ const GroupPage = styled.div`
 
 const PageContent = styled.div`
   background-color: #f5f5f5;
-
-  padding: 20px;
-  padding-bottom: 5rem;
+  padding-top: 20px;
+  padding-bottom: 100px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -36,6 +35,7 @@ const PageContent = styled.div`
 const FunctionButton = styled.button`
   width: 100%;
   height: 200px;
+  margin-top: 20px;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -43,12 +43,12 @@ const FunctionButton = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: "Nanum Gothic", sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: rgb(0, 0, 0);
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  font-family: "omyuPretty", sans-serif;
   transition: all 0.2s ease-in-out;
   &:hover {
     transform: scale(1.1);
@@ -62,8 +62,6 @@ const FunctionList = styled.div`
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 const group = () => {
@@ -71,7 +69,7 @@ const group = () => {
     <GroupPage>
       <Header></Header>
       <PageContent>
-        <span>사용할 기능을 선택하세요</span>
+        <span>사용할 기능을 선택하세요!</span>
         <FunctionList>
           <FunctionButton>
             <TiTicket></TiTicket>

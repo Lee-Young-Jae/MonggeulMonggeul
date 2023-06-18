@@ -2,11 +2,17 @@ import styled from "styled-components";
 
 const AppLayout = (props: { children: React.ReactNode }) => {
   return (
-    <Centering>
-      <FixedWidth>{props.children}</FixedWidth>
-    </Centering>
+    <Font>
+      <Centering>
+        <FixedWidth>{props.children}</FixedWidth>
+      </Centering>
+    </Font>
   );
 };
+
+const Font = styled.div`
+  font-family: "omyuPretty", sans-serif;
+`;
 
 const Centering = styled.div`
   display: flex;

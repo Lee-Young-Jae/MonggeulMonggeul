@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
-import Logo from "../../../assets/Logo.png";
-import Logo2 from "../../../assets/Logo_no_background.png";
+import Logo2 from "@/assets/Logo_no_background.png";
 
 const HeaderStyle = styled.div`
   width: 100%;
@@ -38,7 +37,11 @@ const GroupName = styled.div`
   margin-right: 10px;
 `;
 
-const Header = () => {
+interface Props {
+  groupName: string;
+}
+
+const Header = ({ groupName }: Props) => {
   return (
     <HeaderStyle>
       <Image
@@ -50,8 +53,8 @@ const Header = () => {
         alt="Logo"
       ></Image>
       <GroupDescription>
-        <GroupName>🌎안녕</GroupName>
-        <GroupIcon>안</GroupIcon>
+        <GroupName>🌎{groupName}</GroupName>
+        <GroupIcon>{groupName?.slice(0, 1)}</GroupIcon>
       </GroupDescription>
     </HeaderStyle>
   );

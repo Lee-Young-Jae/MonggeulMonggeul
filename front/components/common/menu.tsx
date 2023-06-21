@@ -20,8 +20,6 @@ const MenuStyle = styled.div`
   height: 10%;
   background-color: rgb(255, 255, 255);
   border-radius: 10px;
-
-  // test
 `;
 
 const MenuButton = styled(Button)`

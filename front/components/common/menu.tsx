@@ -22,7 +22,7 @@ const MenuStyle = styled.div`
   border-radius: 10px;
 `;
 
-const MenuButton = styled(Button)`
+const MenuButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;

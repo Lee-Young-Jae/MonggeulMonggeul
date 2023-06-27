@@ -16,6 +16,7 @@ module.exports = () => {
             where: { kakaoId: profile.id },
           });
           if (exUser) {
+            exUser.accessToken = accessToken;
             done(null, exUser);
           } else {
             const newUser = await User.create({
@@ -23,6 +24,11 @@ module.exports = () => {
               email: profile._json && profile._json.kakao_account.email,
               kakaoId: profile.id,
             });
+            console.log(
+              newUser,
+              "\nnewUser@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+            );
+            newUser.accessToken = accessToken;
             done(null, newUser);
           }
         } catch (error) {

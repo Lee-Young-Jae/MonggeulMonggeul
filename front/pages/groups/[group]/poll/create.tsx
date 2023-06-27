@@ -135,23 +135,23 @@ const PollCreatePage = () => {
             closingTime={closingTime}
             handleCloseDate={handleCloseDate}
             handleCloseTime={handleCloseTime}
-          ></PollDeadlineForm>
+          />
           <PollCreateTitleInput
             onChange={handlePollTitle}
             value={pollTitle}
             placeholder="투표 제목을 입력해주세요"
-          ></PollCreateTitleInput>
+          />
           <PollOptionForm
             isAnonymous={isAnonymous}
             isMultipleChoice={isMultipleChoice}
             handleIsAnonymous={handleAnonymous}
             handleIsMultipleChoice={handleMultipleChoice}
-          ></PollOptionForm>
+          />
           <PollSubjectCreateForm
             pollSubjects={pollSubjects}
             handlePollSubject={handlePollSubject}
             setPollSubjects={setPollSubjects}
-          ></PollSubjectCreateForm>
+          />
 
           <PollButton
             onClick={(e) => {

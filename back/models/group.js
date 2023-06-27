@@ -25,7 +25,7 @@ class Group extends Model {
     );
   }
   static associate(db) {
-    db.Group.hasMany(db.User);
+    db.Group.belongsToMany(db.User, { through: "UserGroup" });
   }
 }
 

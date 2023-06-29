@@ -20,8 +20,8 @@ app.use(express.urlencoded({ extended: false })); // url 파싱
 // cors 설정
 app.use(
   cors({
-    origin: true,
-    credentials: true,
+    origin: process.env.FRONT_URL,
+    credentials: true, // 프론트로 쿠키 전달
   })
 );
 

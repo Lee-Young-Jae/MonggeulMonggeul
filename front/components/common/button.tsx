@@ -2,8 +2,9 @@ import styled, { css } from "styled-components";
 
 interface ButtonStyleProps {
   children: React.ReactNode;
-  isOutlined?: boolean;
+  outlined?: "true" | "false";
   size?: "s" | "m" | "l";
+  align?: "left" | "center" | "right";
 }
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
@@ -20,7 +21,7 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
   font-size: 1rem;
 
   ${(props) =>
-    props.isOutlined &&
+    props.outlined === "true" &&
     css`
       background-color: white;
       border: 1px solid #f8c6d2;
@@ -46,13 +47,17 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  isOutlined?: boolean;
+  outlined?: boolean;
   size?: "s" | "m" | "l";
 }
 
-const Button = ({ isOutlined, size, ...props }: ButtonProps) => {
+const Button = ({ outlined, size, ...props }: ButtonProps) => {
   return (
-    <ButtonStyle {...props} isOutlined={isOutlined} size={size}></ButtonStyle>
+    <ButtonStyle
+      size={size}
+      outlined={outlined === true ? "true" : "false"}
+      {...props}
+    ></ButtonStyle>
   );
 };
 

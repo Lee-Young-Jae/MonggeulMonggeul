@@ -4,7 +4,7 @@ const passport = require("passport");
 
 const { Group, User } = require("../models");
 
-// 카카오 로그인 http://localhost:3000/auth/kakao/callback
+// 카카오 로그인 http://localhost:3010/auth/kakao/callback
 router.get(
   "/kakao/callback",
   passport.authenticate("kakao", {
@@ -41,6 +41,16 @@ router.get("/kakao/logout", (req, res) => {
     console.error(error);
     res.status(500).send({ message: "로그아웃 실패" });
   }
+});
+
+// 로그인 여부 확인 http://localhost:3010/auth
+router.get("/", (req, res) => {
+  if (req.user) {
+    return res.status(200).json({
+      user: req.user,
+    });
+  }
+  res.status(401).send({ message: "로그인이 필요합니다." });
 });
 
 module.exports = router;

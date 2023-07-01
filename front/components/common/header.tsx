@@ -51,6 +51,7 @@ const Header = ({ groupName }: Props) => {
         }}
         src={Logo2}
         alt="Logo"
+        priority
       ></Image>
       <GroupDescription>
         <GroupName>🌎{groupName}</GroupName>

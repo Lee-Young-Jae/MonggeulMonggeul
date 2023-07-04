@@ -6,10 +6,9 @@ class Group extends Model {
         name: {
           type: DataTypes.STRING(20),
           allowNull: false,
-          unique: true,
         },
         code: {
-          type: DataTypes.STRING(20),
+          type: DataTypes.STRING(25),
           allowNull: false,
           unique: true,
         },

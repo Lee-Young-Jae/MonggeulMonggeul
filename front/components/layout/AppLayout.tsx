@@ -1,11 +1,19 @@
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../common/errorFallback";
+
 import styled from "styled-components";
 
 const AppLayout = (props: { children: React.ReactNode }) => {
+  const { reset } = useQueryErrorResetBoundary();
+
   return (
     <Font>
-      <Centering>
-        <FixedWidth>{props.children}</FixedWidth>
-      </Centering>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
+        <Centering>
+          <FixedWidth>{props.children}</FixedWidth>
+        </Centering>
+      </ErrorBoundary>
     </Font>
   );
 };

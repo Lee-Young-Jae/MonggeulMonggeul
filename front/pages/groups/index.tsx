@@ -1,10 +1,11 @@
 import Logo from "@/assets/Logo_no_background.png";
 import Image from "next/image";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RegisterContent from "./components/registerContent";
-import { useQuery } from "@tanstack/react-query";
-import { fetchGetLoginInfo } from "@/apis/auth";
+import { useCreateGroup, useJoinGroup } from "@/hooks/queries/group/useCreate";
+import useInput from "@/hooks/common/useInput";
+import { useRouter } from "next/router";
 
 const GroupsWrapper = styled.div`
   display: flex;
@@ -61,8 +62,47 @@ const Description = styled.p`
 const GroupsPage = () => {
   const [groupCreateMode, setGroupCreateMode] = useState(false);
   const [groupJoinMode, setGroupJoinMode] = useState(false);
+  const [createGroupName, createGroupNameHandler] = useInput("");
+  const [joinGroupCode, joinGroupCodeHandler] = useInput("");
 
-  useQuery(["loginCheck"], fetchGetLoginInfo);
+  const createGroup = useCreateGroup();
+  const joinGroup = useJoinGroup();
+
+  const router = useRouter();
+
+  const createGroupHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (createGroupName.length === 0) {
+      alert("모임 이름을 입력해주세요!");
+      return;
+    }
+    createGroup.mutate(createGroupName);
+  };
+
+  const joinGroupHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (joinGroupCode.length === 0) {
+      alert("초대 코드를 입력해주세요!");
+      return;
+    }
+    joinGroup.mutate(joinGroupCode);
+  };
+
+  useEffect(() => {
+    if (createGroup.isSuccess) {
+      alert("모임 생성을 완료했습니다!");
+      setGroupCreateMode(false);
+      router.push(`/groups/${createGroup.data?.code}`);
+    }
+  }, [createGroup.isSuccess, createGroup.data?.code, router]);
+
+  useEffect(() => {
+    if (joinGroup.isSuccess) {
+      alert("모임 참가를 완료했습니다!");
+      setGroupJoinMode(false);
+      router.push(`/groups/${joinGroup.data?.code}`);
+    }
+  }, [joinGroup.isSuccess, joinGroup.data?.code, router]);
 
   return (
     <GroupsWrapper>
@@ -83,6 +123,9 @@ const GroupsPage = () => {
           description="새로운 모임을 생성하고, 친구들을 초대해보세요!"
           inputPlaceholder="모임 이름을 입력해주세요"
           buttonText="생성하기"
+          onClickHandler={createGroupHandler}
+          groupInputValue={createGroupName}
+          groupInputHandler={createGroupNameHandler}
         />
         <RegisterContent
           isSelected={groupJoinMode}
@@ -91,6 +134,9 @@ const GroupsPage = () => {
           description="친구들이 초대한 모임에 참가해보세요!"
           inputPlaceholder="초대 코드를 입력해주세요"
           buttonText="참가하기"
+          onClickHandler={joinGroupHandler}
+          groupInputValue={joinGroupCode}
+          groupInputHandler={joinGroupCodeHandler}
         />
       </RegisterSection>
     </GroupsWrapper>

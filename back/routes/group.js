@@ -10,6 +10,31 @@ router.get("/", isLoggedIn, (req, res) => {
   });
 });
 
+// 그룹 정보 GET http://localhost:3010/group/:id
+router.get("/:code", isLoggedIn, async (req, res) => {
+  try {
+    if (!req.params.code || req.params.code === "") {
+      return res.status(409).json({ message: "유효한 그룹을 선택해주세요." });
+    }
+
+    const group = await Group.findOne({
+      where: { code: req.params.code },
+      include: [
+        {
+          model: User,
+          attributes: ["name", "email"],
+        },
+      ],
+    });
+    if (!group) {
+      return res.status(404).json({ message: "그룹을 찾을 수 없습니다." });
+    }
+    res.status(200).json(group);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 // 그룹 생성 POST http://localhost:3010/group/create
 router.post("/create", isLoggedIn, async (req, res) => {
   try {
@@ -65,6 +90,11 @@ router.post("/join", isLoggedIn, async (req, res) => {
     const existGroup = await Group.findOne({
       where: { code: code },
     });
+
+    if (!existGroup) {
+      res.status(404).send({ message: "초대 코드를 확인해주세요." });
+    }
+
     const existJoinedGroup = await req.user.getGroups({
       where: { id: existGroup.id },
     });

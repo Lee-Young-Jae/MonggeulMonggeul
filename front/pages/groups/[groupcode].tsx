@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { TiTicket, TiCalendar, TiMessage } from "react-icons/ti";
-import { useRouter } from "next/router";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { useGetGroup } from "@/hooks/queries/group/useGet";
+import { groupAtom } from "@/recoil/state/groupstate";
+import { useRecoilState } from "recoil";
 
 const FunctionButton = styled.button`
   width: 100%;
@@ -37,11 +41,22 @@ const FunctionList = styled.div`
 
 const Group = () => {
   const router = useRouter();
-  const { group } = router.query as { group: string };
+  const { groupcode } = router.query;
 
-  if (typeof String(group) === "undefined") {
+  if (typeof String(groupcode) === "undefined") {
     router.push("/");
   }
+
+  const { data: group, isLoading } = useGetGroup(String(groupcode));
+  const [groupState, setGroupState] = useRecoilState(groupAtom);
+
+  useEffect(() => {
+    if (group) {
+      setGroupState({
+        currentGroup: group,
+      });
+    }
+  }, [group, setGroupState]);
 
   return (
     <GroupPage>
@@ -50,7 +65,7 @@ const Group = () => {
         <FunctionList>
           <FunctionButton
             onClick={() => {
-              router.push(`/groups/${group}/poll`);
+              router.push(`/groups/${groupcode}/poll`);
             }}
           >
             <TiTicket></TiTicket>
@@ -71,7 +86,3 @@ const Group = () => {
 };
 
 export default Group;
-
-// server side rendering
-
-// getServerSideProps

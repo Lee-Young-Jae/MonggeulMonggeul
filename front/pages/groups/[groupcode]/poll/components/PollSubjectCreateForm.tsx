@@ -8,7 +8,7 @@ const PollCreateSubjectItem = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
-  border: 1px solid #f8c6d2;
+  border: 1px solid #f4356c;
   border-radius: 15px;
   padding: 0.5rem;
 
@@ -59,7 +59,7 @@ const PollSubjectCreateForm = ({
 
   return (
     <>
-      {pollSubjects.map((item, index) => (
+      {pollSubjects?.map((item, index) => (
         <PollCreateSubjectItem key={index}>
           <PollCreateSubjectInput
             placeholder="선택 항목을 입력해주세요"

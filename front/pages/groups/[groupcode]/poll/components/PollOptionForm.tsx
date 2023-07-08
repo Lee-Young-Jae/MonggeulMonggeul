@@ -14,21 +14,16 @@ const PollOptionButton = styled(Button)<{ active: "true" | "false" }>`
   ${({ active }) =>
     active === "true" &&
     css`
-      background-color: #f8c6d2;
+      background-color: #f4356c;
       color: #fff;
     `}
-
-  &:hover {
-    background-color: #f8c6d2;
-    color: #fff;
-  }
 `;
 
 interface PollOptionFormProps {
   isAnonymous: Poll["isAnonymous"];
   isMultipleChoice: Poll["isMultipleChoice"];
-  handleIsAnonymous: (state: boolean) => () => void;
-  handleIsMultipleChoice: (state: boolean) => () => void;
+  handleIsAnonymous: (state: boolean) => void;
+  handleIsMultipleChoice: (state: boolean) => void;
 }
 
 const PollOptionForm = ({
@@ -44,7 +39,7 @@ const PollOptionForm = ({
           outlined
           active={isAnonymous ? "false" : "true"}
           size="s"
-          onClick={handleIsAnonymous(!isAnonymous)}
+          onClick={() => handleIsAnonymous(!isAnonymous)}
         >
           기명
         </PollOptionButton>
@@ -52,7 +47,7 @@ const PollOptionForm = ({
           active={isAnonymous ? "true" : "false"}
           outlined
           size="s"
-          onClick={handleIsAnonymous(!isAnonymous)}
+          onClick={() => handleIsAnonymous(!isAnonymous)}
         >
           익명
         </PollOptionButton>
@@ -62,7 +57,9 @@ const PollOptionForm = ({
           active={isMultipleChoice ? "false" : "true"}
           outlined
           size="s"
-          onClick={handleIsMultipleChoice(!isMultipleChoice)}
+          onClick={() => {
+            handleIsMultipleChoice(!isMultipleChoice);
+          }}
         >
           하나만 투표 가능
         </PollOptionButton>
@@ -70,7 +67,9 @@ const PollOptionForm = ({
           active={isMultipleChoice ? "true" : "false"}
           outlined
           size="s"
-          onClick={handleIsMultipleChoice(!isMultipleChoice)}
+          onClick={() => {
+            handleIsMultipleChoice(!isMultipleChoice);
+          }}
         >
           여러개 투표 가능
         </PollOptionButton>

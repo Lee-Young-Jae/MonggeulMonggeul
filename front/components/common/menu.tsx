@@ -1,83 +1,38 @@
-import Button from "@/components/common/button";
-import styled from "styled-components";
-import {
-  TiHome,
-  TiTicket,
-  TiCalendar,
-  TiThMenu,
-  TiMessage,
-} from "react-icons/ti";
+import React, { useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
+import { useRouter } from "next/router";
+
+const MenuSlide = keyframes`
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+`;
 
 const MenuStyle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  position: fixed;
-  width: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0px;
-  height: 10%;
-  background-color: rgb(255, 255, 255);
-  border-radius: 10px;
+  animation: ${MenuSlide} 0.5s ease-in-out forwards;
 `;
 
-const MenuButton = styled.button`
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-`;
+interface MenuProps {
+  isVisiable: boolean;
+}
+const Menu = ({ isVisiable }: MenuProps) => {
+  const router = useRouter();
 
-const Menu = () => {
-  return (
-    <MenuStyle>
-      <MenuButton>
-        <TiHome
-          aria-label="Main"
-          style={{
-            width: "2rem",
-            height: "2rem",
-          }}
-        ></TiHome>
-      </MenuButton>
-      <MenuButton>
-        <TiTicket
-          aria-label="Poll"
-          style={{
-            width: "2rem",
-            height: "2rem",
-          }}
-        ></TiTicket>
-      </MenuButton>
-      <MenuButton>
-        <TiCalendar
-          aira-label="Appointment"
-          style={{
-            width: "2rem",
-            height: "2rem",
-          }}
-        ></TiCalendar>
-      </MenuButton>
-      <MenuButton>
-        <TiMessage
-          aira-label="Chat"
-          style={{
-            width: "2rem",
-            height: "2rem",
-          }}
-        ></TiMessage>
-      </MenuButton>
-      <MenuButton>
-        <TiThMenu
-          aria-label="Menu"
-          style={{
-            width: "2rem",
-            height: "2rem",
-          }}
-        ></TiThMenu>
-      </MenuButton>
-    </MenuStyle>
-  );
+  useEffect(() => {
+    if (isVisiable) {
+      setTimeout(() => {
+        router.push("/groups");
+      }, 500);
+    }
+  }, [isVisiable]);
+
+  return <MenuStyle></MenuStyle>;
 };
 
 export default Menu;

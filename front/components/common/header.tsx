@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Logo2 from "@/assets/Logo_no_background.png";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { groupAtom } from "@/recoil/state/groupstate";
 
 const HeaderStyle = styled.div`
   width: 100%;
@@ -37,25 +40,30 @@ const GroupName = styled.div`
   margin-right: 10px;
 `;
 
-interface Props {
-  groupName: string;
-}
+const Header = () => {
+  const router = useRouter();
+  const [groupState, setGroupState] = useRecoilState(groupAtom);
 
-const Header = ({ groupName }: Props) => {
+  const pushToGroupPage = () => {
+    router.push(`/groups/${groupState.currentGroup.code}`);
+  };
+
   return (
     <HeaderStyle>
       <Image
         style={{
           width: "4rem",
           height: "4rem",
+          cursor: "pointer",
         }}
         src={Logo2}
         alt="Logo"
         priority
+        onClick={pushToGroupPage}
       ></Image>
       <GroupDescription>
-        <GroupName>🌎{groupName}</GroupName>
-        <GroupIcon>{groupName?.slice(0, 1)}</GroupIcon>
+        <GroupName>🌎{groupState.currentGroup.name}</GroupName>
+        <GroupIcon>{groupState.currentGroup.name?.slice(0, 1)}</GroupIcon>
       </GroupDescription>
     </HeaderStyle>
   );

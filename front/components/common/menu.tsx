@@ -84,6 +84,10 @@ const GroupNameIconStyle = styled.div`
   border-radius: 14px;
 `;
 
+const ModalTitleStyle = styled.div`
+  text-align: center;
+`;
+
 interface MenuProps {
   visiable: boolean;
   setVisiable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -93,6 +97,8 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
   const [animating, setAnimating] = useState(false);
   const [localVisible, setLocalVisible] = useState(visiable);
   const [groupJoinModal, setGroupJoinModal] = useState(false);
+  const [groupLeaveModal, setGroupLeaveModal] = useState(false);
+
   const [groupCreateModal, setGroupCreateModal] = useState(false);
   const [groupInviteModal, setGroupInviteModal] = useState(false);
 
@@ -137,6 +143,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
         {group.currentGroup.name}
       </GroupNameSectionStyle>
       <div
+        style={{ cursor: "pointer" }}
         onClick={() => {
           setGroupJoinModal(true);
         }}
@@ -150,12 +157,15 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
             setGroupJoinModal(false);
           }}
         >
-          <div>그룹 참가</div>
+          <ModalTitleStyle>
+            친구들이 초대한 모임에 참가해보세요!
+          </ModalTitleStyle>
           <Input
             value={groupJoinInputValue}
             onChange={groupJoinInputHandler}
             placeholder="그룹 코드를 입력해주세요"
           ></Input>
+          <Button>참가하기</Button>
         </Modal>
       )}
       <FunctionLinkStyle
@@ -166,7 +176,24 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       >
         새로운 그룹 생성
       </FunctionLinkStyle>
-      <div>그룹 나가기</div>
+      <div
+        onClick={() => {
+          setGroupLeaveModal(true);
+        }}
+      >
+        그룹 나가기
+      </div>
+      {groupLeaveModal && (
+        <Modal
+          visible={groupLeaveModal}
+          onClose={() => {
+            setGroupLeaveModal(false);
+          }}
+        >
+          <ModalTitleStyle>정말로 그룹을 나가시겠습니까?</ModalTitleStyle>
+          <Button>나가기</Button>
+        </Modal>
+      )}
       <hr></hr>
       <h3>기능</h3>
       <FunctionLinkStyle

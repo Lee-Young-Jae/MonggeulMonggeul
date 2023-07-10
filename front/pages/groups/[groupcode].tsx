@@ -7,36 +7,30 @@ import { useGetGroup } from "@/hooks/queries/group/useGet";
 import { groupAtom } from "@/recoil/state/groupstate";
 import { useRecoilState } from "recoil";
 
+const FunctionList = styled.div`
+  box-sizing: border-box;
+  padding: 5%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
 const FunctionButton = styled.button`
   width: 100%;
-  height: 200px;
+  height: 100%;
   margin-top: 20px;
   border: none;
-  background-color: transparent;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: rgb(0, 0, 0);
-  border-radius: 10px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 14px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-  font-family: "omyuPretty", sans-serif;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const FunctionList = styled.div`
-  width: 70%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Group = () => {

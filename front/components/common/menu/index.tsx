@@ -8,11 +8,21 @@ import Link from "next/link";
 import { useGetUserGroups } from "@/hooks/queries/group/useGet";
 
 import useUserLogout from "@/hooks/common/useUserLogout";
-import Button from "./button";
-import Modal from "./modal";
+import Button from "../button";
 import useInput from "@/hooks/common/useInput";
-import Input from "./Input";
-import MyGroupList from "./menu/myGroupList";
+import MyGroupList from "./myGroupList";
+import { GoX } from "react-icons/go";
+import GroupActions from "./groupActions";
+
+const MenuCloseButtonWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  right: 10px;
+  cursor: pointer;
+`;
 
 const FunctionLinkStyle = styled(Link)`
   text-decoration: none;
@@ -65,10 +75,6 @@ const MenuStyle = styled.div<MenuStyleProps>`
     `}
 `;
 
-const ModalTitleStyle = styled.div`
-  text-align: center;
-`;
-
 interface MenuProps {
   visiable: boolean;
   setVisiable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -77,15 +83,8 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
   const router = useRouter();
   const [animating, setAnimating] = useState(false);
   const [localVisible, setLocalVisible] = useState(visiable);
-  const [groupJoinModal, setGroupJoinModal] = useState(false);
-  const [groupLeaveModal, setGroupLeaveModal] = useState(false);
-
-  const [groupCreateModal, setGroupCreateModal] = useState(false);
-  const [groupInviteModal, setGroupInviteModal] = useState(false);
 
   const { data: userGroups } = useGetUserGroups();
-
-  const [groupJoinInputValue, groupJoinInputHandler] = useInput("");
 
   const [currentGroup, setCurrentGroup] = useRecoilState(groupAtom);
 
@@ -100,7 +99,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       setAnimating(true);
       setTimeout(() => {
         setAnimating(false);
-      }, 490);
+      }, 460);
       setLocalVisible(visiable);
     }
   }, [visiable, localVisible]);
@@ -111,71 +110,22 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
 
   return (
     <MenuStyle visiable={!localVisible ? "true" : "false"}>
-      <button
+      <MenuCloseButtonWrapper
         onClick={() => {
+          if (animating) return;
           setVisiable(false);
         }}
       >
-        나가기
-      </button>
+        <GoX></GoX>
+      </MenuCloseButtonWrapper>
 
       <MyGroupList
         currentGroup={currentGroup.currentGroup}
         userGroups={userGroups ? userGroups : []}
       ></MyGroupList>
 
-      <div
-        style={{ cursor: "pointer" }}
-        onClick={() => {
-          setGroupJoinModal(true);
-        }}
-      >
-        새로운 그룹 참가
-      </div>
-      {groupJoinModal && (
-        <Modal
-          visible={groupJoinModal}
-          onClose={() => {
-            setGroupJoinModal(false);
-          }}
-        >
-          <ModalTitleStyle>
-            친구들이 초대한 모임에 참가해보세요!
-          </ModalTitleStyle>
-          <Input
-            value={groupJoinInputValue}
-            onChange={groupJoinInputHandler}
-            placeholder="그룹 코드를 입력해주세요"
-          ></Input>
-          <Button>참가하기</Button>
-        </Modal>
-      )}
-      <FunctionLinkStyle
-        href={{
-          pathname: `/groups`,
-        }}
-        about="새로운 그룹 생성"
-      >
-        새로운 그룹 생성
-      </FunctionLinkStyle>
-      <div
-        onClick={() => {
-          setGroupLeaveModal(true);
-        }}
-      >
-        그룹 나가기
-      </div>
-      {groupLeaveModal && (
-        <Modal
-          visible={groupLeaveModal}
-          onClose={() => {
-            setGroupLeaveModal(false);
-          }}
-        >
-          <ModalTitleStyle>정말로 그룹을 나가시겠습니까?</ModalTitleStyle>
-          <Button>나가기</Button>
-        </Modal>
-      )}
+      <GroupActions></GroupActions>
+
       <hr></hr>
       <h3>기능</h3>
       <FunctionLinkStyle

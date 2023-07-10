@@ -5,6 +5,8 @@ import { groupAtom } from "@/recoil/state/groupstate";
 import { useRecoilState } from "recoil";
 import Link from "next/link";
 
+import { useGetUserGroups } from "@/hooks/queries/group/useGet";
+
 import useUserLogout from "@/hooks/common/useUserLogout";
 import Button from "./button";
 import Modal from "./modal";
@@ -15,6 +17,7 @@ const FunctionLinkStyle = styled(Link)`
   text-decoration: none;
   color: rgb(0, 0, 0);
   cursor: pointer;
+  width: 100%;
 `;
 
 const MenuSlideUp = keyframes`
@@ -61,7 +64,16 @@ const MenuStyle = styled.div<MenuStyleProps>`
     `}
 `;
 
-const GroupNameSectionStyle = styled.div`
+const MyGroupListStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+interface GroupNameSectionStyleProps {
+  active?: "true" | "false";
+}
+const GroupNameSectionStyle = styled.div<GroupNameSectionStyleProps>`
   display: flex;
   gap: 2rem;
   -webkit-box-align: center;
@@ -70,7 +82,9 @@ const GroupNameSectionStyle = styled.div`
   text-decoration: none;
   color: rgb(0, 0, 0);
   cursor: pointer;
-  background-color: rgb(245, 245, 245);
+  background-color: ${(props) =>
+    props.active === "true" ? "rgb(245, 245, 245)" : "transparent"};
+
   border-radius: 14px;
   width: 100%;
   box-sizing: border-box;
@@ -102,9 +116,11 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
   const [groupCreateModal, setGroupCreateModal] = useState(false);
   const [groupInviteModal, setGroupInviteModal] = useState(false);
 
+  const { data: userGroups } = useGetUserGroups();
+
   const [groupJoinInputValue, groupJoinInputHandler] = useInput("");
 
-  const [group, setGroup] = useRecoilState(groupAtom);
+  const [currentGroup, setCurrentGroup] = useRecoilState(groupAtom);
 
   const handleLogout = useUserLogout();
 
@@ -135,13 +151,32 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       >
         나가기
       </button>
-      <h3>그룹</h3>
-      <GroupNameSectionStyle>
-        <GroupNameIconStyle>
-          {group.currentGroup.name.charAt(0)}
-        </GroupNameIconStyle>
-        {group.currentGroup.name}
-      </GroupNameSectionStyle>
+      <MyGroupListStyle>
+        <h3>내 그룹</h3>
+        {userGroups?.map((group) => {
+          return (
+            <FunctionLinkStyle
+              href={{
+                pathname: `/groups/${group.code}`,
+              }}
+              about="내 그룹"
+              key={group.id}
+            >
+              <GroupNameSectionStyle
+                active={
+                  currentGroup.currentGroup.code === group.code
+                    ? "true"
+                    : "false"
+                }
+              >
+                <GroupNameIconStyle>{group.name.charAt(0)}</GroupNameIconStyle>
+                {group.name}
+              </GroupNameSectionStyle>
+            </FunctionLinkStyle>
+          );
+        })}
+      </MyGroupListStyle>
+
       <div
         style={{ cursor: "pointer" }}
         onClick={() => {
@@ -207,7 +242,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       <div>약속잡기</div>
       <div>채팅하기</div>
       <hr />
-      <h3>멤버 목록 ({group.currentGroup.Users.length}명)</h3>
+      <h3>멤버 목록 ({currentGroup.currentGroup.Users.length}명)</h3>
       <div>멤버 프로필</div>
       <hr />
       <div>새로운 멤버 초대</div>

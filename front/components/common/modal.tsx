@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import Button from "./button";
+import { GoX } from "react-icons/go";
 
 const ModalWrapper = styled.div<{ visible: "true" | "false" }>`
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -36,9 +36,19 @@ const ModalInner = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   cursor: default;
-
+  position: relative;
   transition: all 0.1s ease-in-out;
   animation: ${ModalFadeIn} 0.25s ease-in-out;
+`;
+
+const ModalCloseButtonWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 `;
 
 interface ModalProps {
@@ -46,9 +56,16 @@ interface ModalProps {
   children?: React.ReactNode;
   onClose?: () => void;
   onConfirm?: () => void;
+  closeBtn?: boolean;
 }
 
-const Modal = ({ visible, children, onClose, onConfirm }: ModalProps) => {
+const Modal = ({
+  visible,
+  children,
+  onClose,
+  onConfirm,
+  closeBtn,
+}: ModalProps) => {
   return (
     <>
       <ModalWrapper
@@ -59,7 +76,16 @@ const Modal = ({ visible, children, onClose, onConfirm }: ModalProps) => {
           }
         }}
       >
-        <ModalInner>{children}</ModalInner>
+        <ModalInner>
+          <ModalCloseButtonWrapper
+            onClick={() => {
+              onClose && onClose();
+            }}
+          >
+            <GoX></GoX>
+          </ModalCloseButtonWrapper>
+          {children}
+        </ModalInner>
       </ModalWrapper>
     </>
   );

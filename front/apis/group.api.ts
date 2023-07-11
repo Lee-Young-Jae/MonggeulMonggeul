@@ -23,3 +23,12 @@ export const getGroup = async (groupCode: string): Promise<GroupType.Group> => {
   const response = await axiosInstance.get(`/group/${groupCode}`);
   return response.data;
 };
+
+export const leaveGroup = async (
+  groupCode: string
+): Promise<GroupType.Group> => {
+  const response = await axiosInstance.post(`/group/leave`, {
+    code: groupCode,
+  });
+  return response.data;
+};

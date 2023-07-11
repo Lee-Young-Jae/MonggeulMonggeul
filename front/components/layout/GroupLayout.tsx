@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../common/header";
-import Menu from "../common/menu";
+import NavigationBar from "../common/navigationBar";
 
 const GroupPageStyle = styled.div`
   display: flex;
@@ -12,6 +12,7 @@ const GroupPageStyle = styled.div`
   border-radius: 10px;
   width: 100%;
   perspective: 1px;
+  overflow: hidden;
 `;
 
 const PageContentStyle = styled.div`
@@ -31,20 +32,24 @@ const PageContentStyle = styled.div`
   }
 `;
 
-export type GroupLayoutProps = {
+interface GroupLayoutProps {
   children: React.ReactNode;
-};
+}
 
 export const GroupPage = ({ children }: GroupLayoutProps) => {
   return (
     <GroupPageStyle>
-      <Header groupName="test"></Header>
+      <Header></Header>
       {children}
-      <Menu></Menu>
+      <NavigationBar />
     </GroupPageStyle>
   );
 };
 
-export const PageContent = ({ children }: GroupLayoutProps) => {
+interface PageContentProps {
+  children: React.ReactNode;
+}
+
+export const PageContent = ({ children }: PageContentProps) => {
   return <PageContentStyle>{children}</PageContentStyle>;
 };

@@ -37,20 +37,19 @@ const Group = () => {
   const router = useRouter();
   const { groupcode } = router.query;
 
-  if (typeof String(groupcode) === "undefined") {
-    router.push("/");
-  }
-
-  const { data: group, isLoading } = useGetGroup(String(groupcode));
+  const { data: group, isLoading } = useGetGroup(String(groupcode), {
+    enabled: !!groupcode,
+  });
   const [groupState, setGroupState] = useRecoilState(groupAtom);
 
   useEffect(() => {
+    if (!router.isReady) return;
     if (group) {
       setGroupState({
         currentGroup: group,
       });
     }
-  }, [group, setGroupState]);
+  }, [group, setGroupState, router.isReady]);
 
   return (
     <GroupPage>

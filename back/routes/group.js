@@ -112,4 +112,47 @@ router.post("/join", isLoggedIn, async (req, res) => {
   }
 });
 
+//그룹 탈퇴 POST http://localhost:3010/group/leave
+router.post("/leave", isLoggedIn, async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code || code === "") {
+      res.status(404).send({ message: "유효한 그룹이 아닙니다." });
+    }
+    // 그룹 찾기
+    const existGroup = await Group.findOne({
+      where: { code: code },
+    });
+
+    if (!existGroup) {
+      res.status(404).send({ message: "유효한 그룹이 아닙니다." });
+    }
+
+    // 유저가 가입된 그룹인지 확인
+    const existJoinedGroup = await req.user.getGroups({
+      where: { id: existGroup.id },
+    });
+
+    if (existGroup && existJoinedGroup.length !== 0) {
+      req.user.removeGroup(existGroup);
+      // 그룹에 유저가 없으면 그룹 삭제
+      const existUser = await existGroup.getUsers();
+      if (existUser.length === 1) {
+        await Group.destroy({
+          where: { id: existGroup.id },
+        });
+      }
+      res.status(201).json(existGroup);
+    }
+
+    if (existGroup && existJoinedGroup.length === 0) {
+      res.status(404).send({ message: "가입된 그룹이 아닙니다." });
+    }
+
+    res.status(404).send({ message: "유효한 그룹이 아닙니다." });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 module.exports = router;

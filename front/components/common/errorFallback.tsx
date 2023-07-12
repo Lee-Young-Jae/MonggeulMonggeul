@@ -38,9 +38,13 @@ const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps) => {
   });
   const router = useRouter();
   const isNotAuthorized = status === 401 || status === 403;
+  const isNotFound = status === 404;
 
   const onClickHandler = () => {
-    if (isNotAuthorized) {
+    if (isNotFound) {
+      router.back();
+      resetErrorBoundary();
+    } else if (isNotAuthorized) {
       router.push("/");
       resetErrorBoundary();
     } else {

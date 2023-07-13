@@ -11,7 +11,7 @@ router.get(
     failureRedirect: "/",
   }),
   (req, res) => {
-    res.redirect("http://localhost:3000/groups");
+    res.redirect("http://localhost:3000/auth");
   }
 );
 
@@ -47,7 +47,20 @@ router.get("/kakao/logout", (req, res) => {
 router.get("/", (req, res) => {
   if (req.user) {
     return res.status(200).json({
-      user: req.user,
+      id: req.user.id,
+      nickname: req.user.nickname,
+      email: req.user.email,
+      // accessToken: req.user.accessToken,
+    });
+  }
+  res.status(401).send({ message: "로그인이 필요합니다." });
+});
+
+// 세션 유효성 검사 http://localhost:3010/auth/session
+router.get("/session", (req, res) => {
+  if (req.user) {
+    return res.status(200).json({
+      id: req.user.id,
     });
   }
   res.status(401).send({ message: "로그인이 필요합니다." });

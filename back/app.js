@@ -41,7 +41,7 @@ app.use(passport.session()); // passport 세션 연결
 
 app.use("/group", groupRouter);
 app.use("/auth", authRouter);
-app.use("pollRouter", pollRouter);
+app.use("/poll", pollRouter);
 
 // 데이터베이스 연결
 require("./models")

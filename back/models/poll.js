@@ -8,10 +8,6 @@ class Poll extends Model {
           type: DataTypes.STRING(100),
           allowNull: false,
         },
-        subject: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
 
         isMultiple: {
           type: DataTypes.BOOLEAN,
@@ -43,7 +39,6 @@ class Poll extends Model {
   }
   static associate(db) {
     db.Poll.belongsTo(db.Group);
-    db.Poll.hasMany(db.Vote);
   }
 }
 

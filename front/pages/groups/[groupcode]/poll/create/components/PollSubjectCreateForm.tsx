@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { PollSubject } from "../create";
+import { PollSubject } from "..";
 import { TiTrash } from "react-icons/ti";
 import styled from "styled-components";
 

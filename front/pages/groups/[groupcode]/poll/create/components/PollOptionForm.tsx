@@ -21,7 +21,7 @@ const PollOptionButton = styled(Button)<{ active: "true" | "false" }>`
 
 interface PollOptionFormProps {
   isAnonymous: Poll["isAnonymous"];
-  isMultipleChoice: Poll["isMultipleChoice"];
+  isMultipleChoice: Poll["isMultiple"];
   handleIsAnonymous: (state: boolean) => void;
   handleIsMultipleChoice: (state: boolean) => void;
 }

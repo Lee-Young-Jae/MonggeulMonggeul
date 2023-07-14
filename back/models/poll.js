@@ -39,6 +39,7 @@ class Poll extends Model {
   }
   static associate(db) {
     db.Poll.belongsTo(db.Group);
+    db.Poll.hasMany(db.PollSubject);
   }
 }
 

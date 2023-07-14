@@ -1,18 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const { Poll, User, Group, PollSubject } = require("../models");
+const { Poll, Group, PollSubject, Vote } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const { generateRandomCode } = require("../utils/common");
 
-// 그룹의 투표 목록 send GET http://localhost:3010/poll
+// 그룹의 투표 목록 send GET http://localhost:3010/poll?groupcode={groupCode}
 router.get("/", isLoggedIn, async (req, res) => {
   try {
+    if (!req.query.groupcode || req.query.groupcode === "") {
+      return res.status(409).json({ message: "유효한 그룹을 선택해주세요." });
+    }
+
+    const existGroup = await Group.findOne({
+      where: { code: req.query.groupcode },
+    });
+    if (!existGroup) {
+      return res.status(404).json({ message: "그룹을 찾을 수 없습니다." });
+    }
+    const groupId = existGroup.id;
+
     const polls = await Poll.findAll({
-      where: { GroupId: req.query.groupId },
+      where: { GroupId: groupId },
       include: [
         {
-          model: User,
-          attributes: ["name", "email"],
+          model: PollSubject,
+          attributes: ["title"],
+          include: [
+            {
+              model: Vote,
+            },
+          ],
         },
       ],
     });
@@ -81,6 +98,47 @@ router.post("/create", isLoggedIn, async (req, res) => {
     if (!pollSubjects) {
       return res.status(404).json({ message: "투표를 생성할 수 없습니다." });
     }
+    res.status(200).json(poll);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 투표 삭제 DELETE http://localhost:3010/poll/delete
+router.delete("/delete", isLoggedIn, async (req, res) => {
+  try {
+    const { pollId } = req.body;
+
+    const existPoll = await Poll.findOne({
+      where: { id: pollId },
+    });
+    if (!existPoll) {
+      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    const existGroup = await Group.findOne({
+      where: { id: existPoll.GroupId },
+    });
+    const vaildUser = await existGroup.hasUser(req.user.id);
+
+    if (!vaildUser) {
+      return res.status(409).json({ message: "삭제 권한이 없습니다." });
+    }
+
+    const pollSubjects = await PollSubject.destroy({
+      where: { PollId: pollId },
+    });
+    if (!pollSubjects) {
+      return res.status(404).json({ message: "투표를 삭제할 수 없습니다." });
+    }
+
+    const poll = await Poll.destroy({
+      where: { id: pollId },
+    });
+    if (!poll) {
+      return res.status(404).json({ message: "투표를 삭제할 수 없습니다." });
+    }
+
     res.status(200).json(poll);
   } catch (error) {
     console.error(error);

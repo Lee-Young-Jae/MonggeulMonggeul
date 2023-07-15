@@ -1,78 +1,57 @@
-import Button from "@/components/common/button";
-import styled, { css } from "styled-components";
-import { Poll } from "@/types/poll";
+import styled from "styled-components";
+import RadioGroup from "@/components/common/radio/radioGroup";
+import Radio from "@/components/common/radio";
 
 const PollOptions = styled.div`
   display: flex;
-  align-items: center;
-`;
-
-const PollOptionButton = styled(Button)<{ active: "true" | "false" }>`
-  margin-top: 15px;
-  margin-right: 0.5rem;
-
-  ${({ active }) =>
-    active === "true" &&
-    css`
-      background-color: #f4356c;
-      color: #fff;
-    `}
+  flex-direction: column;
 `;
 
 interface PollOptionFormProps {
-  isAnonymous: Poll["isAnonymous"];
-  isMultipleChoice: Poll["isMultiple"];
   handleIsAnonymous: (state: boolean) => void;
   handleIsMultipleChoice: (state: boolean) => void;
 }
 
 const PollOptionForm = ({
-  isAnonymous,
-  isMultipleChoice,
   handleIsAnonymous,
   handleIsMultipleChoice,
 }: PollOptionFormProps) => {
   return (
     <>
       <PollOptions>
-        <PollOptionButton
-          outlined
-          active={isAnonymous ? "false" : "true"}
-          size="s"
-          onClick={() => handleIsAnonymous(!isAnonymous)}
-        >
-          기명
-        </PollOptionButton>
-        <PollOptionButton
-          active={isAnonymous ? "true" : "false"}
-          outlined
-          size="s"
-          onClick={() => handleIsAnonymous(!isAnonymous)}
-        >
-          익명
-        </PollOptionButton>
-      </PollOptions>
-      <PollOptions>
-        <PollOptionButton
-          active={isMultipleChoice ? "false" : "true"}
-          outlined
-          size="s"
-          onClick={() => {
-            handleIsMultipleChoice(!isMultipleChoice);
-          }}
-        >
-          하나만 투표 가능
-        </PollOptionButton>
-        <PollOptionButton
-          active={isMultipleChoice ? "true" : "false"}
-          outlined
-          size="s"
-          onClick={() => {
-            handleIsMultipleChoice(!isMultipleChoice);
-          }}
-        >
-          여러개 투표 가능
-        </PollOptionButton>
+        <RadioGroup label="투표 방식">
+          <Radio
+            name="isAnonymous"
+            value="true"
+            onChange={() => handleIsAnonymous(true)}
+          >
+            기명
+          </Radio>
+          <Radio
+            name="isAnonymous"
+            value="false"
+            onChange={() => handleIsAnonymous(false)}
+          >
+            익명
+          </Radio>
+        </RadioGroup>
+
+        <RadioGroup label="투표 방식">
+          <Radio
+            name="isMultipleChoice"
+            value="true"
+            onChange={() => handleIsMultipleChoice(true)}
+          >
+            하나만 투표 가능
+          </Radio>
+          <Radio
+            name="isMultipleChoice"
+            value="false"
+            onChange={() => handleIsMultipleChoice(false)}
+          >
+            여러개 투표 가능
+          </Radio>
+        </RadioGroup>
       </PollOptions>
     </>
   );

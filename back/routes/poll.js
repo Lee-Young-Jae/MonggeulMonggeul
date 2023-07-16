@@ -24,7 +24,7 @@ router.get("/", isLoggedIn, async (req, res) => {
       include: [
         {
           model: PollSubject,
-          attributes: ["title"],
+          attributes: ["title", "id"],
           include: [
             {
               model: Vote,
@@ -33,6 +33,7 @@ router.get("/", isLoggedIn, async (req, res) => {
         },
       ],
     });
+
     if (!polls) {
       return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
     }
@@ -98,6 +99,13 @@ router.post("/create", isLoggedIn, async (req, res) => {
     if (!pollSubjects) {
       return res.status(404).json({ message: "투표를 생성할 수 없습니다." });
     }
+
+    poll.dataValues.PollSubjects = pollSubjects.map((subject) => ({
+      title: subject.title,
+      PollId: subject.PollId,
+      Votes: [],
+    }));
+
     res.status(200).json(poll);
   } catch (error) {
     console.error(error);
@@ -140,6 +148,35 @@ router.delete("/delete", isLoggedIn, async (req, res) => {
     }
 
     res.status(200).json(poll);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 유저가 Poll에 투표 POST http://localhost:3010/poll/vote
+router.post("/vote", isLoggedIn, async (req, res) => {
+  try {
+    const { pollCode, subjectId, comment } = req.body;
+
+    const existPoll = await Poll.findOne({
+      where: { code: pollCode },
+    });
+    if (!existPoll) {
+      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    // vote 생성
+    const vote = await Vote.create({
+      PollId: existPoll.id,
+      UserId: req.user.id,
+      PollSubjectId: subjectId,
+      comment,
+    });
+
+    if (!vote) {
+      return res.status(404).json({ message: "투표를 생성할 수 없습니다." });
+    }
+    res.status(200).json(vote);
   } catch (error) {
     console.error(error);
   }

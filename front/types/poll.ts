@@ -3,21 +3,30 @@ type Poll = {
   title: string;
   isAnonymous: boolean;
   isMultiple: boolean;
-  subjects: subject[];
+  PollSubjects: subject[];
   createdAt: string;
   closedAt: string;
 };
 
 type subject = {
-  id: number;
   title: string;
-  PollId: number;
+  Votes: Vote[];
+};
+
+type Vote = {
+  id: number;
+  isAgree: boolean;
+  comment: string;
+  createdAt: string;
+  UserId: number;
+  PollSubjectId: number;
 };
 
 type createPollRequest = Pick<
   Poll,
-  "title" | "isAnonymous" | "isMultiple" | "closedAt" | "subjects"
+  "title" | "isAnonymous" | "isMultiple" | "closedAt"
 > & {
+  subjects: string[];
   groupCode: string;
 };
 
@@ -26,4 +35,21 @@ type createPollResponse = Poll & {
   message: string;
 };
 
-export type { Poll, createPollRequest, createPollResponse };
+type createPollVoteRequest = {
+  pollCode: string;
+  subjectId: number;
+  comment?: string | "";
+};
+
+type createPollVoteResponse = {
+  message: string;
+  Vote: Vote;
+};
+
+export type {
+  Poll,
+  createPollRequest,
+  createPollResponse,
+  createPollVoteRequest,
+  createPollVoteResponse,
+};

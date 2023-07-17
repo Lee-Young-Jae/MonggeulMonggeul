@@ -5,6 +5,7 @@ import Input from "../Input";
 import useInput from "@/hooks/common/useInput";
 import Button from "../button";
 import Link from "next/link";
+import { useJoinGroup } from "@/hooks/queries/group/useCreate";
 import { useLeaveGroup } from "@/hooks/queries/group/useDelete";
 import { useRouter } from "next/router";
 
@@ -38,8 +39,27 @@ const GroupActions = () => {
   const [groupInviteModal, setGroupInviteModal] = useState(false);
   const [groupJoinInputValue, groupJoinInputHandler] = useInput("");
   const { mutateAsync: leaveGroup } = useLeaveGroup();
+  const { mutateAsync: joinGroup } = useJoinGroup();
 
   const router = useRouter();
+
+  const groupJoinHandler = async () => {
+    const result = await joinGroup(groupJoinInputValue);
+    if (result) {
+      window.alert("모임에 성공적으로 가입했습니다..");
+      router.push(`/groups/${groupJoinInputValue}`);
+    }
+  };
+
+  const groupLeaveHandler = async () => {
+    const code = router.query.groupcode as string;
+    const result = await leaveGroup(code);
+    if (result) {
+      window.alert("모임을 나갔습니다.");
+      router.push("/auth");
+    }
+  };
+
   return (
     <GroupActionsStyle>
       <GroupActionStyle
@@ -64,7 +84,7 @@ const GroupActions = () => {
             onChange={groupJoinInputHandler}
             placeholder="모임 코드를 입력해주세요"
           ></Input>
-          <Button>참가하기</Button>
+          <Button onClick={groupJoinHandler}>참가하기</Button>
         </Modal>
       )}
       <FunctionLinkStyle
@@ -90,19 +110,7 @@ const GroupActions = () => {
           }}
         >
           <ModalTitleStyle>정말로 모임을 나가시겠습니까?</ModalTitleStyle>
-          <Button
-            onClick={async () => {
-              const code = router.query.groupcode as string;
-              const result = await leaveGroup(code);
-              if (result) {
-                console.log(result);
-                router.push("/auth");
-              }
-              setGroupLeaveModal(false);
-            }}
-          >
-            나가기
-          </Button>
+          <Button onClick={groupLeaveHandler}>나가기</Button>
         </Modal>
       )}
     </GroupActionsStyle>

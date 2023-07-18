@@ -2,6 +2,11 @@ import { Group } from "@/types/group";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
+import Modal from "../modal";
+
+const Title = styled.p`
+  margin-bottom: 1rem;
+`;
 
 const FunctionLinkStyle = styled(Link)`
   text-decoration: none;
@@ -11,9 +16,15 @@ const FunctionLinkStyle = styled(Link)`
 `;
 
 const MyGroupListStyle = styled.div`
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-height: 220px;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 interface GroupNameSectionStyleProps {
@@ -21,10 +32,10 @@ interface GroupNameSectionStyleProps {
 }
 const GroupNameSectionStyle = styled.div<GroupNameSectionStyleProps>`
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   -webkit-box-align: center;
   align-items: center;
-  padding: 14px;
+  padding: 8px;
   text-decoration: none;
   color: rgb(0, 0, 0);
   cursor: pointer;
@@ -40,6 +51,11 @@ const GroupNameIconStyle = styled.div`
   color: rgb(255, 255, 255);
   font-size: 30px;
   background-color: #f4356c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
   padding: 0.5rem;
   border-radius: 14px;
 `;
@@ -51,14 +67,14 @@ interface MyGroupListProps {
 const MyGroupList = ({ userGroups, currentGroup }: MyGroupListProps) => {
   return (
     <MyGroupListStyle>
-      <h3>내 그룹</h3>
+      <Title>모임</Title>
       {userGroups?.map((group) => {
         return (
           <FunctionLinkStyle
             href={{
               pathname: `/groups/${group.code}`,
             }}
-            about="내 그룹"
+            about="내 모임"
             key={group.id}
           >
             <GroupNameSectionStyle

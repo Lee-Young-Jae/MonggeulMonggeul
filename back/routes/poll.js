@@ -43,6 +43,32 @@ router.get("/", isLoggedIn, async (req, res) => {
   }
 });
 
+// 투표 상세 정보 send GET http://localhost:3010/poll/detail/{pollCode}
+router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
+  try {
+    const existPoll = await Poll.findOne({
+      where: { code: req.params.pollCode },
+      include: [
+        {
+          model: PollSubject,
+          attributes: ["title", "id"],
+          include: [
+            {
+              model: Vote,
+            },
+          ],
+        },
+      ],
+    });
+    if (!existPoll) {
+      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+    return res.status(200).json(existPoll);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 // 투표 생성 POST http://localhost:3010/poll/create
 router.post("/create", isLoggedIn, async (req, res) => {
   try {

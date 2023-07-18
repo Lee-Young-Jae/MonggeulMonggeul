@@ -1,5 +1,4 @@
 import { useGetLoginInfo } from "@/hooks/queries/user/useGet";
-import { get } from "http";
 
 const useAuth = () => {
   const getLoginInfo = useGetLoginInfo({ suspense: false });
@@ -8,4 +7,4 @@ const useAuth = () => {
   return { getLoginInfo, isLogin };
 };
 
-export default useAuth;
+export { useAuth };

@@ -41,3 +41,8 @@ export const createPollVote = async ({
   });
   return response.data;
 };
+
+export const getPoll = async (pollCode: string): Promise<Poll> => {
+  const response = await axiosInstance.get(`/poll/detail/${pollCode}`);
+  return response.data;
+};

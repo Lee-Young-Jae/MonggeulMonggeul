@@ -31,6 +31,12 @@ const FunctionLinkStyle = styled(Link)`
   width: 100%;
 `;
 
+const HrStyle = styled.hr`
+  border-color: rgb(226, 226, 226);
+  width: 100%;
+  border-width: 0px 0px 0.1rem;
+`;
+
 const MenuSlideUp = keyframes`
   0% {
     transform: translateY(100%);
@@ -124,9 +130,9 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
         userGroups={userGroups ? userGroups : []}
       ></MyGroupList>
 
-      <GroupActions></GroupActions>
+      <GroupActions />
 
-      <hr></hr>
+      <HrStyle />
       <h3>기능</h3>
       <FunctionLinkStyle
         href={{
@@ -138,10 +144,10 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       </FunctionLinkStyle>
       <div>약속잡기</div>
       <div>채팅하기</div>
-      <hr />
+      <HrStyle />
       <h3>멤버 목록 ({currentGroup.currentGroup.Users.length}명)</h3>
       <div>멤버 프로필</div>
-      <hr />
+      <HrStyle />
       <div>새로운 멤버 초대</div>
       <Button
         onClick={() => {

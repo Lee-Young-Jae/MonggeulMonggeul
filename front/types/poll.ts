@@ -6,9 +6,11 @@ type Poll = {
   PollSubjects: subject[];
   createdAt: string;
   closedAt: string;
+  code: string;
 };
 
 type subject = {
+  id: number;
   title: string;
   Votes: Vote[];
 };
@@ -52,4 +54,6 @@ export type {
   createPollResponse,
   createPollVoteRequest,
   createPollVoteResponse,
+  Vote,
+  subject,
 };

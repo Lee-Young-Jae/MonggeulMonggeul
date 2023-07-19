@@ -4,8 +4,10 @@ import styled from "styled-components";
 const RadioGroupStyle = styled.fieldset`
   border: none;
   padding: 0;
-  margin-bottom: 1.5rem;
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
 `;
 
 interface RadioGroupProps {
@@ -15,10 +17,10 @@ interface RadioGroupProps {
 
 const RadioGroup = ({ label, children }: RadioGroupProps) => {
   return (
-    <RadioGroupStyle>
+    <>
       <legend>{label}</legend>
-      {children}
-    </RadioGroupStyle>
+      <RadioGroupStyle>{children}</RadioGroupStyle>
+    </>
   );
 };
 

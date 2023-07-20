@@ -37,6 +37,20 @@ router.get("/", isLoggedIn, async (req, res) => {
     if (!polls) {
       return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
     }
+
+    polls.forEach((poll) => {
+      let isVoted = false;
+      poll.dataValues.PollSubjects.forEach((subject) => {
+        subject.dataValues.Votes.forEach((vote) => {
+          if (vote.UserId === req.user.id) {
+            isVoted = true;
+          }
+          return vote;
+        });
+      });
+      poll.dataValues.isVoted = isVoted;
+    });
+
     res.status(200).json(polls);
   } catch (error) {
     console.error(error);
@@ -60,9 +74,23 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
         },
       ],
     });
+
     if (!existPoll) {
       return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
     }
+
+    let isVoted = false;
+    existPoll.dataValues.PollSubjects.forEach((subject) => {
+      subject.dataValues.Votes.forEach((vote) => {
+        if (vote.UserId === req.user.id) {
+          isVoted = true;
+        }
+        return vote;
+      });
+    });
+
+    existPoll.dataValues.isVoted = isVoted;
+
     return res.status(200).json(existPoll);
   } catch (error) {
     console.error(error);
@@ -182,21 +210,19 @@ router.delete("/delete", isLoggedIn, async (req, res) => {
 // 유저가 Poll에 투표 POST http://localhost:3010/poll/vote
 router.post("/vote", isLoggedIn, async (req, res) => {
   try {
-    const { pollCode, subjectId, comment } = req.body;
+    const { subjectId, comment } = req.body;
 
-    const existPoll = await Poll.findOne({
-      where: { code: pollCode },
+    const existSubject = await PollSubject.findOne({
+      where: { id: subjectId },
     });
-    if (!existPoll) {
-      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    if (!existSubject) {
+      return res.status(404).json({ message: "투표 항목을 찾을 수 없습니다." });
     }
-
     // vote 생성
     const vote = await Vote.create({
-      PollId: existPoll.id,
       UserId: req.user.id,
       PollSubjectId: subjectId,
-      comment,
+      comment: comment ? comment : null,
     });
 
     if (!vote) {

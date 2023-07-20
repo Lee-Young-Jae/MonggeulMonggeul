@@ -3,8 +3,8 @@ import { Poll } from "@/types/poll";
 import { getDateString } from "@/utills/common";
 import React, { use } from "react";
 import styled from "styled-components";
-import PollSubject from "./pollSubject";
 import { useDeletePoll } from "@/hooks/queries/poll/useDelete";
+import { useRouter } from "next/router";
 
 const PollItemStyle = styled.div`
   display: flex;
@@ -18,22 +18,46 @@ const PollItemStyle = styled.div`
   background-color: white;
 `;
 
-const ProgressBar = styled.div`
+interface ProgressBarProps {
+  percentmax: number;
+  percentcurrent: number;
+}
+const ProgressBar = styled.div<ProgressBarProps>`
   width: 100%;
   height: 1rem;
   border-radius: 15px;
   background-color: #ccc;
+  position: relative;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: ${(props) => (props.percentcurrent / props.percentmax) * 100}%;
+    height: 100%;
+    background-color: #f4356c;
+    border-radius: 15px;
+  }
+
+  & > p {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 1rem;
+  }
 `;
 
-const OptionStyle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-  border-radius: 15px;
-  padding: 0.5rem;
-  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
-  background-color: white;
+const OptionsStyle = styled.div`
+  color: #ccc;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const PollItem = ({
@@ -43,41 +67,59 @@ const PollItem = ({
   isMultiple,
   closedAt,
   PollSubjects,
-}: Poll) => {
-  const { mutate } = useDeletePoll();
+  isVoted,
+  code,
+  userCount,
+}: Poll & { userCount: number }) => {
+  const { mutate: deleteMutate } = useDeletePoll();
+
+  const router = useRouter();
+
+  const votedUserCount = PollSubjects.reduce((acc, cur) => {
+    return acc + cur.Votes.length;
+  }, 0);
+
+  const onDeletePoll = () => {
+    const result = window.confirm("정말 삭제하시겠습니까?");
+
+    if (result) {
+      deleteMutate(id);
+    }
+  };
 
   return (
     <PollItemStyle>
       <div>공유하기 버튼</div>
       <div>{title}</div>
-      <ProgressBar></ProgressBar>
-      <p>0명/1명</p>
-      <div>
-        투표 설정
-        <OptionStyle>{isAnonymous ? "익명" : "기명"} </OptionStyle>
-        <OptionStyle>
-          {isMultiple ? "여러개 투표가능" : "하나만 투표 가능"}
-        </OptionStyle>
-      </div>
-      <div>{getDateString(new Date(closedAt))}까지</div>
-      {PollSubjects?.map((subject, index) => {
-        return (
-          <PollSubject
-            key={index}
-            title={subject.title}
-            voteCount={subject.Votes.length}
-          />
-        );
-      })}
+      <ProgressBar percentmax={userCount} percentcurrent={votedUserCount}>
+        <p>
+          {votedUserCount}명/{userCount}명
+        </p>
+      </ProgressBar>
 
-      <Button
-        onClick={() => {
-          mutate(id);
-        }}
-      >
+      <OptionsStyle>
+        {`${isAnonymous ? "익명투표" : "기명투표"} | ${
+          isMultiple ? "여러개 투표가능" : "하나만 투표 가능"
+        }
+            `}
+      </OptionsStyle>
+      <div>{getDateString(new Date(closedAt))}까지</div>
+
+      {isVoted ? (
+        <Button>결과보기</Button>
+      ) : (
+        <Button
+          onClick={() => {
+            router.push(`/groups/${router.query.groupcode}/poll/${code}`);
+          }}
+        >
+          투표하기
+        </Button>
+      )}
+
+      <Button color="unimportant" onClick={onDeletePoll}>
         투표 삭제하기
       </Button>
-      <Button>재투표하기</Button>
     </PollItemStyle>
   );
 };

@@ -30,12 +30,10 @@ export const deletePoll = async (pollId: number): Promise<string> => {
 };
 
 export const createPollVote = async ({
-  pollCode,
   subjectId,
   comment,
 }: createPollVoteRequest): Promise<createPollVoteResponse> => {
   const response = await axiosInstance.post(`/poll/vote`, {
-    pollCode,
     subjectId,
     comment,
   });

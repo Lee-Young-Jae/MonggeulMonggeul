@@ -7,6 +7,7 @@ type Poll = {
   createdAt: string;
   closedAt: string;
   code: string;
+  isVoted: boolean;
 };
 
 type subject = {
@@ -38,7 +39,6 @@ type createPollResponse = Poll & {
 };
 
 type createPollVoteRequest = {
-  pollCode: string;
   subjectId: number;
   comment?: string | "";
 };

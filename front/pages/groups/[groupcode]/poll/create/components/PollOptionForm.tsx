@@ -7,6 +7,10 @@ const PollOptions = styled.div`
   flex-direction: column;
 `;
 
+const RadioStyle = styled(Radio)`
+  margin: 0.5rem 1rem 0.5rem 0;
+`;
+
 interface PollOptionFormProps {
   handleIsAnonymous: (state: boolean) => void;
   handleIsMultipleChoice: (state: boolean) => void;
@@ -20,37 +24,37 @@ const PollOptionForm = ({
     <>
       <PollOptions>
         <RadioGroup label="투표 방식">
-          <Radio
+          <RadioStyle
             name="isAnonymous"
-            value="true"
+            value="isAnonymous"
             onChange={() => handleIsAnonymous(true)}
           >
             기명
-          </Radio>
-          <Radio
+          </RadioStyle>
+          <RadioStyle
             name="isAnonymous"
-            value="false"
+            value="isNotAnonymous"
             onChange={() => handleIsAnonymous(false)}
           >
             익명
-          </Radio>
+          </RadioStyle>
         </RadioGroup>
 
         <RadioGroup label="투표 방식">
-          <Radio
+          <RadioStyle
             name="isMultipleChoice"
-            value="true"
+            value="isMultipleChoice"
             onChange={() => handleIsMultipleChoice(true)}
           >
             하나만 투표 가능
-          </Radio>
-          <Radio
+          </RadioStyle>
+          <RadioStyle
             name="isMultipleChoice"
-            value="false"
+            value="isNotMultipleChoice"
             onChange={() => handleIsMultipleChoice(false)}
           >
             여러개 투표 가능
-          </Radio>
+          </RadioStyle>
         </RadioGroup>
       </PollOptions>
     </>

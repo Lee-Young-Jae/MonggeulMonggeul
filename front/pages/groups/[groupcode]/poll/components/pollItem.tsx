@@ -1,21 +1,22 @@
 import Button from "@/components/common/button";
 import { Poll } from "@/types/poll";
 import { getDateString } from "@/utills/common";
-import React, { use } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useDeletePoll } from "@/hooks/queries/poll/useDelete";
 import { useRouter } from "next/router";
 
 const PollItemStyle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 1rem;
-  border-radius: 15px;
-  padding: 0.5rem;
-  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
-  background-color: white;
+  border-radius: 14px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  @media (min-width: 500px) {
+    width: 49%;
+  }
 `;
 
 interface ProgressBarProps {
@@ -101,7 +102,7 @@ const PollItem = ({
         {`${isAnonymous ? "익명투표" : "기명투표"} | ${
           isMultiple ? "여러개 투표가능" : "하나만 투표 가능"
         }
-            `}
+              `}
       </OptionsStyle>
       <div>{getDateString(new Date(closedAt))}까지</div>
 

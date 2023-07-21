@@ -107,6 +107,11 @@ const PollCreatePage = () => {
         alert("투표 항목을 모두 입력해주세요.");
         return;
       }
+      const closeAt = new Date(`${closingDate}T${closingTime}`);
+      if (closeAt < new Date(new Date().getTime() + 60 * 60 * 1000)) {
+        alert("투표 마감 시간은 최소 1시간 이후여야 합니다.");
+        return;
+      }
 
       const poll: createPollRequest = {
         title: pollTitle,
@@ -183,18 +188,6 @@ const PollCreatePage = () => {
           </PollButton>
           <PollButton onClick={pollSubmit}>투표 생성하기</PollButton>
         </PollCreateForm>
-        <Button
-          onClick={() => {
-            console.log(pollSubjects);
-            console.log(closingDate);
-            console.log(closingTime);
-            console.log(pollTitle);
-            console.log(isAnonymous);
-            console.log(isMultipleChoice);
-          }}
-        >
-          지금 상태들을 보여줍니다.
-        </Button>
       </PageContent>
     </GroupPage>
   );

@@ -9,7 +9,6 @@ import { useGetUserGroups } from "@/hooks/queries/group/useGet";
 
 import useUserLogout from "@/hooks/common/useUserLogout";
 import Button from "../button";
-import useInput from "@/hooks/common/useInput";
 import MyGroupList from "./myGroupList";
 import { GoX } from "react-icons/go";
 import GroupActions from "./groupActions";
@@ -31,7 +30,7 @@ const FunctionLinkStyle = styled(Link)`
   width: 100%;
 `;
 
-const HrStyle = styled.hr`
+export const HrStyle = styled.hr`
   border-color: rgb(226, 226, 226);
   width: 100%;
   border-width: 0px 0px 0.1rem;

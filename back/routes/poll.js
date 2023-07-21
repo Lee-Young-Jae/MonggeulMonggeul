@@ -8,15 +8,24 @@ const { generateRandomCode } = require("../utils/common");
 router.get("/", isLoggedIn, async (req, res) => {
   try {
     if (!req.query.groupcode || req.query.groupcode === "") {
-      return res.status(409).json({ message: "유효한 그룹을 선택해주세요." });
+      return res.status(409).json({ message: "유효한 모임을 선택해주세요." });
     }
 
     const existGroup = await Group.findOne({
       where: { code: req.query.groupcode },
     });
     if (!existGroup) {
-      return res.status(404).json({ message: "그룹을 찾을 수 없습니다." });
+      return res.status(404).json({ message: "모임을 찾을 수 없습니다." });
     }
+
+    //가입된 모임인지 확인
+    const existUserGroup = await UserGroup.findOne({
+      where: { GroupId: existGroup.id, UserId: req.user.id },
+    });
+    if (!existUserGroup) {
+      return res.status(404).json({ message: "가입된 모임이 아닙니다." });
+    }
+
     const groupId = existGroup.id;
 
     const polls = await Poll.findAll({
@@ -31,6 +40,10 @@ router.get("/", isLoggedIn, async (req, res) => {
             },
           ],
         },
+      ],
+      order: [
+        ["closedAt", "ASC"],
+        ["createdAt", "DESC"],
       ],
     });
 
@@ -77,6 +90,14 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
 
     if (!existPoll) {
       return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    // 가입된 모임인지 확인
+    const existUserGroup = await UserGroup.findOne({
+      where: { GroupId: existPoll.GroupId, UserId: req.user.id },
+    });
+    if (!existUserGroup) {
+      return res.status(404).json({ message: "가입된 모임이 아닙니다." });
     }
 
     let isVoted = false;

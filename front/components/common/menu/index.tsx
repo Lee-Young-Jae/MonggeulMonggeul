@@ -72,6 +72,7 @@ const MenuStyle = styled.div<MenuStyleProps>`
   left: 0;
   background-color: rgb(255, 255, 255);
   box-sizing: border-box;
+  z-index: 100;
 
   ${(props) =>
     props.visiable === "true" &&

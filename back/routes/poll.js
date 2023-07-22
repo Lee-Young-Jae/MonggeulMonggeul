@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Poll, Group, PollSubject, Vote } = require("../models");
+const { Poll, Group, PollSubject, Vote, User } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const { generateRandomCode } = require("../utils/common");
 
@@ -19,9 +19,10 @@ router.get("/", isLoggedIn, async (req, res) => {
     }
 
     //가입된 모임인지 확인
-    const existUserGroup = await UserGroup.findOne({
-      where: { GroupId: existGroup.id, UserId: req.user.id },
+    const existUserGroup = await existGroup.getUsers({
+      where: { id: req.user.id },
     });
+
     if (!existUserGroup) {
       return res.status(404).json({ message: "가입된 모임이 아닙니다." });
     }
@@ -82,6 +83,12 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
           include: [
             {
               model: Vote,
+              include: [
+                {
+                  model: User,
+                  attributes: ["id", "name", "email"],
+                },
+              ],
             },
           ],
         },
@@ -93,9 +100,10 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
     }
 
     // 가입된 모임인지 확인
-    const existUserGroup = await UserGroup.findOne({
-      where: { GroupId: existPoll.GroupId, UserId: req.user.id },
+    const existUserGroup = await existPoll.getGroup({
+      where: { id: req.user.id },
     });
+
     if (!existUserGroup) {
       return res.status(404).json({ message: "가입된 모임이 아닙니다." });
     }

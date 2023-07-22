@@ -5,6 +5,7 @@ interface ButtonStyleProps {
   outlined?: "true" | "false";
   size?: "s" | "m" | "l";
   align?: "left" | "center" | "right";
+  color?: "default" | "unimportant";
 }
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
@@ -16,7 +17,9 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
   cursor: pointer;
   color: white;
 
-  background-color: #f8c6d2;
+  background-color: ${(props) =>
+    props.color === "default" ? "#f4356c" : "#ccc"};
+
   font-family: inherit;
   font-size: 1rem;
 
@@ -24,7 +27,7 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
     props.outlined === "true" &&
     css`
       background-color: white;
-      border: 1px solid #f8c6d2;
+      border: 1px solid #f4356c;
       color: rgb(151, 151, 151);
     `}
 
@@ -49,13 +52,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   outlined?: boolean;
   size?: "s" | "m" | "l";
+  color?: "default" | "unimportant";
 }
 
-const Button = ({ outlined, size, ...props }: ButtonProps) => {
+const Button = ({
+  outlined,
+  size,
+  color = "default",
+  ...props
+}: ButtonProps) => {
   return (
     <ButtonStyle
       size={size}
       outlined={outlined === true ? "true" : "false"}
+      color={color}
       {...props}
     ></ButtonStyle>
   );

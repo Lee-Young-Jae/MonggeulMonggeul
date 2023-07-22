@@ -1,17 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 
-const RadioLabelStyle = styled.label`
-  line-height: 1.5;
+const RadioWrapperStyle = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 1rem;
   cursor: pointer;
 `;
-const RadioStyle = styled.input`
+
+const RadioLabelStyle = styled.label``;
+
+const RadioInputStyle = styled.input`
+  margin: 0;
   appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.2rem;
+  height: 1.2rem;
   border: 1px solid #ced4da;
   border-radius: 50%;
   display: flex;
@@ -61,18 +63,18 @@ interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   children: React.ReactNode;
 }
 
-const Radio = ({ name, value, onChange, children, ...rest }: RadioProps) => {
+const Radio = ({ name, value, onChange, children, className }: RadioProps) => {
   return (
-    <RadioLabelStyle>
-      <RadioStyle
+    <RadioWrapperStyle className={className}>
+      <RadioInputStyle
         type="radio"
         name={name}
         value={value}
         onChange={onChange}
-        {...rest}
+        id={value}
       />
-      {children}
-    </RadioLabelStyle>
+      <RadioLabelStyle htmlFor={value}>{children}</RadioLabelStyle>
+    </RadioWrapperStyle>
   );
 };
 

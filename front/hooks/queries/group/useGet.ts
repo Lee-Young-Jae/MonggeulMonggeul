@@ -23,7 +23,6 @@ const useGetGroup = (
   queryOptions?: UseQueryOptions<GroupType.Group, ErrorResponse>
 ) => {
   const queryClient = new QueryClient();
-  // clear order group cache
   queryClient.invalidateQueries(["Group", groupCode]);
 
   return useQuery<GroupType.Group, ErrorResponse>(

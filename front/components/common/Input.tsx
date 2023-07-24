@@ -14,6 +14,8 @@ const InputStyle = styled.input<InputStyleProps>`
   padding: 0.5rem;
   border: 1px solid #f8c6d2;
   font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
 
   ${(props) =>
     props.outlined === "true" &&

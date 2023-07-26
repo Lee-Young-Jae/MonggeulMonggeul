@@ -27,14 +27,14 @@ const PollOptionForm = ({
           <RadioStyle
             name="isAnonymous"
             value="isAnonymous"
-            onChange={() => handleIsAnonymous(true)}
+            onChange={() => handleIsAnonymous(false)}
           >
             기명
           </RadioStyle>
           <RadioStyle
             name="isAnonymous"
             value="isNotAnonymous"
-            onChange={() => handleIsAnonymous(false)}
+            onChange={() => handleIsAnonymous(true)}
           >
             익명
           </RadioStyle>
@@ -44,14 +44,14 @@ const PollOptionForm = ({
           <RadioStyle
             name="isMultipleChoice"
             value="isMultipleChoice"
-            onChange={() => handleIsMultipleChoice(true)}
+            onChange={() => handleIsMultipleChoice(false)}
           >
             하나만 투표 가능
           </RadioStyle>
           <RadioStyle
             name="isMultipleChoice"
             value="isNotMultipleChoice"
-            onChange={() => handleIsMultipleChoice(false)}
+            onChange={() => handleIsMultipleChoice(true)}
           >
             여러개 투표 가능
           </RadioStyle>

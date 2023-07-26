@@ -4,6 +4,7 @@ import Logo2 from "@/assets/Logo_no_background.png";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { groupAtom } from "@/recoil/state/groupstate";
+import { useGetGroup } from "@/hooks/queries/group/useGet";
 
 const HeaderStyle = styled.div`
   width: 100%;
@@ -42,10 +43,14 @@ const GroupName = styled.div`
 
 const Header = () => {
   const router = useRouter();
-  const [groupState, setGroupState] = useRecoilState(groupAtom);
+  // const [groupState, setGroupState] = useRecoilState(groupAtom);
+
+  const { data: group } = useGetGroup(router.query.groupcode as string, {
+    enabled: !!router.isReady,
+  });
 
   const pushToGroupPage = () => {
-    router.push(`/groups/${groupState.currentGroup.code}`);
+    router.push(`/groups/${group?.code}`);
   };
 
   return (
@@ -62,8 +67,8 @@ const Header = () => {
         onClick={pushToGroupPage}
       ></Image>
       <GroupDescription>
-        <GroupName>🌎{groupState.currentGroup.name}</GroupName>
-        <GroupIcon>{groupState.currentGroup.name?.slice(0, 1)}</GroupIcon>
+        <GroupName>🌎{group?.name}</GroupName>
+        <GroupIcon>{group?.name.slice(0, 1)}</GroupIcon>
       </GroupDescription>
     </HeaderStyle>
   );

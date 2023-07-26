@@ -9,8 +9,48 @@ import { useCreatePollVote } from "@/hooks/queries/poll/useCreate";
 import { useGetPoll } from "@/hooks/queries/poll/useGet";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { VoteStyle } from "./component";
+import CheckList from "@/components/common/checkList";
+import CheckboxGroup from "@/components/common/checkList/checkboxGroup";
+import styled, { keyframes } from "styled-components";
+import { getDateString } from "@/utills/common";
+
+interface ProgressProps {
+  current_date: Date;
+  closed_at: Date;
+  created_at: Date;
+}
+
+const ProgressBarStyle = styled.div`
+  width: 100%;
+  height: 0.5rem;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  position: relative;
+  overflow: hidden;
+`;
+
+const progressAnimation = keyframes`
+  from {
+    width: 0%;
+  }
+`;
+
+const ProgressStyle = styled.div<ProgressProps>`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: ${(props) => {
+    const { current_date, closed_at, created_at } = props;
+    const total = closed_at.getTime() - created_at.getTime();
+    const current = current_date.getTime() - created_at.getTime();
+    return (current / total) * 100;
+  }}%;
+  background-color: #f4356c;
+  border-radius: 0.25rem;
+  animation: ${progressAnimation} 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+`;
 
 const Vote = () => {
   const router = useRouter();
@@ -23,8 +63,12 @@ const Vote = () => {
   });
 
   const [selectedSubject, setSelectedSubject] = useState<string>("");
+  const [selectedSubjectList, setSelectedSubjectList] = useState<string[]>([]);
   const [subjectComment, subjectCommentHandler] = useInput("");
   const { mutate } = useCreatePollVote();
+
+  const isMultiple = poll?.isMultiple as boolean;
+  const isOver = new Date(poll?.closedAt as string) < new Date();
 
   const vote = () => {
     if (selectedSubject === "") {
@@ -32,16 +76,27 @@ const Vote = () => {
       return;
     }
 
-    console.log(selectedSubject, subjectComment);
-
     mutate({
       subjectId: parseInt(selectedSubject),
       comment: subjectComment,
     });
   };
 
-  const handleSelectSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRadioSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSubject(e.target.value);
+  };
+
+  const handleCheckboxSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const index = selectedSubjectList.indexOf(value);
+    if (index === -1) {
+      setSelectedSubjectList([...selectedSubjectList, value]);
+    } else {
+      setSelectedSubjectList([
+        ...selectedSubjectList.slice(0, index),
+        ...selectedSubjectList.slice(index + 1),
+      ]);
+    }
   };
 
   useEffect(() => {
@@ -59,31 +114,70 @@ const Vote = () => {
           <VoteStyle>
             <h1>임시 id:{poll.id}</h1>
             <h1>Title: {poll.title}</h1>
-            <h1>closedAt: {poll.closedAt}</h1>
-            <h1>isAnonymous: {poll.isAnonymous}</h1>
-            <h1>isMultiple: {poll.isMultiple}</h1>
-            <h1>createdAt: {poll.createdAt}</h1>
-            <h1>code: {poll.code}</h1>
-            <RadioGroup label="고르세용~">
-              {poll.PollSubjects.map((subject) => {
-                return (
-                  <Radio
-                    key={subject.id}
-                    name={poll.id.toString()}
-                    value={subject.id.toString()}
-                    onChange={handleSelectSubject}
-                  >
-                    {subject.title}
-                  </Radio>
-                );
-              })}
-            </RadioGroup>
+            <span>시작일: {getDateString(new Date(poll.createdAt))}</span>
+            <span>마감시간: {getDateString(new Date(poll.closedAt))}</span>
+            <ProgressBarStyle>
+              <ProgressStyle
+                created_at={new Date(poll.createdAt)}
+                current_date={new Date()}
+                closed_at={new Date(poll.closedAt)}
+              ></ProgressStyle>
+            </ProgressBarStyle>
+            <p>{poll.isAnonymous ? "무기명 투표" : "기명 투표"}</p>
+            {/* <h1>createdAt: {poll.createdAt}</h1> */}
+            <h1>공유하기 코드 : {poll.code}</h1>
+
+            {isMultiple ? (
+              <CheckboxGroup label="체크박스 테스트">
+                {poll.PollSubjects.map((subject) => {
+                  return (
+                    <CheckList
+                      key={subject.id}
+                      value={subject.id.toString()}
+                      handler={handleCheckboxSubject}
+                    >
+                      {subject.title}
+                    </CheckList>
+                  );
+                })}
+              </CheckboxGroup>
+            ) : (
+              <>
+                <RadioGroup label="고르세용~">
+                  {poll.PollSubjects.map((subject) => {
+                    return (
+                      <Radio
+                        key={subject.id}
+                        name={poll.id.toString()}
+                        value={subject.id.toString()}
+                        onChange={handleRadioSubject}
+                      >
+                        {subject.title}
+                      </Radio>
+                    );
+                  })}
+                </RadioGroup>
+              </>
+            )}
+
             <Input
+              width="l"
               value={subjectComment}
               onChange={subjectCommentHandler}
+              placeholder="투표에 대한 의견이 있나요?"
             ></Input>
-            <Button onClick={vote}>투표하기</Button>
+
+            <Button disabled={isOver} onClick={vote}>
+              {isOver ? "마감된 투표입니다" : "투표하기"}
+            </Button>
           </VoteStyle>
+          <Button
+            onClick={() => {
+              console.log(selectedSubjectList);
+            }}
+          >
+            현재 상태를 확인합니다.
+          </Button>
         </PageContent>
       </GroupPage>
     );

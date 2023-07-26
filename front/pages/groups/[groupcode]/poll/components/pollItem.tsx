@@ -107,7 +107,15 @@ const PollItem = ({
       <div>{getDateString(new Date(closedAt))}까지</div>
 
       {isVoted ? (
-        <Button>결과보기</Button>
+        <Button
+          onClick={() => {
+            router.push(
+              `/groups/${router.query.groupcode}/poll/${code}/result`
+            );
+          }}
+        >
+          결과보기
+        </Button>
       ) : (
         <Button
           onClick={() => {

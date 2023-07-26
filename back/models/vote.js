@@ -4,10 +4,6 @@ class Vote extends Model {
   static init(sequelize) {
     return super.init(
       {
-        isAgree: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-        },
         comment: {
           type: DataTypes.STRING(100),
           allowNull: true,
@@ -24,7 +20,7 @@ class Vote extends Model {
     );
   }
   static associate(db) {
-    db.Vote.belongsTo(db.Poll);
+    db.Vote.belongsTo(db.PollSubject);
     db.Vote.belongsTo(db.User);
   }
 }

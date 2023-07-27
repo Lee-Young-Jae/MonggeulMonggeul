@@ -32,7 +32,16 @@ export const deletePoll = async (pollId: number): Promise<string> => {
 export const createPollVote = async ({
   subjectId,
   comment,
+  isMultiple,
 }: createPollVoteRequest): Promise<createPollVoteResponse> => {
+  if (isMultiple) {
+    const response = await axiosInstance.post(`/poll/voteMultiple`, {
+      subjectId,
+      comments: comment,
+    });
+    return response.data;
+  }
+
   const response = await axiosInstance.post(`/poll/vote`, {
     subjectId,
     comment,

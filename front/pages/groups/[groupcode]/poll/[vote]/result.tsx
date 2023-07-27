@@ -15,9 +15,9 @@ const PollTitleStyle = styled.div`
 `;
 
 interface VoteItemProps {
-  currentVoteCount: number;
-  currentMaxSelectedSubjectCount: number;
-  votedCount: number;
+  current_vote_count: number;
+  current_max_selected_subject_count: number;
+  voted_count: number;
 }
 
 const Grow = (width: number) => keyframes`
@@ -49,10 +49,12 @@ const VoteItemStyle = styled.div<VoteItemProps>`
     top: 0;
     bottom: 0;
     width: ${(props) =>
-      (props.votedCount / props.currentMaxSelectedSubjectCount) * 100}%;
+      (props.voted_count / props.current_max_selected_subject_count) * 100}%;
     background-color: #f4356c;
     animation: ${(props) =>
-        Grow((props.votedCount / props.currentMaxSelectedSubjectCount) * 100)}
+        Grow(
+          (props.voted_count / props.current_max_selected_subject_count) * 100
+        )}
       1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
@@ -80,6 +82,7 @@ const VoteResult = () => {
 
   const { data: poll, isLoading } = useGetPoll(router.query.vote as string, {
     enabled: !!router.isReady,
+    staleTime: 0,
   });
 
   const isOver = new Date(poll?.closedAt as string) < new Date();
@@ -120,14 +123,15 @@ const VoteResult = () => {
               {currentMaxSelectedSubjectCount}개
             </p>
             {poll?.PollSubjects.map((subject) => {
+              console.log(subject.id);
               return (
                 <div key={subject.id}>
                   <VoteItemStyle
-                    currentVoteCount={currentVoteCount as number}
-                    currentMaxSelectedSubjectCount={
+                    current_vote_count={currentVoteCount as number}
+                    current_max_selected_subject_count={
                       currentMaxSelectedSubjectCount as number
                     }
-                    votedCount={subject.Votes.length}
+                    voted_count={subject.Votes.length}
                   >
                     <div>
                       <p>{subject.title}</p>
@@ -136,17 +140,27 @@ const VoteResult = () => {
                   </VoteItemStyle>
                   {subject.Votes.map((vote) => {
                     return (
-                      <>
-                        <div key={vote.id}>{vote.User.name}</div>
+                      <div key={vote.id}>
+                        <div>{vote.User.name}</div>
                         {vote.comment && <div>{vote.comment}</div>}
-                      </>
+                      </div>
                     );
                   })}
                 </div>
               );
             })}
           </div>
-          {!isOver && <Button>재투표하기</Button>}
+          {!isOver && (
+            <Button
+              onClick={() => {
+                router.push(
+                  `/groups/${router.query.groupcode}/poll/${router.query.vote}`
+                );
+              }}
+            >
+              재투표하기
+            </Button>
+          )}
           {isOver && <Button>투표 결과 공유하기</Button>}
         </VoteStyle>
       </PageContent>

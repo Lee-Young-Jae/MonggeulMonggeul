@@ -32,6 +32,7 @@ const ProgressBar = styled.div<ProgressBarProps>`
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   text-align: center;
+  overflow: hidden;
 
   &::before {
     content: "";
@@ -88,6 +89,8 @@ const PollItem = ({
     }
   };
 
+  const isOver = new Date(closedAt) < new Date();
+
   return (
     <PollItemStyle>
       <div>공유하기 버튼</div>
@@ -106,7 +109,7 @@ const PollItem = ({
       </OptionsStyle>
       <div>{getDateString(new Date(closedAt))}까지</div>
 
-      {isVoted ? (
+      {isVoted || isOver ? (
         <Button
           onClick={() => {
             router.push(

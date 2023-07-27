@@ -247,6 +247,37 @@ router.post("/vote", isLoggedIn, async (req, res) => {
     if (!existSubject) {
       return res.status(404).json({ message: "투표 항목을 찾을 수 없습니다." });
     }
+
+    const existPoll = await Poll.findOne({
+      where: { id: existSubject.PollId },
+    });
+    if (!existPoll) {
+      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    const pollSubjects = await PollSubject.findAll({
+      where: { PollId: existPoll.id },
+      include: [
+        {
+          model: Vote,
+          attributes: ["UserId"],
+        },
+      ],
+    });
+
+    let isVoted = false;
+    pollSubjects.forEach((subject) => {
+      subject.Votes.forEach((vote) => {
+        if (vote.UserId === req.user.id) {
+          isVoted = true;
+        }
+      });
+    });
+
+    if (isVoted) {
+      return res.status(409).json({ message: "이미 참여한 투표입니다." });
+    }
+
     // vote 생성
     const vote = await Vote.create({
       UserId: req.user.id,
@@ -258,6 +289,45 @@ router.post("/vote", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "투표를 생성할 수 없습니다." });
     }
     res.status(200).json(vote);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 유저가 Poll에 여러개 투표 POST http://localhost:3010/poll/voteMultiple
+router.post("/voteMultiple", isLoggedIn, async (req, res) => {
+  try {
+    const { subjectIds, comments } = req.body;
+
+    const existSubject = await PollSubject.findOne({
+      where: { id: subjectIds },
+    });
+
+    if (!existSubject) {
+      return res.status(404).json({ message: "투표 항목을 찾을 수 없습니다." });
+    }
+
+    const existPoll = await Poll.findOne({
+      where: { id: existSubject.PollId },
+    });
+    if (!existPoll) {
+      return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    // vote 생성
+    const votes = await Vote.bulkCreate(
+      subjectIds.map((subjectId, index) => ({
+        UserId: req.user.id,
+        PollSubjectId: subjectId,
+        comment: comments[index] ? comments[index] : null,
+      }))
+    );
+
+    if (!votes) {
+      return res.status(404).json({ message: "투표를 생성할 수 없습니다." });
+    }
+
+    res.status(200).json(votes);
   } catch (error) {
     console.error(error);
   }

@@ -7,7 +7,9 @@ const RadioWrapperStyle = styled.div`
   cursor: pointer;
 `;
 
-const RadioLabelStyle = styled.label``;
+const RadioLabelStyle = styled.label`
+  cursor: pointer;
+`;
 
 const RadioInputStyle = styled.input`
   margin: 0;

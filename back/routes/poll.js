@@ -295,7 +295,7 @@ router.post("/vote", isLoggedIn, async (req, res) => {
 });
 
 // 유저가 Poll에 여러개 투표 POST http://localhost:3010/poll/voteMultiple
-router.post("/voteMultiple", isLoggedIn, async (req, res) => {
+router.post("/vote/Multiple", isLoggedIn, async (req, res) => {
   try {
     const { subjectIds, comments } = req.body;
 
@@ -312,6 +312,42 @@ router.post("/voteMultiple", isLoggedIn, async (req, res) => {
     });
     if (!existPoll) {
       return res.status(404).json({ message: "투표를 찾을 수 없습니다." });
+    }
+
+    const pollSubjects = await PollSubject.findAll({
+      where: { PollId: existPoll.id },
+      include: [
+        {
+          model: Vote,
+          attributes: ["UserId"],
+        },
+      ],
+    });
+
+    let isVoted = false;
+    pollSubjects.forEach((subject) => {
+      subject.Votes.forEach((vote) => {
+        if (vote.UserId === req.user.id) {
+          isVoted = true;
+        }
+      });
+    });
+
+    if (isVoted) {
+      // 다시 투표하기
+
+      // Poll과 연결된 Vote 삭제
+      const allSubjectIds = pollSubjects.map((subject) => subject.id);
+
+      const deleteVote = await Vote.destroy({
+        where: { UserId: req.user.id, PollSubjectId: allSubjectIds },
+      });
+
+      if (!deleteVote) {
+        return res
+          .status(404)
+          .json({ message: "투표 변경중 오류가 발생하였습니다." });
+      }
     }
 
     // vote 생성

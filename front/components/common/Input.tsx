@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 
 interface InputStyleProps {
   outlined?: "true" | "false";
+  width?: "s" | "m" | "l";
 }
 
 const InputStyle = styled.input<InputStyleProps>`
@@ -16,6 +17,15 @@ const InputStyle = styled.input<InputStyleProps>`
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
+
+  width: ${(props) =>
+    props.width === "s"
+      ? "50%"
+      : props.width === "m"
+      ? "80%"
+      : props.width === "l"
+      ? "100%"
+      : "100%"};
 
   ${(props) =>
     props.outlined === "true" &&
@@ -32,12 +42,14 @@ const InputStyle = styled.input<InputStyleProps>`
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   outlined?: boolean;
+  width?: "s" | "m" | "l";
 }
 
-const Input = ({ outlined, ...props }: InputProps) => {
+const Input = ({ outlined, width = "l", ...props }: InputProps) => {
   return (
     <InputStyle
       outlined={outlined === true ? "true" : "false"}
+      width={width}
       {...props}
     ></InputStyle>
   );

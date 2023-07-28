@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 type Poll = {
   id: number;
   title: string;
@@ -23,6 +25,7 @@ type Vote = {
   createdAt: string;
   UserId: number;
   PollSubjectId: number;
+  User: User;
 };
 
 type createPollRequest = Pick<
@@ -48,12 +51,18 @@ type createPollVoteResponse = {
   Vote: Vote;
 };
 
+type createPollVoteMultipleRequest = {
+  subjectIds: number[];
+  comments: string[];
+};
+
 export type {
   Poll,
   createPollRequest,
   createPollResponse,
   createPollVoteRequest,
   createPollVoteResponse,
+  createPollVoteMultipleRequest,
   Vote,
   subject,
 };

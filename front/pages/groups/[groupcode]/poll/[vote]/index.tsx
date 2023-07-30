@@ -5,11 +5,13 @@ import Radio from "@/components/common/radio";
 import RadioGroup from "@/components/common/radio/radioGroup";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import useInput from "@/hooks/common/useInput";
-import { useCreatePollVote } from "@/hooks/queries/poll/useCreate";
+import {
+  useCreatePollVote,
+  useCreatePollVoteMultiple,
+} from "@/hooks/queries/poll/useCreate";
 import { useGetPoll } from "@/hooks/queries/poll/useGet";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { VoteStyle } from "./component";
+import { useEffect, useState, useCallback } from "react";
 import CheckList from "@/components/common/checkList";
 import CheckboxGroup from "@/components/common/checkList/checkboxGroup";
 import styled, { keyframes } from "styled-components";
@@ -20,6 +22,23 @@ interface ProgressProps {
   closed_at: Date;
   created_at: Date;
 }
+
+export const VoteStyle = styled.div`
+  background-color: white;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  border-radius: 15px;
+  padding: 0.5rem;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 80%;
+  box-sizing: border-box;
+  padding: 1rem;
+`;
 
 const ProgressBarStyle = styled.div`
   width: 100%;
@@ -65,22 +84,59 @@ const Vote = () => {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedSubjectList, setSelectedSubjectList] = useState<string[]>([]);
   const [subjectComment, subjectCommentHandler] = useInput("");
-  const { mutate } = useCreatePollVote();
+  const [subjectCommentList, setSubjectCommentList] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const { mutate: voteMutate, isSuccess: voteIsSuccess } = useCreatePollVote();
+  const { mutate: voteMultipleMutate, isSuccess: voteMultipleIsSuccess } =
+    useCreatePollVoteMultiple();
 
   const isMultiple = poll?.isMultiple as boolean;
   const isOver = new Date(poll?.closedAt as string) < new Date();
 
-  const vote = () => {
+  const vote = useCallback(() => {
+    if (isMultiple) {
+      if (selectedSubjectList.length === 0) {
+        alert("투표할 항목을 선택해주세요.");
+        return;
+      }
+      voteMultipleMutate({
+        subjectIds: selectedSubjectList.map((v) => parseInt(v)),
+        comments: selectedSubjectList.map((v) => subjectCommentList[v]),
+      });
+      return;
+    }
     if (selectedSubject === "") {
       alert("투표할 항목을 선택해주세요.");
       return;
     }
-
-    mutate({
+    voteMutate({
       subjectId: parseInt(selectedSubject),
       comment: subjectComment,
     });
-  };
+  }, [
+    selectedSubject,
+    subjectComment,
+    voteMutate,
+    voteMultipleMutate,
+    isMultiple,
+    selectedSubjectList,
+    subjectCommentList,
+  ]);
+
+  if (voteIsSuccess) {
+    console.log("두번씩 호출되는 이유?");
+
+    alert("투표가 완료되었습니다.");
+    router.push(`/groups/${router.query.groupcode}/poll/${poll?.code}/result`);
+  }
+
+  if (voteMultipleIsSuccess) {
+    console.log("두번씩 호출되는 이유?, 멀티플");
+    alert("투표가 완료되었습니다.");
+    router.push(`/groups/${router.query.groupcode}/poll/${poll?.code}/result`);
+  }
 
   const handleRadioSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSubject(e.target.value);
@@ -97,6 +153,14 @@ const Vote = () => {
         ...selectedSubjectList.slice(index + 1),
       ]);
     }
+  };
+
+  const handleSubjectComment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setSubjectCommentList({
+      ...subjectCommentList,
+      [name]: value,
+    });
   };
 
   useEffect(() => {
@@ -131,13 +195,21 @@ const Vote = () => {
               <CheckboxGroup label="체크박스 테스트">
                 {poll.PollSubjects.map((subject) => {
                   return (
-                    <CheckList
-                      key={subject.id}
-                      value={subject.id.toString()}
-                      handler={handleCheckboxSubject}
-                    >
-                      {subject.title}
-                    </CheckList>
+                    <div key={subject.id}>
+                      <CheckList
+                        value={subject.id.toString()}
+                        handler={handleCheckboxSubject}
+                      >
+                        {subject.title}
+                      </CheckList>
+                      <Input
+                        width="l"
+                        value={subjectCommentList[subject.id]}
+                        name={subject.id.toString()}
+                        onChange={handleSubjectComment}
+                        placeholder="투표에 대한 의견이 있나요?"
+                      ></Input>
+                    </div>
                   );
                 })}
               </CheckboxGroup>
@@ -173,7 +245,8 @@ const Vote = () => {
           </VoteStyle>
           <Button
             onClick={() => {
-              console.log(selectedSubjectList);
+              console.log(selectedSubjectList, "subjectList");
+              console.log(subjectCommentList, "subjectCommentList");
             }}
           >
             현재 상태를 확인합니다.

@@ -3,6 +3,7 @@ import {
   Poll,
   createPollRequest,
   createPollResponse,
+  createPollVoteMultipleRequest,
   createPollVoteRequest,
   createPollVoteResponse,
 } from "@/types/poll";
@@ -32,21 +33,22 @@ export const deletePoll = async (pollId: number): Promise<string> => {
 export const createPollVote = async ({
   subjectId,
   comment,
-  isMultiple,
 }: createPollVoteRequest): Promise<createPollVoteResponse> => {
-  if (isMultiple) {
-    const response = await axiosInstance.post(`/poll/voteMultiple`, {
-      subjectId,
-      comments: comment,
-    });
-    return response.data;
-  }
-
   const response = await axiosInstance.post(`/poll/vote`, {
     subjectId,
     comment,
   });
   return response.data;
+};
+
+export const createPollVoteMultiple = async ({
+  subjectIds,
+  comments,
+}: createPollVoteMultipleRequest): Promise<any> => {
+  axiosInstance.post(`/poll/vote/multiple`, {
+    subjectIds,
+    comments,
+  });
 };
 
 export const getPoll = async (pollCode: string): Promise<Poll> => {

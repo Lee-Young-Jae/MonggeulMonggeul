@@ -15,7 +15,7 @@ interface PollSubjectProps {
 const PollSelectList = ({ PollSubjects }: PollSubjectProps) => {
   return (
     <RadioGroup label="어디에 투표할까요?">
-      {PollSubjects.map((subject, index) => {
+      {PollSubjects?.map((subject, index) => {
         return (
           <RadioStyle
             key={subject.id}

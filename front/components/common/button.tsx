@@ -6,6 +6,7 @@ interface ButtonStyleProps {
   size?: "s" | "m" | "l";
   align?: "left" | "center" | "right";
   color?: "default" | "unimportant";
+  disabled?: boolean;
 }
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
@@ -45,6 +46,13 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
     props.size === "l" &&
     css`
       width: 100%;
+    `}
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #ccc;
+      cursor: not-allowed;
     `}
 `;
 

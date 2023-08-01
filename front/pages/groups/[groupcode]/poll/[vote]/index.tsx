@@ -23,6 +23,13 @@ interface ProgressProps {
   created_at: Date;
 }
 
+const VoteSelectStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
+`;
+
 export const VoteStyle = styled.div`
   background-color: white;
   border-radius: 14px;
@@ -125,16 +132,7 @@ const Vote = () => {
     subjectCommentList,
   ]);
 
-  if (voteIsSuccess) {
-    console.log("두번씩 호출되는 이유?");
-
-    alert("투표가 완료되었습니다.");
-    router.push(`/groups/${router.query.groupcode}/poll/${poll?.code}/result`);
-  }
-
-  if (voteMultipleIsSuccess) {
-    console.log("두번씩 호출되는 이유?, 멀티플");
-    alert("투표가 완료되었습니다.");
+  if (voteIsSuccess || voteMultipleIsSuccess) {
     router.push(`/groups/${router.query.groupcode}/poll/${poll?.code}/result`);
   }
 
@@ -195,49 +193,52 @@ const Vote = () => {
               <CheckboxGroup label="체크박스 테스트">
                 {poll.PollSubjects.map((subject) => {
                   return (
-                    <div key={subject.id}>
+                    <VoteSelectStyle key={subject.id}>
                       <CheckList
                         value={subject.id.toString()}
                         handler={handleCheckboxSubject}
                       >
                         {subject.title}
                       </CheckList>
-                      <Input
-                        width="l"
-                        value={subjectCommentList[subject.id]}
-                        name={subject.id.toString()}
-                        onChange={handleSubjectComment}
-                        placeholder="투표에 대한 의견이 있나요?"
-                      ></Input>
-                    </div>
+                      {selectedSubjectList.includes(subject.id.toString()) && (
+                        <Input
+                          width="l"
+                          value={subjectCommentList[subject.id]}
+                          name={subject.id.toString()}
+                          onChange={handleSubjectComment}
+                          placeholder={`${subject.title}에 대한 의견이 있나요?`}
+                        ></Input>
+                      )}
+                    </VoteSelectStyle>
                   );
                 })}
               </CheckboxGroup>
             ) : (
-              <>
-                <RadioGroup label="고르세용~">
-                  {poll.PollSubjects.map((subject) => {
-                    return (
+              <RadioGroup label="고르세용~" flex_direction="column">
+                {poll.PollSubjects.map((subject) => {
+                  return (
+                    <VoteSelectStyle key={subject.id}>
                       <Radio
-                        key={subject.id}
                         name={poll.id.toString()}
                         value={subject.id.toString()}
                         onChange={handleRadioSubject}
                       >
                         {subject.title}
                       </Radio>
-                    );
-                  })}
-                </RadioGroup>
-              </>
+                      {selectedSubject === subject.id.toString() && (
+                        <Input
+                          width="l"
+                          value={subjectComment}
+                          name={subject.id.toString()}
+                          onChange={subjectCommentHandler}
+                          placeholder={`${subject.title}에 대한 의견이 있나요?`}
+                        ></Input>
+                      )}
+                    </VoteSelectStyle>
+                  );
+                })}
+              </RadioGroup>
             )}
-
-            <Input
-              width="l"
-              value={subjectComment}
-              onChange={subjectCommentHandler}
-              placeholder="투표에 대한 의견이 있나요?"
-            ></Input>
 
             <Button disabled={isOver} onClick={vote}>
               {isOver ? "마감된 투표입니다" : "투표하기"}

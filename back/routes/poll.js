@@ -275,7 +275,18 @@ router.post("/vote", isLoggedIn, async (req, res) => {
     });
 
     if (isVoted) {
-      return res.status(409).json({ message: "이미 참여한 투표입니다." });
+      // Poll과 연결된 Vote 삭제
+      const allSubjectIds = pollSubjects.map((subject) => subject.id);
+
+      const deleteVote = await Vote.destroy({
+        where: { UserId: req.user.id, PollSubjectId: allSubjectIds },
+      });
+
+      if (!deleteVote) {
+        return res
+          .status(404)
+          .json({ message: "투표 변경중 오류가 발생하였습니다." });
+      }
     }
 
     // vote 생성

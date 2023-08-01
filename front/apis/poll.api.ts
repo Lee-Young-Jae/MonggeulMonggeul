@@ -4,6 +4,7 @@ import {
   createPollRequest,
   createPollResponse,
   createPollVoteMultipleRequest,
+  createPollVoteMultipleResponse,
   createPollVoteRequest,
   createPollVoteResponse,
 } from "@/types/poll";
@@ -44,11 +45,13 @@ export const createPollVote = async ({
 export const createPollVoteMultiple = async ({
   subjectIds,
   comments,
-}: createPollVoteMultipleRequest): Promise<any> => {
-  axiosInstance.post(`/poll/vote/multiple`, {
+}: createPollVoteMultipleRequest): Promise<createPollVoteMultipleResponse> => {
+  const response = await axiosInstance.post(`/poll/vote/multiple`, {
     subjectIds,
     comments,
   });
+
+  return response.data;
 };
 
 export const getPoll = async (pollCode: string): Promise<Poll> => {

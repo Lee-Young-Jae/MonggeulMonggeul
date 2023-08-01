@@ -1,5 +1,5 @@
 import Button from "@/components/common/button";
-import { Poll } from "@/types/poll";
+import { Poll, subject } from "@/types/poll";
 import { getDateString } from "@/utills/common";
 import React from "react";
 import styled from "styled-components";
@@ -77,9 +77,11 @@ const PollItem = ({
 
   const router = useRouter();
 
-  const votedUserCount = PollSubjects.reduce((acc, cur) => {
-    return acc + cur.Votes.length;
-  }, 0);
+  const votedUserCount = new Set(
+    PollSubjects.map((subject) =>
+      subject.Votes.map((vote) => vote.UserId)
+    ).flat(1)
+  ).size;
 
   const onDeletePoll = () => {
     const result = window.confirm("정말 삭제하시겠습니까?");

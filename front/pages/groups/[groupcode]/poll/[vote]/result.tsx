@@ -5,13 +5,29 @@ import { useGetPoll } from "@/hooks/queries/poll/useGet";
 import { useRouter } from "next/router";
 import Loading from "@/components/common/loading";
 import { HrStyle } from "@/components/common/menu";
-import { VoteStyle } from "./component";
 import { getDateString } from "@/utills/common";
 import Button from "@/components/common/button";
 import { subject } from "@/types/poll";
 
 const PollTitleStyle = styled.div`
   font-size: 1.5rem;
+`;
+
+export const VoteStyle = styled.div`
+  background-color: white;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  border-radius: 15px;
+  padding: 0.5rem;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 80%;
+  box-sizing: border-box;
+  padding: 1rem;
 `;
 
 interface VoteItemProps {
@@ -92,6 +108,11 @@ const VoteResult = () => {
     },
     0
   );
+  const currentUserVoteCount = new Set(
+    poll?.PollSubjects.reduce((acc: number[], cur: subject) => {
+      return [...acc, ...cur.Votes.map((vote) => vote.UserId)];
+    }, [])
+  ).size;
 
   const currentMaxSelectedSubjectCount = poll?.PollSubjects.reduce(
     (acc: number, cur: subject) => {
@@ -99,8 +120,6 @@ const VoteResult = () => {
     },
     0
   );
-
-  console.log(currentVoteCount);
 
   if (isLoading) {
     return <Loading />;
@@ -116,14 +135,14 @@ const VoteResult = () => {
             <ClosedAtStyle>
               {getDateString(new Date(poll?.closedAt as string))}까지
             </ClosedAtStyle>
-            <p>총 {poll?.PollSubjects.length}개의 항목 중</p>
-            <p>총 {currentVoteCount}명이 투표했습니다.</p>
+            <p>{poll?.PollSubjects.length}개의 항목 중</p>
+            <p>총 {currentUserVoteCount}명이 투표했습니다.</p>
+            <p>총 {currentVoteCount}개의 투표가 있습니다.</p>
             <p>
               최고로 많은 선택을 받은 항목의 투표수:{" "}
               {currentMaxSelectedSubjectCount}개
             </p>
             {poll?.PollSubjects.map((subject) => {
-              console.log(subject.id);
               return (
                 <div key={subject.id}>
                   <VoteItemStyle

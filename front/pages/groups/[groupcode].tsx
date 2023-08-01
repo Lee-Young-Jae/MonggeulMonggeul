@@ -4,8 +4,7 @@ import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useGetGroup } from "@/hooks/queries/group/useGet";
-import { groupAtom } from "@/recoil/state/groupstate";
-import { useRecoilState } from "recoil";
+import Loading from "@/components/common/loading";
 
 const FunctionList = styled.div`
   box-sizing: border-box;
@@ -40,38 +39,38 @@ const Group = () => {
   const { data: group, isLoading } = useGetGroup(String(groupcode), {
     enabled: !!groupcode,
   });
-  const [groupState, setGroupState] = useRecoilState(groupAtom);
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (group) {
-      setGroupState({
-        currentGroup: group,
-      });
-    }
-  }, [group, setGroupState, router.isReady]);
+  }, [group, router.isReady]);
 
   return (
     <GroupPage>
       <PageContent>
         <span>사용할 기능을 선택하세요!</span>
         <FunctionList>
-          <FunctionButton
-            onClick={() => {
-              router.push(`/groups/${groupcode}/poll`);
-            }}
-          >
-            <TiTicket></TiTicket>
-            투표하기
-          </FunctionButton>
-          <FunctionButton>
-            <TiCalendar></TiCalendar>
-            약속잡기
-          </FunctionButton>
-          <FunctionButton>
-            <TiMessage></TiMessage>
-            채팅하기
-          </FunctionButton>
+          {isLoading ? (
+            <Loading></Loading>
+          ) : (
+            <>
+              <FunctionButton
+                onClick={() => {
+                  router.push(`/groups/${groupcode}/poll`);
+                }}
+              >
+                <TiTicket></TiTicket>
+                투표하기
+              </FunctionButton>
+              <FunctionButton>
+                <TiCalendar></TiCalendar>
+                약속잡기
+              </FunctionButton>
+              <FunctionButton>
+                <TiMessage></TiMessage>
+                채팅하기
+              </FunctionButton>
+            </>
+          )}
         </FunctionList>
       </PageContent>
     </GroupPage>

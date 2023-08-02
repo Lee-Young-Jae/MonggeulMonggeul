@@ -108,14 +108,20 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "가입된 모임이 아닙니다." });
     }
 
+    // 투표에 참여했는지 확인
     let isVoted = false;
-    existPoll.dataValues.PollSubjects.forEach((subject) => {
-      subject.dataValues.Votes.forEach((vote) => {
+    const isAnonymous = existPoll.isAnonymous;
+    existPoll.dataValues.PollSubjects.map((subject) => {
+      subject.dataValues.Votes.map((vote) => {
         if (vote.UserId === req.user.id) {
           isVoted = true;
         }
+        if (isAnonymous) {
+          vote.dataValues.User.name = "알 수 없음";
+        }
         return vote;
       });
+      return subject;
     });
 
     existPoll.dataValues.isVoted = isVoted;

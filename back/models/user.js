@@ -10,13 +10,17 @@ class User extends Model {
         },
         email: {
           type: DataTypes.STRING(40),
-          allowNull: false,
+          allowNull: true,
           unique: true,
         },
         kakaoId: {
           type: DataTypes.STRING(20),
           allowNull: false,
           unique: true,
+        },
+        profileImage: {
+          type: DataTypes.STRING(200),
+          allowNull: true,
         },
       },
       {

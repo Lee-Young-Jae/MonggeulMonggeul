@@ -43,7 +43,7 @@ type createPollResponse = Poll & {
 
 type createPollVoteRequest = {
   subjectId: number;
-  comment?: string | "";
+  comment?: string | "" | null;
 };
 
 type createPollVoteResponse = {
@@ -56,6 +56,18 @@ type createPollVoteMultipleRequest = {
   comments: string[];
 };
 
+type createPollVoteMultipleResponse = {
+  GroupId: number;
+  PollSubjects: subject[];
+  closedAt: string;
+  code: string;
+  createdAt: string;
+  id: number;
+  isAnonymous: boolean;
+  isMultiple: boolean;
+  title: string;
+};
+
 export type {
   Poll,
   createPollRequest,
@@ -63,6 +75,7 @@ export type {
   createPollVoteRequest,
   createPollVoteResponse,
   createPollVoteMultipleRequest,
+  createPollVoteMultipleResponse,
   Vote,
   subject,
 };

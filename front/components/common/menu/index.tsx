@@ -1,17 +1,15 @@
 import React, { useEffect, useState, memo } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { useRouter } from "next/router";
-import { groupAtom } from "@/recoil/state/groupstate";
-import { useRecoilState } from "recoil";
 import Link from "next/link";
-
 import { useGetUserGroups } from "@/hooks/queries/group/useGet";
-
 import useUserLogout from "@/hooks/common/useUserLogout";
 import Button from "../button";
 import MyGroupList from "./myGroupList";
 import { GoX } from "react-icons/go";
 import GroupActions from "./groupActions";
+import Image from "next/image";
+import anonymous from "@/assets/anonymous.png";
 
 const MenuCloseButtonWrapper = styled.div`
   position: absolute;
@@ -81,6 +79,29 @@ const MenuStyle = styled.div<MenuStyleProps>`
     `}
 `;
 
+const UserProfileGridStyle = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "profileImage profileName";
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+const UserProfileStyle = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  & > p {
+    margin-left: 10px;
+  }
+`;
+
+const ProfileImageStyle = styled(Image)`
+  border-radius: 50%;
+`;
+
 interface MenuProps {
   visiable: boolean;
   setVisiable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,9 +111,13 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
   const [animating, setAnimating] = useState(false);
   const [localVisible, setLocalVisible] = useState(visiable);
 
-  const { data: userGroups } = useGetUserGroups();
+  const { data: userGroups } = useGetUserGroups({
+    staleTime: 30000,
+  });
 
-  const [currentGroup, setCurrentGroup] = useRecoilState(groupAtom);
+  const currentGroup = userGroups?.find(
+    (group) => group.code === router.query.groupcode
+  );
 
   const handleLogout = useUserLogout();
 
@@ -114,6 +139,10 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
     return null;
   }
 
+  if (!currentGroup) {
+    return null;
+  }
+
   return (
     <MenuStyle visiable={!localVisible ? "true" : "false"}>
       <MenuCloseButtonWrapper
@@ -126,7 +155,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       </MenuCloseButtonWrapper>
 
       <MyGroupList
-        currentGroup={currentGroup.currentGroup}
+        currentGroup={currentGroup}
         userGroups={userGroups ? userGroups : []}
       ></MyGroupList>
 
@@ -145,8 +174,21 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       <div>약속잡기</div>
       <div>채팅하기</div>
       <HrStyle />
-      <h3>멤버 목록 ({currentGroup.currentGroup.Users.length}명)</h3>
-      <div>멤버 프로필</div>
+      <div>멤버 목록 ({currentGroup.Users.length})</div>
+      <UserProfileGridStyle>
+        {currentGroup.Users.map((member) => (
+          <UserProfileStyle key={member.id}>
+            <ProfileImageStyle
+              width={50}
+              height={50}
+              alt="프로필 이미지"
+              src={member.profileImage ? member.profileImage : anonymous}
+            />
+            <p>{member.name}</p>
+          </UserProfileStyle>
+        ))}
+      </UserProfileGridStyle>
+
       <HrStyle />
       <div>새로운 멤버 초대</div>
       <Button

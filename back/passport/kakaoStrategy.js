@@ -23,6 +23,8 @@ module.exports = () => {
               name: profile.displayName,
               email: profile._json && profile._json.kakao_account.email,
               kakaoId: profile.id,
+              profileImage:
+                profile._json && profile._json.properties.profile_image,
             });
 
             newUser.accessToken = accessToken;

@@ -1,6 +1,16 @@
 import { useMutation, QueryClient } from "@tanstack/react-query";
-import { createPoll, createPollVote } from "@/apis/poll.api";
-import { Poll, createPollResponse, createPollVoteResponse } from "@/types/poll";
+import {
+  createPoll,
+  createPollVote,
+  createPollVoteMultiple,
+} from "@/apis/poll.api";
+import {
+  Poll,
+  createPollResponse,
+  createPollVoteMultipleRequest,
+  createPollVoteResponse,
+  createPollVoteMultipleResponse,
+} from "@/types/poll";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
 
 const useCreatePoll = (
@@ -19,10 +29,27 @@ const useCreatePoll = (
 const useCreatePollVote = (
   mutationOptions?: UseCustomMutationOptions<createPollVoteResponse>
 ) => {
+  const queryClient = new QueryClient();
   return useMutation(createPollVote, {
     useErrorBoundary: true,
     ...mutationOptions,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["poll"]);
+    },
   });
 };
 
-export { useCreatePoll, useCreatePollVote };
+const useCreatePollVoteMultiple = (
+  mutationOptions?: UseCustomMutationOptions<createPollVoteMultipleResponse>
+) => {
+  const queryClient = new QueryClient();
+  return useMutation(createPollVoteMultiple, {
+    useErrorBoundary: true,
+    ...mutationOptions,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["poll", data.code]);
+    },
+  });
+};
+
+export { useCreatePoll, useCreatePollVote, useCreatePollVoteMultiple };

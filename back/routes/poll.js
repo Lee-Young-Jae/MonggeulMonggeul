@@ -100,7 +100,8 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
     }
 
     // 가입된 모임인지 확인
-    const existUserGroup = await existPoll.getGroup({
+    const existPollGroup = await existPoll.getGroup();
+    const existUserGroup = await existPollGroup.getUsers({
       where: { id: req.user.id },
     });
 

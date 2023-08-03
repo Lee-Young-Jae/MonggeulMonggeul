@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import { useGetPoll } from "@/hooks/queries/poll/useGet";
@@ -7,7 +7,8 @@ import Loading from "@/components/common/loading";
 import { HrStyle } from "@/components/common/menu";
 import { getDateString } from "@/utills/common";
 import Button from "@/components/common/button";
-import { subject } from "@/types/poll";
+import { Poll, subject } from "@/types/poll";
+import Modal from "@/components/common/modal";
 
 const PollTitleStyle = styled.div`
   font-size: 1.5rem;
@@ -47,11 +48,17 @@ const Grow = (width: number) => keyframes`
   }
 `;
 
-const VoteItemStyle = styled.div<VoteItemProps>`
+const VoteItemStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+const VoteProgressBarStyle = styled.div<VoteItemProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
   padding: 0.5rem;
   border-radius: 14px;
   position: relative;
@@ -87,6 +94,25 @@ const VoteItemStyle = styled.div<VoteItemProps>`
   }
 `;
 
+const VoteCommentStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  position: relative;
+
+  & > div {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
 const ClosedAtStyle = styled.p`
   font-size: 1rem;
   color: #999;
@@ -95,6 +121,9 @@ const ClosedAtStyle = styled.p`
 
 const VoteResult = () => {
   const router = useRouter();
+
+  const [openCommentIdModal, setOpenCommentIdModal] =
+    useState<Poll["id"]>(Infinity);
 
   const { data: poll, isLoading } = useGetPoll(router.query.vote as string, {
     enabled: !!router.isReady,
@@ -121,6 +150,14 @@ const VoteResult = () => {
     0
   );
 
+  const isAnonymous = poll?.isAnonymous;
+
+  const modalHandler = (subjectId: number) => {
+    if (subjectId) {
+      setOpenCommentIdModal(Number(subjectId));
+    }
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -144,8 +181,11 @@ const VoteResult = () => {
             </p>
             {poll?.PollSubjects.map((subject) => {
               return (
-                <div key={subject.id}>
-                  <VoteItemStyle
+                <VoteItemStyle key={subject.id}>
+                  <VoteProgressBarStyle
+                    onClick={() => {
+                      if (subject.Votes.length > 0) modalHandler(subject.id);
+                    }}
                     current_vote_count={currentVoteCount as number}
                     current_max_selected_subject_count={
                       currentMaxSelectedSubjectCount as number
@@ -156,16 +196,38 @@ const VoteResult = () => {
                       <p>{subject.title}</p>
                       <p>{subject.Votes.length}표</p>
                     </div>
-                  </VoteItemStyle>
-                  {subject.Votes.map((vote) => {
-                    return (
-                      <div key={vote.id}>
-                        <div>{vote.User.name}</div>
-                        {vote.comment && <div>{vote.comment}</div>}
-                      </div>
-                    );
-                  })}
-                </div>
+                  </VoteProgressBarStyle>
+
+                  {openCommentIdModal === subject.id && isAnonymous ? (
+                    <Modal
+                      visible={openCommentIdModal === subject.id}
+                      onClose={() => setOpenCommentIdModal(Infinity)}
+                    >
+                      {subject.Votes.map((vote) => {
+                        return (
+                          <VoteCommentStyle key={vote.id}>
+                            <div>익명</div>
+                            <p>{vote.comment}</p>
+                          </VoteCommentStyle>
+                        );
+                      })}
+                    </Modal>
+                  ) : openCommentIdModal === subject.id ? (
+                    <Modal
+                      visible={openCommentIdModal === subject.id}
+                      onClose={() => setOpenCommentIdModal(Infinity)}
+                    >
+                      {subject.Votes.map((vote) => {
+                        return (
+                          <VoteCommentStyle key={vote.id}>
+                            <div>{vote.User.name}</div>
+                            <p>{vote.comment}</p>
+                          </VoteCommentStyle>
+                        );
+                      })}
+                    </Modal>
+                  ) : null}
+                </VoteItemStyle>
               );
             })}
           </div>

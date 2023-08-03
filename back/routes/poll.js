@@ -108,17 +108,30 @@ router.get("/detail/:pollCode", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "가입된 모임이 아닙니다." });
     }
 
-    // 투표에 참여했는지 확인
+    // 1. 투표에 참여했는지 확인
+    // 2. 탈퇴한 회원이면 이름을 탈퇴한 회원으로 표시
     let isVoted = false;
+    let isLeave = false;
     const isAnonymous = existPoll.isAnonymous;
     existPoll.dataValues.PollSubjects.map((subject) => {
       subject.dataValues.Votes.map((vote) => {
         if (vote.UserId === req.user.id) {
           isVoted = true;
         }
-        if (isAnonymous) {
-          vote.dataValues.User.name = "알 수 없음";
+
+        if (vote.dataValues.User === null) {
+          vote.dataValues.User = {
+            name: "탈퇴한 회원",
+            email: "탈퇴한 회원",
+            id: 0,
+          };
+          isLeave = true;
         }
+
+        if (isAnonymous) {
+          vote.dataValues.User.name = isLeave ? "탈퇴한 회원" : "알 수 없음";
+        }
+
         return vote;
       });
       return subject;

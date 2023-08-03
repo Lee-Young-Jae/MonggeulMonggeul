@@ -8,8 +8,7 @@ import Button from "../button";
 import MyGroupList from "./myGroupList";
 import { GoX } from "react-icons/go";
 import GroupActions from "./groupActions";
-import Image from "next/image";
-import anonymous from "@/assets/anonymous.png";
+import UsersProfile from "./components/UsersProfile";
 
 const MenuCloseButtonWrapper = styled.div`
   position: absolute;
@@ -79,29 +78,6 @@ const MenuStyle = styled.div<MenuStyleProps>`
     `}
 `;
 
-const UserProfileGridStyle = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: "profileImage profileName";
-  width: 100%;
-  margin-bottom: 10px;
-`;
-
-const UserProfileStyle = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  & > p {
-    margin-left: 10px;
-  }
-`;
-
-const ProfileImageStyle = styled(Image)`
-  border-radius: 50%;
-`;
-
 interface MenuProps {
   visiable: boolean;
   setVisiable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -162,7 +138,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       <GroupActions />
 
       <HrStyle />
-      <h3>기능</h3>
+      <h2>기능</h2>
       <FunctionLinkStyle
         href={{
           pathname: `/groups/${router.query.groupcode}/poll`,
@@ -174,21 +150,8 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       <div>약속잡기</div>
       <div>채팅하기</div>
       <HrStyle />
-      <div>멤버 목록 ({currentGroup.Users.length})</div>
-      <UserProfileGridStyle>
-        {currentGroup.Users.map((member) => (
-          <UserProfileStyle key={member.id}>
-            <ProfileImageStyle
-              width={50}
-              height={50}
-              alt="프로필 이미지"
-              src={member.profileImage ? member.profileImage : anonymous}
-            />
-            <p>{member.name}</p>
-          </UserProfileStyle>
-        ))}
-      </UserProfileGridStyle>
-
+      <h2>멤버 목록 ({currentGroup.Users.length})</h2>
+      <UsersProfile currentGroup={currentGroup} />
       <HrStyle />
       <div>새로운 멤버 초대</div>
       <Button

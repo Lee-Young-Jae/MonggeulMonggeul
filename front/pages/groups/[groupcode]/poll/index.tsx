@@ -19,6 +19,7 @@ const PollList = styled.div`
 `;
 
 const PollCreateTitle = styled.h1`
+  text-align: center;
   font-size: 1.5rem;
   margin-bottom: 1rem;
 `;
@@ -33,6 +34,8 @@ const PollPage = () => {
   const { data: currentGroup } = useGetGroup(router.query.groupcode as string, {
     enabled: !!router.isReady,
   });
+
+  const isPollExist = polls?.length !== 0;
 
   if (!router.isReady) return <Loading />;
 
@@ -49,28 +52,32 @@ const PollPage = () => {
             투표 생성하기
           </Button>
         </div>
-        <div>
-          <span>첫 투표를 만들어보세요!</span>
-        </div>
-        <PollList>
-          {polls?.map((poll) => {
-            return (
-              <PollItem
-                key={poll.id}
-                title={poll.title}
-                closedAt={poll.closedAt}
-                PollSubjects={poll.PollSubjects}
-                isAnonymous={poll.isAnonymous}
-                isMultiple={poll.isMultiple}
-                createdAt={poll.createdAt}
-                id={poll.id}
-                code={poll.code}
-                isVoted={poll.isVoted}
-                userCount={currentGroup?.Users.length || 0}
-              ></PollItem>
-            );
-          })}
-        </PollList>
+
+        {isPollExist ? (
+          <PollList>
+            {polls?.map((poll) => {
+              return (
+                <PollItem
+                  key={poll.id}
+                  title={poll.title}
+                  closedAt={poll.closedAt}
+                  PollSubjects={poll.PollSubjects}
+                  isAnonymous={poll.isAnonymous}
+                  isMultiple={poll.isMultiple}
+                  createdAt={poll.createdAt}
+                  id={poll.id}
+                  code={poll.code}
+                  isVoted={poll.isVoted}
+                  userCount={currentGroup?.Users.length || 0}
+                ></PollItem>
+              );
+            })}
+          </PollList>
+        ) : (
+          <div>
+            <span>첫 투표를 만들어보세요!</span>
+          </div>
+        )}
       </PageContent>
     </GroupPage>
   );

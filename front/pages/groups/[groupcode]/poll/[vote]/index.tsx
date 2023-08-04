@@ -103,6 +103,7 @@ const Vote = () => {
   const isOver = new Date(poll?.closedAt as string) < new Date();
 
   const vote = useCallback(() => {
+    // 유효성 검증
     if (isMultiple) {
       if (selectedSubjectList.length === 0) {
         alert("투표할 항목을 선택해주세요.");
@@ -116,6 +117,10 @@ const Vote = () => {
     }
     if (selectedSubject === "") {
       alert("투표할 항목을 선택해주세요.");
+      return;
+    }
+    if (subjectComment.length > 100) {
+      alert("100자 이내로 입력해주세요.");
       return;
     }
     voteMutate({
@@ -244,14 +249,6 @@ const Vote = () => {
               {isOver ? "마감된 투표입니다" : "투표하기"}
             </Button>
           </VoteStyle>
-          <Button
-            onClick={() => {
-              console.log(selectedSubjectList, "subjectList");
-              console.log(subjectCommentList, "subjectCommentList");
-            }}
-          >
-            현재 상태를 확인합니다.
-          </Button>
         </PageContent>
       </GroupPage>
     );

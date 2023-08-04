@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Loading from "@/components/common/loading";
 import Button from "@/components/common/button";
-import VoteResultItemList from "./component/voteResultItemList";
+import VoteResultItemList from "./components/voteResultItemList";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import { useGetPoll } from "@/hooks/queries/poll/useGet";
 import { useRouter } from "next/router";

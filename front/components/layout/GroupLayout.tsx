@@ -7,6 +7,7 @@ const GroupPageStyle = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100vh;
+  height: 100dvh; /* for desktop */
   background-color: white;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 10px;

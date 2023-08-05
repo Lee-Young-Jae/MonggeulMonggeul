@@ -41,10 +41,13 @@ const ClosedAtStyle = styled.p`
 const VoteResult = () => {
   const router = useRouter();
 
-  const { data: poll, isLoading } = useGetPoll(router.query.vote as string, {
-    enabled: !!router.isReady,
-    staleTime: 0,
-  });
+  const { data: poll, isLoading } = useGetPoll(
+    router.query.votecode as string,
+    {
+      enabled: !!router.isReady,
+      staleTime: 0,
+    }
+  );
 
   const isOver = new Date(poll?.closedAt as string) < new Date();
 
@@ -78,7 +81,7 @@ const VoteResult = () => {
             <Button
               onClick={() => {
                 router.push(
-                  `/groups/${router.query.groupcode}/poll/${router.query.vote}`
+                  `/groups/${router.query.groupcode}/poll/${router.query.votecode}`
                 );
               }}
             >

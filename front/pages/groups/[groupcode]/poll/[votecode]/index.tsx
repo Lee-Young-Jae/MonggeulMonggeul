@@ -84,7 +84,7 @@ const Vote = () => {
     data: poll,
     isLoading,
     isSuccess: isSuccessGetPoll,
-  } = useGetPoll(router.query.vote as string, {
+  } = useGetPoll(router.query.votecode as string, {
     enabled: !!router.isReady,
   });
 

@@ -12,8 +12,6 @@ import {
 import { useGetPoll } from "@/hooks/queries/poll/useGet";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
-import CheckList from "@/components/common/checkList";
-import CheckboxGroup from "@/components/common/checkList/checkboxGroup";
 import styled, { keyframes } from "styled-components";
 import { getDateString } from "@/utills/common";
 import MultipleVote from "./components/multipleVote";
@@ -25,10 +23,9 @@ interface ProgressProps {
   created_at: Date;
 }
 
-const VoteSelectStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+const TitleStyle = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 700;
   margin-bottom: 1rem;
 `;
 
@@ -181,10 +178,7 @@ const Vote = () => {
       <GroupPage>
         <PageContent>
           <VoteStyle>
-            <h1>임시 id:{poll.id}</h1>
-            <h1>Title: {poll.title}</h1>
-            <span>시작일: {getDateString(new Date(poll.createdAt))}</span>
-            <span>마감시간: {getDateString(new Date(poll.closedAt))}</span>
+            <TitleStyle>{poll.title}</TitleStyle>
             <ProgressBarStyle>
               <ProgressStyle
                 created_at={new Date(poll.createdAt)}
@@ -192,9 +186,11 @@ const Vote = () => {
                 closed_at={new Date(poll.closedAt)}
               ></ProgressStyle>
             </ProgressBarStyle>
-            <p>{poll.isAnonymous ? "무기명 투표" : "기명 투표"}</p>
+            <span>시작일: {getDateString(new Date(poll.createdAt))}</span>
+            <span>마감시간: {getDateString(new Date(poll.closedAt))}</span>
+            {poll.isAnonymous ? "투표는 비밀이에요" : "투표는 공개에요"}
+
             {/* <h1>createdAt: {poll.createdAt}</h1> */}
-            <h1>공유하기 코드 : {poll.code}</h1>
 
             {isMultiple ? (
               <MultipleVote

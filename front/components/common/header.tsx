@@ -47,6 +47,7 @@ const Header = () => {
 
   const { data: group } = useGetGroup(router.query.groupcode as string, {
     enabled: !!router.isReady,
+    staleTime: 10000,
   });
 
   const pushToGroupPage = () => {

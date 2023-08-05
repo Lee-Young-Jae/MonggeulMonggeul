@@ -16,6 +16,8 @@ import CheckList from "@/components/common/checkList";
 import CheckboxGroup from "@/components/common/checkList/checkboxGroup";
 import styled, { keyframes } from "styled-components";
 import { getDateString } from "@/utills/common";
+import MultipleVote from "./components/multipleVote";
+import SingleVote from "./components/singleVote";
 
 interface ProgressProps {
   current_date: Date;
@@ -195,56 +197,22 @@ const Vote = () => {
             <h1>공유하기 코드 : {poll.code}</h1>
 
             {isMultiple ? (
-              <CheckboxGroup label="체크박스 테스트">
-                {poll.PollSubjects.map((subject) => {
-                  return (
-                    <VoteSelectStyle key={subject.id}>
-                      <CheckList
-                        value={subject.id.toString()}
-                        handler={handleCheckboxSubject}
-                      >
-                        {subject.title}
-                      </CheckList>
-                      {selectedSubjectList.includes(subject.id.toString()) && (
-                        <Input
-                          width="l"
-                          value={subjectCommentList[subject.id]}
-                          name={subject.id.toString()}
-                          onChange={handleSubjectComment}
-                          placeholder={`${subject.title}에 대한 의견이 있나요?`}
-                        ></Input>
-                      )}
-                    </VoteSelectStyle>
-                  );
-                })}
-              </CheckboxGroup>
+              <MultipleVote
+                poll={poll}
+                selectedSubjectList={selectedSubjectList}
+                subjectCommentList={subjectCommentList}
+                handleCheckboxSubject={handleCheckboxSubject}
+                handleSubjectComment={handleSubjectComment}
+              />
             ) : (
-              <RadioGroup label="고르세용~" flex_direction="column">
-                {poll.PollSubjects.map((subject) => {
-                  return (
-                    <VoteSelectStyle key={subject.id}>
-                      <Radio
-                        name={poll.id.toString()}
-                        value={subject.id.toString()}
-                        onChange={handleRadioSubject}
-                      >
-                        {subject.title}
-                      </Radio>
-                      {selectedSubject === subject.id.toString() && (
-                        <Input
-                          width="l"
-                          value={subjectComment}
-                          name={subject.id.toString()}
-                          onChange={subjectCommentHandler}
-                          placeholder={`${subject.title}에 대한 의견이 있나요?`}
-                        ></Input>
-                      )}
-                    </VoteSelectStyle>
-                  );
-                })}
-              </RadioGroup>
+              <SingleVote
+                poll={poll}
+                selectedSubject={selectedSubject}
+                subjectComment={subjectComment}
+                handleRadioSubject={handleRadioSubject}
+                subjectCommentHandler={subjectCommentHandler}
+              />
             )}
-
             <Button disabled={isOver} onClick={vote}>
               {isOver ? "마감된 투표입니다" : "투표하기"}
             </Button>

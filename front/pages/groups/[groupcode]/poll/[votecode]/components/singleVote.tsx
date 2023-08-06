@@ -29,7 +29,7 @@ const SingleVote = ({
   subjectCommentHandler,
 }: SingleVoteProps) => {
   return (
-    <RadioGroup label="고르세용~" flex_direction="column">
+    <RadioGroup label="하나의 항목 투표" flex_direction="column">
       {poll.PollSubjects.map((subject) => {
         return (
           <VoteSelectStyle key={subject.id}>

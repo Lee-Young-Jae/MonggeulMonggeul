@@ -28,7 +28,7 @@ const MultipleVote = ({
   handleSubjectComment,
 }: MultipleVoteProps) => {
   return (
-    <CheckboxGroup label="체크박스 테스트">
+    <CheckboxGroup label="여러 항목 투표">
       {poll.PollSubjects.map((subject) => {
         return (
           <VoteSelectStyle key={subject.id}>

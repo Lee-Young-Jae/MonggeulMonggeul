@@ -16,6 +16,7 @@ export const useLeaveGroup = (
   return useMutation<Group, ErrorResponse, string>(leaveGroup, {
     onSuccess: (data) => {
       queryClient.invalidateQueries(["Group", data.code]);
+      queryClient.invalidateQueries(["UserGroups"]);
     },
     ...MutationOptions,
   });

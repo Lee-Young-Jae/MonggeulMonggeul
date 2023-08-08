@@ -10,26 +10,36 @@ const FunctionList = styled.div`
   box-sizing: border-box;
   padding: 5%;
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 `;
 
 const FunctionButton = styled.button`
-  width: 100%;
-  height: 100%;
-  margin-top: 20px;
+  width: 80%;
+  height: 150px;
   border: none;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
   background-color: white;
   border-radius: 14px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  font-family: "omyuPretty", sans-serif;
+  // font gradient
+  transition: 0.2s;
+
+  &:hover {
+    background: linear-gradient(
+      40deg,
+      rgba(244, 53, 108, 0.01) 0%,
+      rgba(255, 0, 0, 0.03) 50%,
+      rgba(255, 154, 0, 0.01) 100%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  }
 `;
 
 const Group = () => {
@@ -58,15 +68,19 @@ const Group = () => {
                   router.push(`/groups/${groupcode}/poll`);
                 }}
               >
-                <TiTicket></TiTicket>
+                <TiTicket size={80} color="#F4356C" />
                 투표하기
               </FunctionButton>
-              <FunctionButton>
-                <TiCalendar></TiCalendar>
+              <FunctionButton
+                onClick={() => {
+                  router.push(`/groups/${groupcode}/appointment`);
+                }}
+              >
+                <TiCalendar size={80} color="#F4356C" />
                 약속잡기
               </FunctionButton>
               <FunctionButton>
-                <TiMessage></TiMessage>
+                <TiMessage size={80} color="#F4356C" />
                 채팅하기
               </FunctionButton>
             </>

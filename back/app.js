@@ -6,6 +6,7 @@ const app = express();
 const groupRouter = require("./routes/group");
 const authRouter = require("./routes/auth");
 const pollRouter = require("./routes/poll");
+const appointmentRouter = require("./routes/appointment");
 
 const port = 3010;
 const cors = require("cors");
@@ -42,6 +43,7 @@ app.use(passport.session()); // passport 세션 연결
 app.use("/group", groupRouter);
 app.use("/auth", authRouter);
 app.use("/poll", pollRouter);
+app.use("/appointment", appointmentRouter);
 
 // 데이터베이스 연결
 require("./models")

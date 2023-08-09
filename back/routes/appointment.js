@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Group, User } = require("../models");
+const { Group, User, Appointment } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const { generateRandomCode } = require("../utils/common");
 
@@ -41,7 +41,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 router.post("/", isLoggedIn, async (req, res) => {
   try {
     const {
-      groupCode,
+      group_code,
       title,
       sub_title,
       start_date,
@@ -53,7 +53,7 @@ router.post("/", isLoggedIn, async (req, res) => {
     } = req.body;
 
     const existGroup = await Group.findOne({
-      where: { code: groupCode },
+      where: { code: group_code },
     });
     if (!existGroup) {
       return res.status(404).json({ message: "모임을 찾을 수 없습니다." });
@@ -74,24 +74,26 @@ router.post("/", isLoggedIn, async (req, res) => {
     }
 
     let code = generateRandomCode(
-      groupCode + title + new Date().getTime().toString(),
+      group_code + title + new Date().getTime().toString(),
       11
     );
 
-    console.log(code);
-
-    const existCode = await existGroup.getAppointments({
+    let existCode = await Appointment.findOne({
       where: { code },
     });
 
-    while (existCode.length > 0) {
+    while (existCode) {
       code = generateRandomCode(
         groupCode + title + new Date().getTime().toString(),
         11
       );
+
+      existCode = await Appointment.findOne({
+        where: { code },
+      });
     }
 
-    const createdAppointment = await existGroup.createAppointment({
+    const createdAppointment = await Appointment.create({
       title,
       sub_title,
       start_date,
@@ -101,8 +103,9 @@ router.post("/", isLoggedIn, async (req, res) => {
       deadline,
       duration_minutes,
       code,
+      status: "진행중",
       hostId: req.user.id,
-      groupCode: groupCode,
+      groupCode: group_code,
     });
 
     if (!createdAppointment) {

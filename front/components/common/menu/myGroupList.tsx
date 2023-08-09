@@ -2,7 +2,6 @@ import { Group } from "@/types/group";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
-import Modal from "../modal";
 
 const Title = styled.p`
   margin-bottom: 1rem;

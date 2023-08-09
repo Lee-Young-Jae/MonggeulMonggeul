@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { GoX } from "react-icons/go";
+import { createPortal } from "react-dom";
 
 const ModalWrapper = styled.div<{ visible: "true" | "false" }>`
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -14,6 +15,7 @@ const ModalWrapper = styled.div<{ visible: "true" | "false" }>`
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(2px);
+  font-family: "omyuPretty", sans-serif;
 `;
 
 const ModalFadeIn = keyframes`
@@ -66,7 +68,7 @@ const Modal = ({
   onConfirm,
   closeBtn,
 }: ModalProps) => {
-  return (
+  return createPortal(
     <>
       <ModalWrapper
         visible={visible ? "true" : "false"}
@@ -87,7 +89,8 @@ const Modal = ({
           {children}
         </ModalInner>
       </ModalWrapper>
-    </>
+    </>,
+    document.body
   );
 };
 

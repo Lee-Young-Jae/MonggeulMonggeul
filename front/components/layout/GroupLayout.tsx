@@ -3,9 +3,6 @@ import Header from "../common/header";
 import NavigationBar from "../common/navigationBar";
 
 const GroupPageStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   height: 100vh;
   height: 100dvh; /* for desktop */
   background-color: white;
@@ -14,12 +11,15 @@ const GroupPageStyle = styled.div`
   width: 100%;
   perspective: 1px;
   overflow: hidden;
+  padding-bottom: 10%;
 `;
 
 const PageContentStyle = styled.div`
   background-color: #f5f5f5;
   padding-top: 20px;
   padding-bottom: 100px;
+  padding-left: 40px;
+  padding-right: 40px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;

@@ -8,15 +8,15 @@ import Loading from "@/components/common/loading";
 
 const FunctionList = styled.div`
   box-sizing: border-box;
-  padding: 5%;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  margin-top: 2rem;
 `;
 
 const FunctionButton = styled.button`
-  width: 80%;
-  height: 150px;
+  width: 95%;
+  height: 125px;
   border: none;
   cursor: pointer;
   display: flex;

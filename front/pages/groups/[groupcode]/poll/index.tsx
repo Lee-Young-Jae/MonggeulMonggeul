@@ -14,8 +14,8 @@ const PollList = styled.div`
   flex-flow: wrap;
   gap: 2%;
   box-sizing: border-box;
-  padding: 1rem;
   width: 100%;
+  margin: 1rem 0;
 `;
 
 const PollCreateTitle = styled.h1`

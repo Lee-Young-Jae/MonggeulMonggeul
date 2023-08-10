@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { SetStateAction, useState, Dispatch } from "react";
 
 const StyledContainer = styled.div`
+  box-sizing: border-box;
   width: 100%;
-  max-width: 300px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 10px;

@@ -29,6 +29,13 @@ const DurationContainer = styled.div`
   align-items: center;
 `;
 
+const AppointmentSubTitle = styled.label`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin-top: 20px;
+`;
+
 const now_utc = Date.now();
 const timeOff = new Date().getTimezoneOffset() * 60000;
 const [today] = new Date(now_utc - timeOff).toISOString().split("T");
@@ -148,11 +155,11 @@ const AppointmentCreate = () => {
         ></Calendar>
 
         <AppointmentCreateContainer>
-          <label>제목</label>
+          <AppointmentSubTitle>제목</AppointmentSubTitle>
           <Input value={title} onChange={onChangeTitle}></Input>
-          <label>부제목</label>
+          <AppointmentSubTitle>부제목</AppointmentSubTitle>
           <Input value={subTitle} onChange={onChangeSubTitle}></Input>
-          <label>진행 시간 설정</label>
+          <AppointmentSubTitle>진행 시간 설정</AppointmentSubTitle>
           <DurationContainer>
             <SelectBox<number>
               value={duration.hours}
@@ -166,21 +173,22 @@ const AppointmentCreate = () => {
               value={duration.hours}
               onChange={(e) => {
                 setDuration({ ...duration, minutes: ~~e.target.value });
+                console.log(duration);
               }}
               options={[0, 30]}
             ></SelectBox>
             <span>분</span>
           </DurationContainer>
 
-          <label>시작 시간</label>
+          <AppointmentSubTitle>시작 시간</AppointmentSubTitle>
           <Input
             value={startTime}
             onChange={onChangeStartTime}
             type="time"
           ></Input>
-          <label>종료 시간</label>
+          <AppointmentSubTitle>종료 시간</AppointmentSubTitle>
           <Input value={endTime} onChange={onChangeEndTime} type="time"></Input>
-          <label>마감날짜</label>
+          <AppointmentSubTitle>마감날짜</AppointmentSubTitle>
           <Input
             value={deadLine}
             onChange={(e) => {

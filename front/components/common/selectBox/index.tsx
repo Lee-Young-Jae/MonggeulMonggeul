@@ -2,10 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledSelectBox = styled.select`
+  /* appearance: none; */
   width: 100%;
   height: 40px;
   border: none;
   border-radius: 14px;
+  text-align: center;
 
   &:focus {
     outline: none;
@@ -30,13 +32,13 @@ const StyledSelectBox = styled.select`
   }
 `;
 
-const SelectBox = ({
+const SelectBox = <ValueType extends string | number>({
   options,
   value,
   onChange,
 }: {
-  options: string[];
-  value: string;
+  options: ValueType[];
+  value: ValueType;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
   return (

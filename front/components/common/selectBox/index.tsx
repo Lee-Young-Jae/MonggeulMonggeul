@@ -4,10 +4,10 @@ import styled from "styled-components";
 const StyledSelectBox = styled.select`
   /* appearance: none; */
   width: 100%;
-  height: 40px;
   border: none;
   border-radius: 14px;
   text-align: center;
+  height: 34.667px; // Input height: 34.667px;
 
   &:focus {
     outline: none;

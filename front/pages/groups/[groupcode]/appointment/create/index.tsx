@@ -16,11 +16,10 @@ const AppointmentCreateContainer = styled.div`
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  margin: 40px;
   width: 100%;
   background-color: #ffffff;
   border-radius: 14px;
-  padding: 14px;
+  padding: 2rem;
 `;
 
 const DurationContainer = styled.div`
@@ -29,11 +28,24 @@ const DurationContainer = styled.div`
   align-items: center;
 `;
 
+const SelectBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  border: 1px solid #f8c6d2;
+  border-radius: 14px;
+`;
+
 const AppointmentSubTitle = styled.label`
+  display: inline-block;
+  width: 100%;
+  text-align: left;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
   margin-top: 20px;
+  margin-bottom: 5px;
 `;
 
 const now_utc = Date.now();
@@ -58,7 +70,7 @@ const AppointmentCreate = () => {
 
   const router = useRouter();
 
-  const { mutate: createAppointment } = useCreateAppointment();
+  const { mutate: createAppointment, isSuccess } = useCreateAppointment();
 
   const onSubmit = () => {
     if (title === "") {
@@ -82,7 +94,6 @@ const AppointmentCreate = () => {
     }
 
     if (startTime > endTime) {
-      console.log(startTime, endTime);
       alert("시작 시간이 종료 시간보다 늦습니다");
       return;
     }
@@ -112,21 +123,23 @@ const AppointmentCreate = () => {
       return;
     }
 
-    console.log(
-      router.query.groupcode as string,
-      title,
-      subTitle,
-      startDate,
-      "startDate",
-      endDate,
-      "endDate",
-      startTime,
-      "startTime",
-      endTime,
-      "endTime",
-      deadLine,
-      "deadLine"
-    );
+    // 진행 시간이 종료시간 - 시작시간 보다 길면 안됨
+    // 임의의 2000년 1월 1일을 기준으로 시작시간과 종료시간을 비교
+    const start = new Date(`2000-01-01 ${startTime}`);
+    const end = new Date(`2000-01-01 ${endTime}`);
+    const diffStartEnd = end.getTime() - start.getTime();
+    const durationTime =
+      duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000;
+
+    if (diffStartEnd < durationTime) {
+      alert("진행 시간이 종료 시간 - 시작 시간보다 길 수 없습니다");
+      return;
+    }
+
+    if (duration.hours === 0 && duration.minutes === 0) {
+      alert("진행 시간을 설정해주세요");
+      return;
+    }
 
     createAppointment({
       group_code: router.query.groupcode as string,
@@ -140,6 +153,10 @@ const AppointmentCreate = () => {
       duration_minutes: duration?.hours * 60 + duration?.minutes,
     });
   };
+
+  if (isSuccess) {
+    router.push(`/groups/${router.query.groupcode}/appointment`);
+  }
 
   return (
     <GroupPage>
@@ -161,23 +178,27 @@ const AppointmentCreate = () => {
           <Input value={subTitle} onChange={onChangeSubTitle}></Input>
           <AppointmentSubTitle>진행 시간 설정</AppointmentSubTitle>
           <DurationContainer>
-            <SelectBox<number>
-              value={duration.hours}
-              onChange={(e) => {
-                setDuration({ ...duration, hours: ~~e.target.value });
-              }}
-              options={new Array(23).fill(0).map((_, index) => index)}
-            ></SelectBox>
-            <span>시간</span>
-            <SelectBox<number>
-              value={duration.hours}
-              onChange={(e) => {
-                setDuration({ ...duration, minutes: ~~e.target.value });
-                console.log(duration);
-              }}
-              options={[0, 30]}
-            ></SelectBox>
-            <span>분</span>
+            <SelectBoxWrapper>
+              <SelectBox<number>
+                value={duration.hours}
+                onChange={(e) => {
+                  setDuration({ ...duration, hours: ~~e.target.value });
+                }}
+                options={new Array(23).fill(0).map((_, index) => index)}
+              ></SelectBox>
+            </SelectBoxWrapper>
+            <p>시간</p>
+            <SelectBoxWrapper>
+              <SelectBox<number>
+                value={duration.minutes}
+                onChange={(e) => {
+                  setDuration({ ...duration, minutes: ~~e.target.value });
+                  console.log(duration);
+                }}
+                options={[0, 30]}
+              ></SelectBox>
+            </SelectBoxWrapper>
+            <p>분 동안</p>
           </DurationContainer>
 
           <AppointmentSubTitle>시작 시간</AppointmentSubTitle>

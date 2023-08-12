@@ -8,10 +8,10 @@ const GroupPageStyle = styled.div`
   background-color: white;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  width: 100%;
   perspective: 1px;
   overflow: hidden;
-  padding-bottom: 10%;
+  box-sizing: border-box;
+  padding-bottom: 10vh;
 `;
 
 const PageContentStyle = styled.div`
@@ -25,7 +25,6 @@ const PageContentStyle = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {

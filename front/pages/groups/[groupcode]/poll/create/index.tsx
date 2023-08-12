@@ -16,10 +16,8 @@ const PollCreateForm = styled.div`
   flex-direction: column;
   background-color: white;
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
+  border-radius: 14px;
   padding: 1rem;
-  width: 80%;
-  margin-bottom: 1rem;
 `;
 
 const PollCreateTitleInput = styled.input`

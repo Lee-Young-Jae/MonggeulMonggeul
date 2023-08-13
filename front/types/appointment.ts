@@ -9,12 +9,13 @@ type Appointment = {
   start_time: string;
   end_time: string;
   code: string;
-  status: string;
+  status: "진행중" | "완료";
   deadline: Date;
   duration_minutes: number;
   created_at: Date;
   group_code: string;
   host_id: number;
+  isHost?: boolean;
 };
 
 type createAppointmentRequest = Pick<

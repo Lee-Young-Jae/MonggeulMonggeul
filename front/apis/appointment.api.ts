@@ -19,3 +19,10 @@ export const createAppointment = async (
   );
   return response.data;
 };
+
+export const deleteAppointment = async (
+  code: Appointment["code"]
+): Promise<void> => {
+  const response = await axiosInstance.delete(`/appointment/${code}`);
+  return response.data;
+};

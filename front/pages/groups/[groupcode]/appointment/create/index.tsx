@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import styled from "styled-components";
 import Calendar from "@/components/common/calendar";
@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/button";
 import SelectBox from "@/components/common/selectBox";
+import { QueryClient } from "@tanstack/react-query";
 
 const AppointmentCreateContainer = styled.div`
   margin-top: 20px;
@@ -50,10 +51,10 @@ const AppointmentSubTitle = styled.label`
 
 const now_utc = Date.now();
 const timeOff = new Date().getTimezoneOffset() * 60000;
-const [today] = new Date(now_utc - timeOff).toISOString().split("T");
 const after7days = new Date(now_utc - timeOff + 7 * 24 * 60 * 60 * 1000)
   .toISOString()
-  .split("T")[0];
+  .split(".")[0];
+
 const AppointmentCreate = () => {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -70,7 +71,14 @@ const AppointmentCreate = () => {
 
   const router = useRouter();
 
-  const { mutate: createAppointment, isSuccess } = useCreateAppointment();
+  const { mutate: createAppointment } = useCreateAppointment({
+    onSuccess: () => {
+      const queryClient = new QueryClient();
+      queryClient.invalidateQueries(["Appointments"]);
+      alert("약속이 생성되었습니다");
+      router.push(`/groups/${router.query.groupcode}/appointment`);
+    },
+  });
 
   const onSubmit = () => {
     if (title === "") {
@@ -93,10 +101,11 @@ const AppointmentCreate = () => {
       return;
     }
 
-    if (startTime > endTime) {
-      alert("시작 시간이 종료 시간보다 늦습니다");
-      return;
-    }
+    // TODO: 종료 시간은 항상 시작 시간보다 늦어야 함
+    /**
+     *  1. 만약 시작 시간이 오후 11시 종료 시간이 오전 1시라면 종료 시간은 다음날이라고 가정
+     *
+     */
 
     if (deadLine === "") {
       alert("마감 시간을 입력해주세요");
@@ -115,11 +124,6 @@ const AppointmentCreate = () => {
 
     if (endDate === "") {
       alert("종료 날짜를 선택해주세요");
-      return;
-    }
-
-    if (startDate > endDate) {
-      alert("시작 날짜가 종료 날짜보다 늦습니다");
       return;
     }
 
@@ -153,10 +157,6 @@ const AppointmentCreate = () => {
       duration_minutes: duration?.hours * 60 + duration?.minutes,
     });
   };
-
-  if (isSuccess) {
-    router.push(`/groups/${router.query.groupcode}/appointment`);
-  }
 
   return (
     <GroupPage>
@@ -193,7 +193,6 @@ const AppointmentCreate = () => {
                 value={duration.minutes}
                 onChange={(e) => {
                   setDuration({ ...duration, minutes: ~~e.target.value });
-                  console.log(duration);
                 }}
                 options={[0, 30]}
               ></SelectBox>
@@ -210,16 +209,16 @@ const AppointmentCreate = () => {
           <AppointmentSubTitle>종료 시간</AppointmentSubTitle>
           <Input value={endTime} onChange={onChangeEndTime} type="time"></Input>
           <AppointmentSubTitle>마감날짜</AppointmentSubTitle>
+
           <Input
             value={deadLine}
             onChange={(e) => {
               setDeadLine(e.target.value);
             }}
-            type="date"
+            type="datetime-local"
             role="textbox"
             min={after7days}
           ></Input>
-
           <Button onClick={onSubmit}>생성하기</Button>
         </AppointmentCreateContainer>
       </PageContent>

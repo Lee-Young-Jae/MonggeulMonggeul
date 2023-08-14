@@ -2,8 +2,7 @@ import { useMutation, QueryClient } from "@tanstack/react-query";
 import { createAppointment } from "@/apis/appointment.api";
 import { Appointment, createAppointmentRequest } from "@/types/appointment";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
-
-const queryClient = new QueryClient();
+import { queryClient } from "@/apis/config/queryClient";
 
 const useCreateAppointment = (
   mutationOptions?: UseCustomMutationOptions<Appointment>
@@ -14,7 +13,6 @@ const useCreateAppointment = (
       onSuccess: () => {
         queryClient.invalidateQueries(["Appointments"]);
       },
-      useErrorBoundary: true,
       ...mutationOptions,
     }
   );

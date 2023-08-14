@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { deletePoll } from "@/apis/poll.api";
 import { Poll } from "@/types/poll";
+import { queryClient } from "@/apis/config/queryClient";
 
 const useDeletePoll = () => {
-  const queryClient = useQueryClient();
-
   return useMutation(deletePoll, {
     onSuccess: () => {
       queryClient.invalidateQueries(["polls"]);

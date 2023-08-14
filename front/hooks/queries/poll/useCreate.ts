@@ -12,6 +12,7 @@ import {
   createPollVoteMultipleResponse,
 } from "@/types/poll";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
+import { queryClient } from "@/apis/config/queryClient";
 
 const useCreatePoll = (
   mutationOptions?: UseCustomMutationOptions<createPollResponse>
@@ -29,7 +30,6 @@ const useCreatePoll = (
 const useCreatePollVote = (
   mutationOptions?: UseCustomMutationOptions<createPollVoteResponse>
 ) => {
-  const queryClient = new QueryClient();
   return useMutation(createPollVote, {
     useErrorBoundary: true,
     ...mutationOptions,
@@ -42,7 +42,6 @@ const useCreatePollVote = (
 const useCreatePollVoteMultiple = (
   mutationOptions?: UseCustomMutationOptions<createPollVoteMultipleResponse>
 ) => {
-  const queryClient = new QueryClient();
   return useMutation(createPollVoteMultiple, {
     useErrorBoundary: true,
     ...mutationOptions,

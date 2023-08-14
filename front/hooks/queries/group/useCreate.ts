@@ -1,9 +1,8 @@
-import { useMutation, QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { createGroup, joinGroup } from "@/apis/group.api";
 import { Group } from "@/types/group";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
-
-const queryClient = new QueryClient();
+import { queryClient } from "@/apis/config/queryClient";
 
 const useCreateGroup = (mutationOptions?: UseCustomMutationOptions<Group>) => {
   return useMutation<Group, ErrorResponse, string>(createGroup, {

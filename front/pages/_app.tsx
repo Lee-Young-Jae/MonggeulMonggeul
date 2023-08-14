@@ -3,15 +3,13 @@ import type { AppProps } from "next/app";
 import AppLayout from "../components/layout/AppLayout";
 import "./font.css";
 import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { queryClient } from "@/apis/config/queryClient";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    // 요청 실패 시 1번 재시도
-    queries: {
-      retry: 1,
-    },
+queryClient.setDefaultOptions({
+  queries: {
+    retry: 1,
   },
 });
 

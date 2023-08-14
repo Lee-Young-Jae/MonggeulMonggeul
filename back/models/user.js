@@ -36,6 +36,7 @@ class User extends Model {
   static associate(db) {
     db.User.belongsToMany(db.Group, { through: "UserGroup" });
     db.User.hasMany(db.Vote);
+    db.User.hasMany(db.Appointment);
   }
 }
 

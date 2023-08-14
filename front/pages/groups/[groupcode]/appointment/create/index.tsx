@@ -71,14 +71,11 @@ const AppointmentCreate = () => {
 
   const router = useRouter();
 
-  const { mutate: createAppointment } = useCreateAppointment({
-    onSuccess: () => {
-      const queryClient = new QueryClient();
-      queryClient.invalidateQueries(["Appointments"]);
-      alert("약속이 생성되었습니다");
-      router.push(`/groups/${router.query.groupcode}/appointment`);
-    },
-  });
+  const { mutate: createAppointment, isSuccess } = useCreateAppointment();
+
+  if (isSuccess) {
+    router.push(`/groups/${router.query.groupcode}/appointment`);
+  }
 
   const onSubmit = () => {
     if (title === "") {

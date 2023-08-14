@@ -1,20 +1,19 @@
-import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { deleteAppointment } from "@/apis/appointment.api";
-import * as AppointmentType from "@/types/appointment";
-import { ErrorResponse } from "@/types/axios";
+import { Appointment, deleteAppointmentResponse } from "@/types/appointment";
+import { UseCustomMutationOptions } from "@/types/axios";
+import { queryClient } from "@/apis/config/queryClient";
 
 const useDeleteAppointment = (
-  code: AppointmentType.Appointment["code"],
-  queryOptions?: UseQueryOptions<void, ErrorResponse>
+  MutationOptions?: UseCustomMutationOptions<deleteAppointmentResponse>
 ) => {
-  return useQuery<void, ErrorResponse>(
-    ["Appointment", code],
-    () => deleteAppointment(code),
-    {
-      useErrorBoundary: true,
-      ...queryOptions,
-    }
-  );
+  return useMutation(deleteAppointment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["Appointments"]);
+    },
+    useErrorBoundary: true,
+    ...MutationOptions,
+  });
 };
 
 export { useDeleteAppointment };

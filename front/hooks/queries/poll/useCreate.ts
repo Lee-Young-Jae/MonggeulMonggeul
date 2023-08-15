@@ -17,11 +17,10 @@ import { queryClient } from "@/apis/config/queryClient";
 const useCreatePoll = (
   mutationOptions?: UseCustomMutationOptions<createPollResponse>
 ) => {
-  // const queryClient = new QueryClient();
   return useMutation(createPoll, {
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(["UserPolls"]);
-    // },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["polls"]);
+    },
     useErrorBoundary: true,
     ...mutationOptions,
   });

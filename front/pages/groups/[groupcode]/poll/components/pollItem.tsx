@@ -5,6 +5,7 @@ import React from "react";
 import styled from "styled-components";
 import { useDeletePoll } from "@/hooks/queries/poll/useDelete";
 import { useRouter } from "next/router";
+import Loading from "@/components/common/loading";
 
 const PollItemStyle = styled.div`
   border-radius: 14px;
@@ -76,6 +77,7 @@ const PollItem = ({
   const { mutate: deleteMutate } = useDeletePoll();
 
   const router = useRouter();
+  if (!PollSubjects) return <Loading />;
 
   const votedUserCount = new Set(
     PollSubjects.map((subject) =>

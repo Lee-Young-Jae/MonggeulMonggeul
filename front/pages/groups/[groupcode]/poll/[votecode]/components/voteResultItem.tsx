@@ -1,3 +1,4 @@
+import Loading from "@/components/common/loading";
 import Modal from "@/components/common/modal";
 import { Poll, subject } from "@/types/poll";
 import React, { useState } from "react";
@@ -107,6 +108,10 @@ const VoteResultItem = ({
       setOpenCommentIdModal(Number(subjectId));
     }
   };
+
+  if (!subject) {
+    return <Loading />;
+  }
 
   return (
     <VoteItemStyle>

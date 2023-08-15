@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { subject } from "@/types/poll";
 import VoteResultItem from "./voteResultItem";
+import Loading from "@/components/common/loading";
 
 const VoteResultItemListStyle = styled.div`
   display: flex;
@@ -19,6 +20,10 @@ const VoteResultItemList = ({
   pollSubjects,
   isAnonymous,
 }: VoteResultItemListProps) => {
+  if (!pollSubjects) {
+    return <Loading />;
+  }
+
   const currentVoteCount = pollSubjects.reduce((acc: number, cur: subject) => {
     return acc + cur.Votes.length;
   }, 0);

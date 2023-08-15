@@ -4,6 +4,7 @@ import styled from "styled-components";
 import CheckboxGroup from "@/components/common/checkList/checkboxGroup";
 import CheckList from "@/components/common/checkList";
 import Input from "@/components/common/Input";
+import Loading from "@/components/common/loading";
 
 const VoteSelectStyle = styled.div`
   display: flex;
@@ -27,9 +28,13 @@ const MultipleVote = ({
   handleCheckboxSubject,
   handleSubjectComment,
 }: MultipleVoteProps) => {
+  if (!poll) {
+    return <Loading />;
+  }
+
   return (
     <CheckboxGroup label="여러 항목 투표">
-      {poll.PollSubjects.map((subject) => {
+      {poll.PollSubjects?.map((subject) => {
         return (
           <VoteSelectStyle key={subject.id}>
             <CheckList

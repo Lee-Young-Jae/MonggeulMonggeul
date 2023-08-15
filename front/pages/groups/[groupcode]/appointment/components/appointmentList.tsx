@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import AppointmentItem from "./appointmentItem";
 import { Appointment } from "@/types/appointment";
+import { User } from "@/types/user";
 
 const StyledAppointmentList = styled.div`
   margin-top: 20px;
@@ -17,7 +18,7 @@ interface IProps {
 const AppointmentList = ({ appointments }: IProps) => {
   return (
     <StyledAppointmentList>
-      {appointments.map((appointment) => (
+      {appointments?.map((appointment) => (
         <AppointmentItem
           key={appointment.id}
           appointment={appointment}

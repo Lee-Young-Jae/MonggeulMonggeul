@@ -5,6 +5,7 @@ import Radio from "@/components/common/radio";
 import RadioGroup from "@/components/common/radio/radioGroup";
 import { Poll } from "@/types/poll";
 import Input from "@/components/common/Input";
+import Loading from "@/components/common/loading";
 
 const VoteSelectStyle = styled.div`
   display: flex;
@@ -28,9 +29,12 @@ const SingleVote = ({
   handleRadioSubject,
   subjectCommentHandler,
 }: SingleVoteProps) => {
+  if (!poll) {
+    return <Loading />;
+  }
   return (
     <RadioGroup label="하나의 항목 투표" flex_direction="column">
-      {poll.PollSubjects.map((subject) => {
+      {poll.PollSubjects?.map((subject) => {
         return (
           <VoteSelectStyle key={subject.id}>
             <Radio

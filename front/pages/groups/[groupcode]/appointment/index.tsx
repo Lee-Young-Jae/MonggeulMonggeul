@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Button from "@/components/common/button";
 import AppointmentList from "./components/appointmentList";
 import { useGetAppointments } from "@/hooks/queries/appointment/useGet";
+import Loading from "@/components/common/loading";
 
 const Appointment = () => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const Appointment = () => {
     router.push(`/groups/${router.query.groupcode}/appointment/create`);
   };
 
-  const { data: appointments } = useGetAppointments(
+  const { data: appointments, isLoading } = useGetAppointments(
     router.query.groupcode as string,
     {
       enabled:
@@ -21,14 +22,16 @@ const Appointment = () => {
     }
   );
 
+  if (isLoading) return <Loading></Loading>;
+
   return (
     <GroupPage>
       <PageContent>
         <div>약속을 잡아보세요</div>
         <Button onClick={onClickCreate}>약속 만들기</Button>
-        <AppointmentList
-          appointments={appointments ? appointments : []}
-        ></AppointmentList>
+        {appointments !== undefined && (
+          <AppointmentList appointments={appointments}></AppointmentList>
+        )}
       </PageContent>
     </GroupPage>
   );

@@ -1,5 +1,9 @@
 import axiosInstance from "./config/axiosInstance";
-import { Appointment, createAppointmentRequest } from "@/types/appointment";
+import {
+  Appointment,
+  createAppointmentRequest,
+  deleteAppointmentResponse,
+} from "@/types/appointment";
 
 export const getAppointments = async (
   groupCode: string
@@ -22,7 +26,9 @@ export const createAppointment = async (
 
 export const deleteAppointment = async (
   code: Appointment["code"]
-): Promise<void> => {
-  const response = await axiosInstance.delete(`/appointment/${code}`);
+): Promise<deleteAppointmentResponse> => {
+  const response = await axiosInstance.delete(`/appointment/`, {
+    data: { code },
+  });
   return response.data;
 };

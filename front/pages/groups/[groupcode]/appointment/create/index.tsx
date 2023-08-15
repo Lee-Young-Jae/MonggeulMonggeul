@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import styled from "styled-components";
 import Calendar from "@/components/common/calendar";
@@ -8,8 +8,6 @@ import { useRouter } from "next/router";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/button";
 import SelectBox from "@/components/common/selectBox";
-import { QueryClient } from "@tanstack/react-query";
-
 const AppointmentCreateContainer = styled.div`
   margin-top: 20px;
   display: flex;
@@ -98,12 +96,6 @@ const AppointmentCreate = () => {
       return;
     }
 
-    // TODO: 종료 시간은 항상 시작 시간보다 늦어야 함
-    /**
-     *  1. 만약 시작 시간이 오후 11시 종료 시간이 오전 1시라면 종료 시간은 다음날이라고 가정
-     *
-     */
-
     if (deadLine === "") {
       alert("마감 시간을 입력해주세요");
       return;
@@ -124,10 +116,18 @@ const AppointmentCreate = () => {
       return;
     }
 
+    // TODO: 종료 시간은 항상 시작 시간보다 늦어야 함
+    /**
+     *  1. 만약 시작 시간이 오후 11시 종료 시간이 오전 1시라면 종료 시간은 다음날이라고 가정
+     *
+     */
     // 진행 시간이 종료시간 - 시작시간 보다 길면 안됨
     // 임의의 2000년 1월 1일을 기준으로 시작시간과 종료시간을 비교
+
+    const isEndTimeNextDay = startTime > endTime;
     const start = new Date(`2000-01-01 ${startTime}`);
-    const end = new Date(`2000-01-01 ${endTime}`);
+    const end = new Date(`${isEndTimeNextDay ? "2000-01-02" : "2000-01-01"}
+     ${endTime}`);
     const diffStartEnd = end.getTime() - start.getTime();
     const durationTime =
       duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000;
@@ -170,9 +170,9 @@ const AppointmentCreate = () => {
 
         <AppointmentCreateContainer>
           <AppointmentSubTitle>제목</AppointmentSubTitle>
-          <Input value={title} onChange={onChangeTitle}></Input>
+          <Input value={title} onChange={onChangeTitle} />
           <AppointmentSubTitle>부제목</AppointmentSubTitle>
-          <Input value={subTitle} onChange={onChangeSubTitle}></Input>
+          <Input value={subTitle} onChange={onChangeSubTitle} />
           <AppointmentSubTitle>진행 시간 설정</AppointmentSubTitle>
           <DurationContainer>
             <SelectBoxWrapper>
@@ -184,7 +184,7 @@ const AppointmentCreate = () => {
                 options={new Array(23).fill(0).map((_, index) => index)}
               ></SelectBox>
             </SelectBoxWrapper>
-            <p>시간</p>
+            <span>시간</span>
             <SelectBoxWrapper>
               <SelectBox<number>
                 value={duration.minutes}
@@ -194,17 +194,13 @@ const AppointmentCreate = () => {
                 options={[0, 30]}
               ></SelectBox>
             </SelectBoxWrapper>
-            <p>분 동안</p>
+            <span>분 동안</span>
           </DurationContainer>
 
           <AppointmentSubTitle>시작 시간</AppointmentSubTitle>
-          <Input
-            value={startTime}
-            onChange={onChangeStartTime}
-            type="time"
-          ></Input>
+          <Input value={startTime} onChange={onChangeStartTime} type="time" />
           <AppointmentSubTitle>종료 시간</AppointmentSubTitle>
-          <Input value={endTime} onChange={onChangeEndTime} type="time"></Input>
+          <Input value={endTime} onChange={onChangeEndTime} type="time" />
           <AppointmentSubTitle>마감날짜</AppointmentSubTitle>
 
           <Input
@@ -215,7 +211,7 @@ const AppointmentCreate = () => {
             type="datetime-local"
             role="textbox"
             min={after7days}
-          ></Input>
+          />
           <Button onClick={onSubmit}>생성하기</Button>
         </AppointmentCreateContainer>
       </PageContent>

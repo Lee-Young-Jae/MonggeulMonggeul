@@ -2,8 +2,6 @@ import styled from "styled-components";
 import Image from "next/image";
 import Logo2 from "@/assets/Logo_no_background.png";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import { groupAtom } from "@/recoil/state/groupstate";
 import { useGetGroup } from "@/hooks/queries/group/useGet";
 
 const HeaderStyle = styled.div`

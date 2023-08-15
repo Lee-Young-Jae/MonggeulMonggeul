@@ -9,7 +9,6 @@ import PollOptionForm from "./components/PollOptionForm";
 import { Poll, createPollRequest } from "@/types/poll";
 import { useRouter } from "next/router";
 import { useCreatePoll } from "@/hooks/queries/poll/useCreate";
-import { useQueryClient } from "@tanstack/react-query";
 
 const PollCreateForm = styled.div`
   display: flex;
@@ -61,24 +60,12 @@ const PollCreatePage = () => {
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(false);
 
-  const queryClient = useQueryClient();
-
-  const { mutate } = useCreatePoll({
-    onSuccess: (data) => {
-      alert("투표가 생성되었습니다.");
-      router.push(`/groups/${router.query.groupcode}/poll`);
-
-      // 새로 생성된 투표를 캐시에 추가
-      queryClient.setQueryData<Poll[]>(
-        ["polls", router.query.groupcode],
-        (prev) => {
-          if (!prev) return [];
-          return [...prev, data];
-        }
-      );
-    },
-  });
+  const { mutate, isSuccess, data } = useCreatePoll();
   const router = useRouter();
+
+  if (isSuccess) {
+    router.push(`/groups/${router.query.groupcode}/poll/${data.code}`);
+  }
 
   const addPollSubject = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

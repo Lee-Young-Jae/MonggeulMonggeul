@@ -30,4 +30,13 @@ type createAppointmentRequest = Pick<
   | "duration_minutes"
   | "group_code"
 >;
-export type { Appointment, createAppointmentRequest };
+
+type deleteAppointmentRequest = Appointment["code"];
+type deleteAppointmentResponse = { message: string };
+
+export type {
+  Appointment,
+  createAppointmentRequest,
+  deleteAppointmentRequest,
+  deleteAppointmentResponse,
+};

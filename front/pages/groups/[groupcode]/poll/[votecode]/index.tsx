@@ -1,8 +1,5 @@
-import Input from "@/components/common/Input";
 import Button from "@/components/common/button";
 import Loading from "@/components/common/loading";
-import Radio from "@/components/common/radio";
-import RadioGroup from "@/components/common/radio/radioGroup";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import useInput from "@/hooks/common/useInput";
 import {
@@ -41,7 +38,6 @@ export const VoteStyle = styled.div`
   padding: 0.5rem;
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
   background-color: white;
-  width: 80%;
   box-sizing: border-box;
   padding: 1rem;
 `;
@@ -169,7 +165,7 @@ const Vote = () => {
     if (!router.isReady) return;
   }, [router.isReady]);
 
-  if (isLoading) {
+  if (isLoading || !poll) {
     return <Loading></Loading>;
   }
 

@@ -44,7 +44,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 router.post("/", isLoggedIn, async (req, res) => {
   try {
     const {
-      group_code,
+      groupCode,
       title,
       sub_title,
       start_date,
@@ -56,17 +56,10 @@ router.post("/", isLoggedIn, async (req, res) => {
     } = req.body;
 
     const existGroup = await Group.findOne({
-      where: { code: group_code },
+      where: { code: groupCode },
     });
     if (!existGroup) {
       return res.status(404).json({ message: "모임을 찾을 수 없습니다." });
-    }
-
-    // startTime이 endTime보다 늦을 경우
-    if (start_time > end_time) {
-      return res.status(400).json({
-        message: "시작 시간이 종료 시간보다 늦을 수 없습니다.",
-      });
     }
 
     // startDate가 endDate보다 늦을 경우
@@ -77,7 +70,7 @@ router.post("/", isLoggedIn, async (req, res) => {
     }
 
     let code = generateRandomCode(
-      group_code + title + new Date().getTime().toString(),
+      groupCode + title + new Date().getTime().toString(),
       11
     );
 
@@ -108,7 +101,7 @@ router.post("/", isLoggedIn, async (req, res) => {
       code,
       status: "진행중",
       hostId: req.user.id,
-      groupCode: group_code,
+      groupCode,
     });
 
     if (!createdAppointment) {
@@ -129,10 +122,10 @@ router.post("/", isLoggedIn, async (req, res) => {
 // Appointment 삭제 DELETE http://localhost:3010/appointment
 router.delete("/", isLoggedIn, async (req, res) => {
   try {
-    const { appointment_code } = req.body;
+    const { code } = req.body;
 
     const existAppointment = await Appointment.findOne({
-      where: { code: appointment_code },
+      where: { code },
     });
     if (!existAppointment) {
       return res.status(404).json({ message: "모임을 찾을 수 없습니다." });
@@ -143,7 +136,7 @@ router.delete("/", isLoggedIn, async (req, res) => {
     }
 
     const deletedAppointment = await Appointment.destroy({
-      where: { code: appointment_code },
+      where: { code },
     });
 
     if (!deletedAppointment) {
@@ -153,6 +146,61 @@ router.delete("/", isLoggedIn, async (req, res) => {
     }
 
     res.status(200).json({ message: "모임이 삭제되었습니다." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "서버에서 에러가 발생했어요 잠시 후 다시 시도해 주세요.",
+    });
+  }
+});
+
+// 특정 Appointment 정보 GET http://localhost:3010/appointment/:code
+router.get("/:code", isLoggedIn, async (req, res) => {
+  try {
+    const { code } = req.params;
+
+    const existAppointment = await Appointment.findOne({
+      where: { code },
+    });
+
+    if (!existAppointment) {
+      return res.status(404).json({ message: "약속을 찾을 수 없습니다." });
+    }
+
+    const existGroup = await Group.findOne({
+      where: { code: existAppointment.groupCode },
+    });
+    const isJoinedUser = await existGroup.hasUser(req.user.id);
+
+    if (!isJoinedUser) {
+      return res.status(403).json({ message: "권한이 없습니다." });
+    }
+
+    res.status(200).json(existAppointment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "서버에서 에러가 발생했어요 잠시 후 다시 시도해 주세요.",
+    });
+  }
+});
+
+// Appointment Status 변경 PUT http://localhost:3010/appointment/:code
+router.put("/:code", isLoggedIn, async (req, res) => {
+  try {
+    const { code } = req.params;
+    const { status } = req.body;
+    const existAppointment = await Appointment.update(
+      { status },
+      { where: { code } }
+    );
+
+    console.log(existAppointment, status, code);
+
+    if (!existAppointment) {
+      return res.status(404).json({ message: "약속을 찾을 수 없습니다." });
+    }
+    res.status(200).json({ message: "약속 상태가 변경되었습니다." });
   } catch (error) {
     console.error(error);
     res.status(500).json({

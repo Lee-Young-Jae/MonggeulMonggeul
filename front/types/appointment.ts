@@ -13,7 +13,7 @@ type Appointment = {
   deadline: Date;
   duration_minutes: number;
   created_at: Date;
-  group_code: string;
+  groupCode: string;
   host_id: number;
   isHost?: boolean;
 };
@@ -28,15 +28,21 @@ type createAppointmentRequest = Pick<
   | "end_time"
   | "deadline"
   | "duration_minutes"
-  | "group_code"
+  | "groupCode"
 >;
 
 type deleteAppointmentRequest = Appointment["code"];
 type deleteAppointmentResponse = { message: string };
+
+type updateAppointmentStatusRequest = {
+  code: Appointment["code"];
+  status: Appointment["status"];
+};
 
 export type {
   Appointment,
   createAppointmentRequest,
   deleteAppointmentRequest,
   deleteAppointmentResponse,
+  updateAppointmentStatusRequest,
 };

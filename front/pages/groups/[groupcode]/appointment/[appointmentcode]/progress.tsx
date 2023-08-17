@@ -11,10 +11,7 @@ const AppointmentProgress = () => {
   const [selectedDate, setSelectedDate] = React.useState<string>("");
   const [pickedTimes, setPickedTimes] = React.useState<{
     [key: string]: string[];
-  }>({}); // {
-  //   "2021-10-01": ["10:00", "11:00"],
-  //   "2021-10-02": ["10:00", "11:00"],
-  // }
+  }>({});
 
   const router = useRouter();
 
@@ -52,6 +49,11 @@ const AppointmentProgress = () => {
   }
 
   if (!Appointment) {
+    router.push(`/groups/${router.query.groupcode}/appointment`);
+  }
+
+  if (Appointment.status !== "진행중") {
+    alert("이미 완료된 약속이네요 결과를 확인하세요.");
     router.push(`/groups/${router.query.groupcode}/appointment`);
   }
 

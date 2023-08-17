@@ -1,9 +1,13 @@
+import React, { useRef } from "react";
 import Button from "@/components/common/button";
 import { Appointment } from "@/types/appointment";
 import { getDateString } from "@/utills/common";
-import App from "next/app";
-import React from "react";
 import styled, { css } from "styled-components";
+import { useDeleteAppointment } from "@/hooks/queries/appointment/useDelete";
+import Loading from "@/components/common/loading";
+import { useRouter } from "next/router";
+import { formatMinute } from "@/utills/common";
+import { useUpdateAppointmentStatus } from "@/hooks/queries/appointment/useUpdate";
 
 const StyledAppointmentItem = styled.div`
   width: 100%;
@@ -38,32 +42,77 @@ const StyledStatusBox = styled.div<{ status: Appointment["status"] }>`
     `}
 `;
 
+const StyledTitle = styled.h1`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+const StyledSubTitle = styled.h2`
+  font-size: 16px;
+  margin-bottom: 10px;
+`;
+
+const StyledDeadline = styled.p`
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #828282;
+`;
+
 interface IProps {
   appointment: Appointment;
 }
 
-const appointmentItem = ({ appointment }: IProps) => {
+const AppointmentItem = ({ appointment }: IProps) => {
+  const { mutate: deleteAppointment } = useDeleteAppointment();
+  const { mutate: upDateApointmentStatus } = useUpdateAppointmentStatus();
+
+  const router = useRouter();
+  const onClickSelect = () => {
+    router.push(
+      `/groups/${router.query.groupcode}/appointment/${appointment.code}/progress`
+    );
+  };
+
+  const onClickDelete = () => {
+    deleteAppointment(appointment.code);
+  };
+
+  const today = new Date();
+  const isExpired = new Date(appointment.deadline) < today;
+  const isRequesting = useRef(false);
+  if (isExpired && !isRequesting.current && appointment.status !== "완료") {
+    upDateApointmentStatus({
+      code: appointment.code,
+      status: "완료",
+    });
+    isRequesting.current = true;
+  }
+  if (!appointment) return <Loading />;
+
   return (
     <StyledAppointmentItem>
       <StyledStatusBox status={appointment.status}>
         {appointment.status}
       </StyledStatusBox>
-      <div>{appointment.title}</div>
-      <div>{appointment.id}</div>
-      <div>{appointment.sub_title}</div>
-      {/* <div>{appointment.start_date}</div>
-      <div>{appointment.end_date}</div> */}
-      <div>{appointment.start_time}</div>
-      <div>{appointment.end_time}</div>
-      <div>{appointment.duration_minutes}</div>
-      <div>
+      <StyledTitle>{appointment.title}</StyledTitle>
+      <StyledSubTitle>{appointment.sub_title}</StyledSubTitle>
+
+      <div>{formatMinute(appointment.duration_minutes)}</div>
+      <StyledDeadline>
         {new Date(appointment.deadline)
           ? getDateString(new Date(appointment.deadline))
           : ""}
-      </div>
-      {appointment.isHost && <Button color="unimportant">삭제하기</Button>}
+        까지
+      </StyledDeadline>
+      <Button onClick={onClickSelect}>선택하기</Button>
+      {appointment.isHost && (
+        <Button color="unimportant" onClick={onClickDelete}>
+          삭제하기
+        </Button>
+      )}
     </StyledAppointmentItem>
   );
 };
 
-export default appointmentItem;
+export default AppointmentItem;

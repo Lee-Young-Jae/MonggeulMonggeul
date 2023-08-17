@@ -143,7 +143,7 @@ const AppointmentCreate = () => {
     }
 
     createAppointment({
-      group_code: router.query.groupcode as string,
+      groupCode: router.query.groupcode as string,
       title,
       sub_title: subTitle,
       start_date: new Date(startDate),

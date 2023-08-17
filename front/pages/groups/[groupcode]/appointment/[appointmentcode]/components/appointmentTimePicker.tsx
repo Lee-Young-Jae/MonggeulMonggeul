@@ -14,18 +14,23 @@ const StyledAppointmentTimePicker = styled.div`
   width: 100%;
 `;
 
-const AppointmentTimePicker = (
-  appointment: Pick<
-    Appointment,
-    "start_time" | "end_time" | "duration_minutes"
-  > & {
-    pickedTimes: {
-      [key: string]: string[];
-    };
-    handleTimePick: (time: string) => void;
-    selectedDate: string;
-  }
-) => {
+const AppointmentTimePicker = ({
+  start_time,
+  end_time,
+  duration_minutes,
+  pickedTimes,
+  handleTimePick,
+  selectedDate,
+}: {
+  start_time: Appointment["start_time"];
+  end_time: Appointment["end_time"];
+  duration_minutes: Appointment["duration_minutes"];
+  pickedTimes: {
+    [key: string]: string[];
+  };
+  handleTimePick: (time: string) => void;
+  selectedDate: string;
+}) => {
   // TODO: start_time과 end_time 사이의 시간 중 duration minutes 만큼의 시간을 배열로 만들어서 반환
   const generateTimeArray = (
     startTime: string,
@@ -74,9 +79,9 @@ const AppointmentTimePicker = (
   };
 
   const durationTime = generateTimeArray(
-    appointment.start_time,
-    appointment.end_time,
-    appointment.duration_minutes
+    start_time || "00:00",
+    end_time || "01:00",
+    duration_minutes || 30
   );
 
   return (
@@ -89,13 +94,11 @@ const AppointmentTimePicker = (
             <Button
               key={time[0] + time[1]}
               color={
-                appointment.pickedTimes[appointment.selectedDate]?.includes(
-                  time[0]
-                )
+                pickedTimes?.[selectedDate]?.includes(time[0])
                   ? "default"
                   : "unimportant"
               }
-              onClick={() => appointment.handleTimePick(time[0])}
+              onClick={() => handleTimePick(time[0])}
             >
               <span>{time[0]}</span> ~ <span>{time[1]}</span>
             </Button>

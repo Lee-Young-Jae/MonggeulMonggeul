@@ -11,3 +11,11 @@ export const getDateString = (date: Date) => {
 
   return `${year}년 ${month}월 ${day}일 ${ampm} ${hour}시 ${minute}분`;
 };
+
+export const formatMinute = (minute: number) => {
+  const hour = Math.floor(minute / 60);
+  const min = minute % 60;
+
+  if (hour === 0) return `${min}분`;
+  else return `${hour}시간 ${min}분`;
+};

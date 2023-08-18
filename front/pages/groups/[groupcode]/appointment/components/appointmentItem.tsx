@@ -79,7 +79,7 @@ const AppointmentItem = ({ appointment }: IProps) => {
   };
 
   const today = new Date();
-  const isExpired = new Date(appointment.deadline) < today;
+  const isExpired = new Date(appointment?.deadline) < today;
   const isRequesting = useRef(false);
   if (isExpired && !isRequesting.current && appointment.status !== "완료") {
     upDateApointmentStatus({

@@ -25,9 +25,14 @@ const AppointmentProgress = () => {
   );
 
   const handleTimePick = (time: string) => {
-    const isTimePicked = pickedTimes[selectedDate]?.includes(time);
+    const isIncludeDate = pickedTimes[selectedDate]?.includes(time);
 
-    if (isTimePicked) {
+    if (!selectedDate || selectedDate === "") {
+      alert("달력에서 날짜를 먼저 선택해주세요!");
+      return;
+    }
+
+    if (isIncludeDate) {
       setPickedTimes({
         ...pickedTimes,
         [selectedDate]: pickedTimes[selectedDate].filter(
@@ -36,13 +41,15 @@ const AppointmentProgress = () => {
       });
     }
 
-    if (!isTimePicked) {
+    if (!isIncludeDate) {
       setPickedTimes({
         ...pickedTimes,
         [selectedDate]: [...(pickedTimes[selectedDate] || []), time],
       });
     }
   };
+
+  const onSubmitTime = () => {};
 
   if (isLoading || !Appointment) {
     return <Loading />;
@@ -67,22 +74,20 @@ const AppointmentProgress = () => {
           setSelectedDate={setSelectedDate}
           selectedDate={selectedDate}
         ></Calendar>
-        <br />
-        <AppointmentTimePicker
-          start_time={Appointment.start_time}
-          end_time={Appointment.end_time}
-          duration_minutes={Appointment.duration_minutes}
-          pickedTimes={pickedTimes}
-          handleTimePick={handleTimePick}
-          selectedDate={selectedDate}
-        ></AppointmentTimePicker>
-        <Button
-          onClick={() => {
-            console.log(pickedTimes);
-          }}
-        >
-          선택!
-        </Button>
+        {selectedDate && (
+          <AppointmentTimePicker
+            start_time={Appointment.start_time}
+            end_time={Appointment.end_time}
+            duration_minutes={Appointment.duration_minutes}
+            pickedTimes={pickedTimes}
+            handleTimePick={handleTimePick}
+            selectedDate={selectedDate}
+          />
+        )}
+
+        {selectedDate && pickedTimes[selectedDate]?.length > 0 && (
+          <Button onClick={onSubmitTime}>선택!</Button>
+        )}
       </PageContent>
     </GroupPage>
   );

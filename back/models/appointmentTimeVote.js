@@ -4,15 +4,8 @@ class AppointmentTimeVote extends Model {
   static init(sequelize) {
     return super.init(
       {
-        // 날짜
-        date: {
+        selectedDate: {
           type: DataTypes.DATE,
-          allowNull: false,
-        },
-        // 시간
-        time: {
-          type: DataTypes.TIME,
-          allowNull: false,
         },
       },
       {
@@ -27,8 +20,8 @@ class AppointmentTimeVote extends Model {
 
   static associate(db) {
     db.AppointmentTimeVote.belongsTo(db.Appointment, {
-      foreignKey: "appointmentId",
-      targetKey: "id",
+      foreignKey: "appointmentCode",
+      targetKey: "code",
     });
 
     db.AppointmentTimeVote.belongsTo(db.User, {

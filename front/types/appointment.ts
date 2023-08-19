@@ -39,10 +39,33 @@ type updateAppointmentStatusRequest = {
   status: Appointment["status"];
 };
 
+type createAppointmentTimeVoteRequest = {
+  code: Appointment["code"];
+  pickTimes: { [key: string]: string[] };
+};
+
+interface AppointmentTimeVote {
+  id: number;
+  date: string;
+  time: string;
+  createdAt: Date;
+  updatedAt: Date;
+  appointemntId: number;
+  userId: number;
+}
+
+type createAppointmentTimeVoteResponse = {
+  message?: string;
+  appointmentTimeVote?: AppointmentTimeVote;
+};
+
 export type {
   Appointment,
+  AppointmentTimeVote,
   createAppointmentRequest,
   deleteAppointmentRequest,
   deleteAppointmentResponse,
   updateAppointmentStatusRequest,
+  createAppointmentTimeVoteRequest,
+  createAppointmentTimeVoteResponse,
 };

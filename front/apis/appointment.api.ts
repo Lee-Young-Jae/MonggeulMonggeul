@@ -1,7 +1,10 @@
 import axiosInstance from "./config/axiosInstance";
 import {
   Appointment,
+  AppointmentTimeVote,
   createAppointmentRequest,
+  createAppointmentTimeVoteRequest,
+  createAppointmentTimeVoteResponse,
   deleteAppointmentResponse,
   updateAppointmentStatusRequest,
 } from "@/types/appointment";
@@ -48,6 +51,16 @@ export const updateAppointmentStatus = async (
   const response = await axiosInstance.put(
     `/appointment/${updateAppointmentStatusRequest.code}`,
     { status: updateAppointmentStatusRequest.status }
+  );
+  return response.data;
+};
+
+export const createAppointmentTimeVote = async (
+  createAppointmentRequest: createAppointmentTimeVoteRequest
+): Promise<AppointmentTimeVote> => {
+  const response = await axiosInstance.post(
+    `/appointment/vote`,
+    createAppointmentRequest
   );
   return response.data;
 };

@@ -1,6 +1,10 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import {} from "@/apis/user.api";
-import { getAppointment, getAppointments } from "@/apis/appointment.api";
+import {
+  getAppointment,
+  getAppointmentTimeVotesRanking,
+  getAppointments,
+} from "@/apis/appointment.api";
 import * as AppointmentType from "@/types/appointment";
 import { ErrorResponse } from "@/types/axios";
 
@@ -34,4 +38,29 @@ const useGetAppointment = (
   );
 };
 
-export { useGetAppointments, useGetAppointment };
+const useGetAppointmentTimeVotesRanking = (
+  code: AppointmentType.Appointment["code"],
+  queryOptions?: UseQueryOptions<
+    AppointmentType.AppointmentTimeVotesRankingResponse,
+    ErrorResponse
+  >
+) => {
+  return useQuery<
+    AppointmentType.AppointmentTimeVotesRankingResponse,
+    ErrorResponse
+  >(
+    ["AppointmentTimeVotesRanking", code],
+    () => getAppointmentTimeVotesRanking(code),
+    {
+      useErrorBoundary: true,
+      staleTime: 30000,
+      ...queryOptions,
+    }
+  );
+};
+
+export {
+  useGetAppointments,
+  useGetAppointment,
+  useGetAppointmentTimeVotesRanking,
+};

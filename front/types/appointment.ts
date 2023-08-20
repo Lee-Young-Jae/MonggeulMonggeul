@@ -59,6 +59,12 @@ type createAppointmentTimeVoteResponse = {
   appointmentTimeVote?: AppointmentTimeVote;
 };
 
+type AppointmentTimeVotesRankingResponse = {
+  date: string;
+  count: number;
+  users: Exclude<User, "email">[];
+}[];
+
 export type {
   Appointment,
   AppointmentTimeVote,
@@ -68,4 +74,5 @@ export type {
   updateAppointmentStatusRequest,
   createAppointmentTimeVoteRequest,
   createAppointmentTimeVoteResponse,
+  AppointmentTimeVotesRankingResponse,
 };

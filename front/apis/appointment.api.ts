@@ -2,6 +2,7 @@ import axiosInstance from "./config/axiosInstance";
 import {
   Appointment,
   AppointmentTimeVote,
+  AppointmentTimeVotesRankingResponse,
   createAppointmentRequest,
   createAppointmentTimeVoteRequest,
   createAppointmentTimeVoteResponse,
@@ -47,7 +48,6 @@ export const deleteAppointment = async (
 export const updateAppointmentStatus = async (
   updateAppointmentStatusRequest: updateAppointmentStatusRequest
 ): Promise<Appointment> => {
-  console.log(updateAppointmentStatusRequest);
   const response = await axiosInstance.put(
     `/appointment/${updateAppointmentStatusRequest.code}`,
     { status: updateAppointmentStatusRequest.status }
@@ -61,6 +61,15 @@ export const createAppointmentTimeVote = async (
   const response = await axiosInstance.post(
     `/appointment/vote`,
     createAppointmentRequest
+  );
+  return response.data;
+};
+
+export const getAppointmentTimeVotesRanking = async (
+  appointmentCode: Appointment["code"]
+): Promise<AppointmentTimeVotesRankingResponse> => {
+  const response = await axiosInstance.get(
+    `/appointment/${appointmentCode}/vote/rank`
   );
   return response.data;
 };

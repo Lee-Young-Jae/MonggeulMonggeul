@@ -1,6 +1,14 @@
 import { useMutation, QueryClient } from "@tanstack/react-query";
-import { createAppointment } from "@/apis/appointment.api";
-import { Appointment, createAppointmentRequest } from "@/types/appointment";
+import {
+  createAppointment,
+  createAppointmentTimeVote,
+} from "@/apis/appointment.api";
+import {
+  Appointment,
+  AppointmentTimeVote,
+  createAppointmentRequest,
+  createAppointmentTimeVoteRequest,
+} from "@/types/appointment";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
 import { queryClient } from "@/apis/config/queryClient";
 
@@ -17,5 +25,19 @@ const useCreateAppointment = (
     }
   );
 };
+const useCreateAppointmentTimeVote = (
+  mutationOptions?: UseCustomMutationOptions<AppointmentTimeVote>
+) => {
+  return useMutation<
+    AppointmentTimeVote,
+    ErrorResponse,
+    createAppointmentTimeVoteRequest
+  >(createAppointmentTimeVote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["Appointments"]);
+    },
+    ...mutationOptions,
+  });
+};
 
-export { useCreateAppointment };
+export { useCreateAppointment, useCreateAppointmentTimeVote };

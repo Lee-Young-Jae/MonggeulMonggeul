@@ -60,7 +60,6 @@ const AppointmentProgress = () => {
       code: router.query.appointmentcode as string,
       pickTimes: pickedTimes,
     });
-    console.log(pickedTimes);
   };
 
   if (isLoading || !Appointment) {

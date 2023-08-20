@@ -6,6 +6,7 @@ import { useGetAppointment } from "@/hooks/queries/appointment/useGet";
 import Loading from "@/components/common/loading";
 import AppointmentTimePicker from "./components/appointmentTimePicker";
 import Button from "@/components/common/button";
+import { useCreateAppointmentTimeVote } from "@/hooks/queries/appointment/useCreate";
 
 const AppointmentProgress = () => {
   const [selectedDate, setSelectedDate] = React.useState<string>("");
@@ -23,6 +24,11 @@ const AppointmentProgress = () => {
         router.query.appointmentcode !== null,
     }
   );
+
+  const {
+    mutate: createAppointmentTimeVote,
+    isSuccess: createAppointmentItmeVoteSuccess,
+  } = useCreateAppointmentTimeVote();
 
   const handleTimePick = (time: string) => {
     const isIncludeDate = pickedTimes[selectedDate]?.includes(time);
@@ -49,7 +55,13 @@ const AppointmentProgress = () => {
     }
   };
 
-  const onSubmitTime = () => {};
+  const onSubmitTime = () => {
+    createAppointmentTimeVote({
+      code: router.query.appointmentcode as string,
+      pickTimes: pickedTimes,
+    });
+    console.log(pickedTimes);
+  };
 
   if (isLoading || !Appointment) {
     return <Loading />;
@@ -61,6 +73,11 @@ const AppointmentProgress = () => {
 
   if (Appointment.status !== "진행중") {
     alert("이미 완료된 약속이네요 결과를 확인하세요.");
+    router.push(`/groups/${router.query.groupcode}/appointment`);
+  }
+
+  if (createAppointmentItmeVoteSuccess) {
+    alert("약속 시간을 선택했습니다!");
     router.push(`/groups/${router.query.groupcode}/appointment`);
   }
 

@@ -282,36 +282,42 @@ router.get("/:code/vote/rank", isLoggedIn, async (req, res) => {
 
     const appointmentTimeVotes = await AppointmentTimeVote.findAll({
       where: { appointmentCode: code },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "profileImage"],
+        },
+      ],
     });
 
     if (!appointmentTimeVotes) {
       return res.status(200).json([]);
     }
 
-    const timeVotes = {};
+    const rank = [];
     appointmentTimeVotes.forEach((timeVote) => {
+      timeVote.dataValues.selectedDate;
       const date = timeVote.dataValues.selectedDate;
-      const dateStr = date.toISOString().split("T")[0];
-      const timeStr = date.toISOString().split("T")[1].split(".")[0];
-      if (timeVotes[dateStr]) {
-        timeVotes[dateStr].push(timeStr);
+      const existDate = rank.find((r) => {
+        return `${r.date}` === `${date}`;
+      });
+      if (existDate) {
+        existDate.count++;
+        existDate.users.push(timeVote.dataValues.User);
       } else {
-        timeVotes[dateStr] = [timeStr];
+        rank.push({
+          date,
+          count: 1,
+          users: [timeVote.dataValues.User],
+        });
       }
     });
 
-    const timeVoteRank = [];
-    for (let date in timeVotes) {
-      const value = timeVotes[date];
-      const count = value.length;
-      timeVoteRank.push({ date, count, times: value });
-    }
-
-    timeVoteRank.sort((a, b) => {
+    rank.sort((a, b) => {
       return b.count - a.count;
     });
 
-    res.status(200).json(timeVoteRank);
+    res.status(200).json(rank);
   } catch (error) {
     console.error(error);
     res.status(500).json({

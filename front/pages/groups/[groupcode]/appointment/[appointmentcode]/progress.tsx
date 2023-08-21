@@ -74,10 +74,11 @@ const AppointmentProgress = () => {
     alert("이미 완료된 약속이네요 결과를 확인하세요.");
     router.push(`/groups/${router.query.groupcode}/appointment`);
   }
-
   if (createAppointmentItmeVoteSuccess) {
     alert("약속 시간을 선택했습니다!");
-    router.push(`/groups/${router.query.groupcode}/appointment`);
+    router.push(
+      `/groups/${router.query.groupcode}/appointment/${router.query.appointmentcode}/rank`
+    );
   }
 
   return (

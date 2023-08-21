@@ -74,6 +74,12 @@ const AppointmentItem = ({ appointment }: IProps) => {
     );
   };
 
+  const onClickViewResult = () => {
+    router.push(
+      `/groups/${router.query.groupcode}/appointment/${appointment.code}/rank`
+    );
+  };
+
   const onClickDelete = () => {
     deleteAppointment(appointment.code);
   };
@@ -106,6 +112,7 @@ const AppointmentItem = ({ appointment }: IProps) => {
         까지
       </StyledDeadline>
       <Button onClick={onClickSelect}>선택하기</Button>
+      <Button onClick={onClickViewResult}>결과보기</Button>
       {appointment.isHost && (
         <Button color="unimportant" onClick={onClickDelete}>
           삭제하기

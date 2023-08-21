@@ -222,6 +222,10 @@ router.post("/vote", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "약속을 찾을 수 없습니다." });
     }
 
+    const existAppointmentTimeVotes = await AppointmentTimeVote.destroy({
+      where: { appointmentCode: code, userId: req.user.id },
+    });
+
     const times = [];
     for (let date in pickTimes) {
       const value = pickTimes[date];

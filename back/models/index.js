@@ -9,6 +9,7 @@ const Vote = require("./vote");
 const PollSubject = require("./pollSubject");
 const Appointment = require("./appointment");
 const UserAppointment = require("./userAppointment");
+const AppointmentTimeVote = require("./appointmentTimeVote");
 
 // node와 mySql연결
 const sequelize = new Sequelize(
@@ -29,6 +30,7 @@ db.Vote = Vote;
 db.PollSubject = PollSubject;
 db.Appointment = Appointment;
 db.UserAppointment = UserAppointment;
+db.AppointmentTimeVote = AppointmentTimeVote;
 
 // 모델 초기화
 Object.keys(db).forEach((modelName) => {

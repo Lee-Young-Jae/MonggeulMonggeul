@@ -37,6 +37,7 @@ class User extends Model {
     db.User.belongsToMany(db.Group, { through: "UserGroup" });
     db.User.hasMany(db.Vote);
     db.User.hasMany(db.Appointment);
+    db.User.hasMany(db.AppointmentTimeVote);
   }
 }
 

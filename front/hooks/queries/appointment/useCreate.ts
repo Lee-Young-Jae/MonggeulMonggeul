@@ -34,7 +34,7 @@ const useCreateAppointmentTimeVote = (
     createAppointmentTimeVoteRequest
   >(createAppointmentTimeVote, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["Appointments"]);
+      queryClient.invalidateQueries(["AppointmentTimeVotesRanking"]);
     },
     ...mutationOptions,
   });

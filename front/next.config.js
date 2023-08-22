@@ -4,6 +4,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ["localhost", "k.kakaocdn.net"],
+  },
 };
 
 module.exports = nextConfig;

@@ -7,6 +7,8 @@ const groupRouter = require("./routes/group");
 const authRouter = require("./routes/auth");
 const pollRouter = require("./routes/poll");
 const appointmentRouter = require("./routes/appointment");
+const userRouter = require("./routes/user");
+const socket = require("./socket");
 
 const port = 3010;
 const cors = require("cors");
@@ -44,6 +46,7 @@ app.use("/group", groupRouter);
 app.use("/auth", authRouter);
 app.use("/poll", pollRouter);
 app.use("/appointment", appointmentRouter);
+app.use("/user", userRouter);
 
 // 데이터베이스 연결
 require("./models")
@@ -55,6 +58,9 @@ require("./models")
     console.error(err);
   });
 
-app.listen(port, () => {
-  console.log(`Backend Server listening at http://localhost:${port}`);
+//서버 실행
+const server = app.listen(port, () => {
+  console.log(`server is running on ${port}`);
 });
+// socket.io 연결
+socket(server, app);

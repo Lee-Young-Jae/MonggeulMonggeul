@@ -79,7 +79,11 @@ const Group = () => {
                 <TiCalendar size={80} color="#F4356C" />
                 약속잡기
               </FunctionButton>
-              <FunctionButton>
+              <FunctionButton
+                onClick={() => {
+                  router.push(`/groups/${groupcode}/chat`);
+                }}
+              >
                 <TiMessage size={80} color="#F4356C" />
                 채팅하기
               </FunctionButton>

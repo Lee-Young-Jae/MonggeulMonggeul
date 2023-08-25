@@ -92,8 +92,7 @@ const LandingPage = () => {
   const router = useRouter();
   const handleLogin = useCallback(() => {
     const restApiKey = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
-
-    const redirectURI = "http://localhost:3010/auth/kakao/callback";
+    const redirectURI = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback`;
     const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectURI}&response_type=code`;
 
     router.push(kakaoUrl);

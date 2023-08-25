@@ -33,15 +33,30 @@ const NavigationButton = styled.button`
 
 const NavigationBar = () => {
   const router = useRouter();
+  const { groupcode } = router.query;
   const [menuVisiable, setMenuVisible] = useState(false);
   const onClickMenuBtn = useCallback(() => {
     setMenuVisible((prev) => !prev);
   }, []);
+  const onClickHomeBtn = () => {
+    router.push(`/groups/${groupcode}`);
+  };
+  const onClickTicketBtn = () => {
+    router.push(`/groups/${groupcode}/poll`);
+  };
+
+  const onClickCalendarBtn = () => {
+    router.push(`/groups/${groupcode}/appointment`);
+  };
+
+  const onClickChatBtn = () => {
+    router.push(`/groups/${groupcode}/chat`);
+  };
 
   return (
     <>
       <NavigationStyle>
-        <NavigationButton>
+        <NavigationButton onClick={onClickHomeBtn}>
           <TiHome
             aria-label="Main"
             style={{
@@ -50,7 +65,7 @@ const NavigationBar = () => {
             }}
           ></TiHome>
         </NavigationButton>
-        <NavigationButton>
+        <NavigationButton onClick={onClickTicketBtn}>
           <TiTicket
             aria-label="Poll"
             style={{
@@ -59,7 +74,7 @@ const NavigationBar = () => {
             }}
           ></TiTicket>
         </NavigationButton>
-        <NavigationButton>
+        <NavigationButton onClick={onClickCalendarBtn}>
           <TiCalendar
             aira-label="Appointment"
             style={{
@@ -68,7 +83,7 @@ const NavigationBar = () => {
             }}
           ></TiCalendar>
         </NavigationButton>
-        <NavigationButton>
+        <NavigationButton onClick={onClickChatBtn}>
           <TiMessage
             aira-label="Chat"
             style={{

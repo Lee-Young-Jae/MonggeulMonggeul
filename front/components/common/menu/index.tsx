@@ -147,8 +147,23 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
       >
         투표하기
       </FunctionLinkStyle>
-      <div>약속잡기</div>
-      <div>채팅하기</div>
+      <FunctionLinkStyle
+        href={{
+          pathname: `/groups/${router.query.groupcode}/appointment`,
+        }}
+        about="약속잡기"
+      >
+        약속잡기
+      </FunctionLinkStyle>
+      <FunctionLinkStyle
+        href={{
+          pathname: `/groups/${router.query.groupcode}/chat`,
+        }}
+        about="채팅하기"
+      >
+        채팅하기
+      </FunctionLinkStyle>
+
       <HrStyle />
       <h2>멤버 목록 ({currentGroup.Users.length})</h2>
       <UsersProfile currentGroup={currentGroup} />

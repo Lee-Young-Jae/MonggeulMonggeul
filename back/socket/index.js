@@ -18,21 +18,34 @@ module.exports = (server, app) => {
     const req = socket.request;
     console.log("새로운 클라이언트 접속", socket.id, req.ip);
 
+    // 룸에 가입
+    socket.on("join", (data) => {
+      socket.join(data.roomId);
+      console.log("유저가", data.roomId, "에 접속했습니다.");
+      data.type = "join";
+      data.message = `${data.userName}님이 입장하셨습니다.`;
+      io.to(data.roomId).emit("joinedUser", data);
+    });
+
     // 채팅 시
-
-    const roomId = socket.handshake.query.roomId;
-
     socket.on("chat", (data) => {
-      console.log(data);
-      // io.to(roomId).emit("chat", data);
       const now = new Date();
       data.time = `${now.getHours()}:${now.getMinutes()}`;
-      io.emit("chat", data);
+      data.type = "chat";
+      io.to(data.roomId).emit("chat", data);
     });
 
     // 연결 종료 시
-    socket.on("disconnect", () => {
-      socket.leave(roomId);
+    socket.on("leave", (data) => {
+      data.type = "disconnect";
+      data.message = `${data.userName}님이 퇴장하셨습니다.`;
+      console.log("연결 종료", data.userName, data.roomId);
+      io.to(data.roomId).emit("leavedUser", data);
+      socket.leave(data.roomId);
+    });
+
+    socket.on("disconnect", (data) => {
+      console.log("클라이언트 접속 해제", socket.id);
     });
   });
 };

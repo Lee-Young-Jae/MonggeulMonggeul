@@ -27,7 +27,6 @@ export const VoteStyle = styled.div`
   padding: 0.5rem;
   box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
   background-color: white;
-  width: 80%;
   box-sizing: border-box;
   padding: 1rem;
 `;

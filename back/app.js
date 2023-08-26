@@ -49,6 +49,11 @@ app.use("/poll", pollRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/user", userRouter);
 
+// 서버 기본 GET
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 // 데이터베이스 연결
 require("./models")
   .sequelize.sync()

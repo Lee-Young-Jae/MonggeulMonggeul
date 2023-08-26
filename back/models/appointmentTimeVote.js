@@ -26,7 +26,6 @@ class AppointmentTimeVote extends Model {
 
     db.AppointmentTimeVote.belongsTo(db.User, {
       foreignKey: "userId",
-      targetKey: "id",
     });
   }
 }

@@ -10,7 +10,8 @@ const appointmentRouter = require("./routes/appointment");
 const userRouter = require("./routes/user");
 const socket = require("./socket");
 
-const port = 3010;
+// const port = 3010;
+const port = process.env.PORT || 3010;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");

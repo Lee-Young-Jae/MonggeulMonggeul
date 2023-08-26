@@ -11,7 +11,8 @@ router.get(
     failureRedirect: "/",
   }),
   (req, res) => {
-    res.redirect("http://localhost:3000/auth");
+    // res.redirect("http://localhost:3000/auth");
+    res.redirect(`${process.env.FRONT_URL}/auth`);
   }
 );
 

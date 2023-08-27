@@ -38,6 +38,11 @@ app.use(
     saveUninitialized: false, // 세션을 저장하기 전에 uninitialized 상태로 미리 만들어서 저장
     resave: false, // 세션을 항상 저장할 지 여부
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true, // 클라이언트에서 쿠키 확인 불가
+      secure: false, // https가 아닌 환경에서도 사용 가능
+      domain: ".mongguel.online",
+    },
   })
 );
 app.use(passport.initialize()); // passport 구동

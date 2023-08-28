@@ -43,7 +43,7 @@ app.use(
       secure: true, // https가 아닌 환경에서도 사용 가능
       domain: [
         process.env.FRONT_URL,
-        "monggeul-monggeul.vercel.app",
+        "monggeul-monggeul.vercel.app/",
         "monggeul.online",
         "https://monggeul-monggeul.vercel.app",
         "https://monggeul.online",

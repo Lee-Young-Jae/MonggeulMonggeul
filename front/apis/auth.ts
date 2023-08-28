@@ -3,6 +3,9 @@ import * as UserType from "@/types/user";
 
 export const fetchGetLoginInfo = async (): Promise<UserType.User> => {
   const response = await axiosInstance.get("/auth");
+
+  console.log("response.data", response.data);
+
   return response.data;
 };
 

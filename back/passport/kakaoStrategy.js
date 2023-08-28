@@ -1,6 +1,5 @@
 const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
-
 const { User } = require("../models");
 
 module.exports = () => {
@@ -12,6 +11,10 @@ module.exports = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
+          console.log("profile", profile);
+          // 인가 code
+          console.log("accessToken", accessToken);
+
           const exUser = await User.findOne({
             where: { kakaoId: profile.id },
           });

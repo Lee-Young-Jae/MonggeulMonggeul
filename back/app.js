@@ -41,7 +41,7 @@ app.use(
     cookie: {
       httpOnly: true, // 클라이언트에서 쿠키 확인 불가
       secure: false, // https가 아닌 환경에서도 사용 가능
-      domain: ".mongguel.online",
+      domain: ".monggeul-monggeul.vercel.app",
     },
   })
 );

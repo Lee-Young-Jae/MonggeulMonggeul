@@ -32,7 +32,7 @@ app.use(
 );
 
 app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie-parser 설정
-app.enable("trust proxy"); // proxy 설정
+app.set("trust proxy", 1); // proxy 설정
 app.use(
   session({
     // express-session 설정

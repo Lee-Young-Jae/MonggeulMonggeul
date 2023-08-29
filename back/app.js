@@ -31,19 +31,30 @@ app.use(
   })
 );
 
+if (process.env.NODE_ENV === "production") {
+  app.enable("trust proxy");
+  app.use((req, res, next) => {
+    if (req.secure) {
+      // https 프로토콜인 경우
+      next();
+    } else {
+      // http 프로토콜인 경우
+      res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+  });
+}
+console.log("서비스 환경: ", process.env.NODE_ENV);
 app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie-parser 설정
-app.set("trust proxy", 1); // proxy 설정
 app.use(
   session({
     // express-session 설정
     saveUninitialized: false, // 세션을 저장하기 전에 uninitialized 상태로 미리 만들어서 저장
     resave: false, // 세션을 항상 저장할 지 여부
     secret: process.env.COOKIE_SECRET,
-    proxy: true,
+    proxy: process.env.NODE_ENV === "production",
     cookie: {
-      httpOnly: false, // 클라이언트에서 쿠키 확인 가능
-      secure: true, // https가 아닌 환경에서도 사용 가능
-      domain: process.env.FRONT_URL,
+      httpOnly: true, // javascript로 cookie 접근 불가
+      secure: process.env.NODE_ENV === "production", // https가 아닌 환경에서도 사용 가능
     },
   })
 );

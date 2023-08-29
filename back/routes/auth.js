@@ -2,17 +2,26 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-const { Group, User } = require("../models");
+// 카카오 로그인 http://localhost:3010/auth/kakao
+router.get("/kakao", passport.authenticate("kakao"), (req, res) => {}); // 사용자 인증 요청
 
 // 카카오 로그인 http://localhost:3010/auth/kakao/callback
 router.get(
   "/kakao/callback",
   passport.authenticate("kakao", {
-    failureRedirect: "/",
+    failureRedirect: "/", // 로그인 실패 시 이동할 주소
   }),
   (req, res) => {
-    // res.redirect("http://localhost:3000/auth");
-    res.redirect(`${process.env.FRONT_URL}/auth`);
+    // 성공시
+    if (req.user) {
+      res.redirect(`${process.env.FRONT_URL}/auth`);
+    }
+
+    // 실패시
+    else {
+      console.log("로그인 실패");
+      res.redirect(`${process.env.FRONT_URL}/`);
+    }
   }
 );
 

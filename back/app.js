@@ -60,6 +60,7 @@ app.use(
       domain:
         process.env.NODE_ENV === "production" &&
         ".monggeul-monggeul.vercel.app",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   })
 );

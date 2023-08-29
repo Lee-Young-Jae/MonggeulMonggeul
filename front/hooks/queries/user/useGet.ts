@@ -1,10 +1,21 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { fetchGetLoginInfo } from "@/apis/auth";
+import { fetchGetLoginInfo, fetchLogin } from "@/apis/auth";
 import { getMyProfile } from "@/apis/user.api";
 import * as UserType from "@/types/user";
 import { ErrorResponse } from "@/types/axios";
 
 const LoginInfoKey = ["loginInfo"];
+
+const useGetKakaoAuth = (
+  queryOptions?: UseQueryOptions<string, ErrorResponse>
+) => {
+  return useQuery<string, ErrorResponse>(
+    LoginInfoKey,
+    () => fetchLogin(),
+    queryOptions
+  );
+};
+
 const useGetLoginInfo = (
   queryOptions?: UseQueryOptions<UserType.User, ErrorResponse>
 ) => {
@@ -25,4 +36,4 @@ const useGetMyProfile = (
   );
 };
 
-export { useGetLoginInfo, LoginInfoKey, useGetMyProfile };
+export { useGetLoginInfo, LoginInfoKey, useGetMyProfile, useGetKakaoAuth };

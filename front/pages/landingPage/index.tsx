@@ -90,12 +90,15 @@ const LandingPage = () => {
   const { setTarget } = useIntersectionObserver({ onIntersect });
 
   const router = useRouter();
-  const handleLogin = useCallback(() => {
-    const restApiKey = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
-    const redirectURI = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback`;
-    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectURI}&response_type=code`;
 
-    router.push(kakaoUrl);
+  const handleLogin = useCallback(() => {
+    // const restApiKey = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+    // const redirectURI = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakaoFallback`;
+    // const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectURI}&response_type=code`;
+
+    // router.push("/auth/kakaoFallback");
+    // router.push(`${process.env.NEXT_PUBLIC_API_URL}/auth/kakao`);
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao`;
   }, [router]);
 
   return (

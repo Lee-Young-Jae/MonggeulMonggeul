@@ -57,9 +57,7 @@ app.use(
     cookie: {
       httpOnly: true, // javascript로 cookie 접근 불가
       secure: process.env.NODE_ENV === "production", // https가 아닌 환경에서도 사용 가능
-      domain:
-        process.env.NODE_ENV === "production" &&
-        ".monggeul-monggeul.vercel.app",
+      domain: process.env.NODE_ENV === "production" && "moim.monggeul.online",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   })

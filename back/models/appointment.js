@@ -55,7 +55,7 @@ class Appointment extends Model {
       {
         modelName: "Appointment",
         tableName: "appointments",
-        charset: "utf8",
+        charset: "utf8mb4",
         collate: "utf8_general_ci",
         sequelize,
         updatedAt: false,

@@ -12,7 +12,8 @@ class AppointmentTimeVote extends Model {
         modelName: "AppointmentTimeVote",
         tableName: "appointment_time_votes",
         charset: "utf8mb4",
-        collate: "utf8_general_ci",
+        collate: "utf8mb4_general_ci",
+
         sequelize,
       }
     );

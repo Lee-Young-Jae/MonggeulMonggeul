@@ -13,7 +13,7 @@ class PollSubject extends Model {
         modelName: "PollSubject",
         tableName: "pollSubjects",
         charset: "utf8mb4",
-        collate: "utf8_general_ci",
+        collate: "utf8mb4_general_ci",
         timestamps: false,
         sequelize,
       }

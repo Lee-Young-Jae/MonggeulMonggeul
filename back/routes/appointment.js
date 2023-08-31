@@ -195,8 +195,6 @@ router.put("/:code", isLoggedIn, async (req, res) => {
       { where: { code } }
     );
 
-    console.log(existAppointment, status, code);
-
     if (!existAppointment) {
       return res.status(404).json({ message: "약속을 찾을 수 없습니다." });
     }
@@ -241,7 +239,7 @@ router.post("/vote", isLoggedIn, async (req, res) => {
         return {
           selectedDate: new Date(time[0] + " " + time[1]),
           appointmentCode: code,
-          userId: req.user.id,
+          UserId: req.user.id,
         };
       })
     );

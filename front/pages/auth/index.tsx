@@ -8,23 +8,25 @@ const AuthPage = () => {
   const router = useRouter();
   const { isLogin, getLoginInfo } = useAuth();
   const { isLoading: isLoginLoading } = getLoginInfo;
-  const { data: groups } = useGetUserGroups();
+  const { data: groups, isSuccess: isGetGroupsSuccess } = useGetUserGroups();
 
   useEffect(() => {
-    const userGroups = groups ?? [];
+    if (isLogin && isGetGroupsSuccess) {
+      const userGroups = groups ?? [];
 
-    if (!isLogin && !isLoginLoading) {
-      router.push("/");
-    } else if (isLogin && userGroups?.length > 0) {
-      router.push(`/groups/${userGroups[0].code}`, undefined, {
-        shallow: true,
-      });
-    } else if (isLogin && userGroups.length === 0) {
-      router.push("/groups", undefined, { shallow: true });
+      if (!isLogin && !isLoginLoading) {
+        router.push("/");
+      } else if (isLogin && userGroups?.length > 0) {
+        router.push(`/groups/${userGroups[0].code}`, undefined, {
+          shallow: true,
+        });
+      } else if (isLogin && userGroups.length === 0) {
+        router.push("/groups", undefined, { shallow: true });
+      }
     } else {
       console.log("로딩중...");
     }
-  }, [isLogin, router, isLoginLoading, groups]);
+  }, [isLogin, router, isLoginLoading, groups, isGetGroupsSuccess]);
 
   return (
     <>

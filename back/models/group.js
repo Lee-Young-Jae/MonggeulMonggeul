@@ -25,6 +25,10 @@ class Group extends Model {
   }
   static associate(db) {
     db.Group.belongsToMany(db.User, { through: "UserGroup" });
+    db.Group.hasMany(db.Appointment, {
+      foreignKey: "groupCode",
+      sourceKey: "code",
+    });
   }
 }
 

@@ -3,11 +3,12 @@ import styled from "styled-components";
 
 const StyledSelectBox = styled.select`
   /* appearance: none; */
-  width: 100%;
+  width: fit-content;
   border: none;
   border-radius: 14px;
   text-align: center;
   height: 34.667px; // Input height: 34.667px;
+  font-family: "omyuPretty", sans-serif;
 
   &:focus {
     outline: none;
@@ -37,15 +38,18 @@ const SelectBox = <ValueType extends string | number>({
   value,
   onChange,
 }: {
-  options: ValueType[];
+  options: {
+    value: ValueType;
+    label: string;
+  }[];
   value: ValueType;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
   return (
     <StyledSelectBox value={value} onChange={onChange}>
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
         </option>
       ))}
     </StyledSelectBox>

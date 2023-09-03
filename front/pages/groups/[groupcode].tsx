@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TiTicket, TiCalendar, TiMessage } from "react-icons/ti";
+import { TiTicket, TiCalendar, TiMessage, TiContacts } from "react-icons/ti";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -11,12 +11,13 @@ const FunctionList = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 2rem;
+  grid-gap: 10px;
+  margin-top: 1rem;
 `;
 
 const FunctionButton = styled.button`
-  width: 95%;
-  height: 125px;
+  width: 100%;
+  height: 120px;
   border: none;
   cursor: pointer;
   display: flex;
@@ -68,7 +69,7 @@ const Group = () => {
                   router.push(`/groups/${groupcode}/poll`);
                 }}
               >
-                <TiTicket size={80} color="#F4356C" />
+                <TiTicket size={60} color="#F4356C" />
                 투표하기
               </FunctionButton>
               <FunctionButton
@@ -76,7 +77,7 @@ const Group = () => {
                   router.push(`/groups/${groupcode}/appointment`);
                 }}
               >
-                <TiCalendar size={80} color="#F4356C" />
+                <TiCalendar size={60} color="#F4356C" />
                 약속잡기
               </FunctionButton>
               <FunctionButton
@@ -84,8 +85,17 @@ const Group = () => {
                   router.push(`/groups/${groupcode}/chat`);
                 }}
               >
-                <TiMessage size={80} color="#F4356C" />
+                <TiMessage size={60} color="#F4356C" />
                 채팅하기
+              </FunctionButton>
+
+              <FunctionButton
+                onClick={() => {
+                  router.push(`/groups/${groupcode}/invite`);
+                }}
+              >
+                <TiContacts size={60} color="#F4356C" />
+                초대하기
               </FunctionButton>
             </>
           )}

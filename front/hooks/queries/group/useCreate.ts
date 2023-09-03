@@ -1,6 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
-import { createGroup, joinGroup } from "@/apis/group.api";
-import { Group } from "@/types/group";
+import {
+  createGroup,
+  joinGroup,
+  generateGroupInviteCode,
+} from "@/apis/group.api";
+import {
+  Group,
+  GroupInviteCode,
+  generateGroupInviteCodeRequest,
+} from "@/types/group";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
 import { queryClient } from "@/apis/config/queryClient";
 
@@ -24,4 +32,20 @@ const useJoinGroup = (mutationOptions?: UseCustomMutationOptions<Group>) => {
   });
 };
 
-export { useCreateGroup, useJoinGroup };
+const useCreateGroupInviteCode = (
+  mutationOptions?: UseCustomMutationOptions<GroupInviteCode>
+) => {
+  return useMutation<
+    GroupInviteCode,
+    ErrorResponse,
+    generateGroupInviteCodeRequest
+  >(generateGroupInviteCode, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["GroupInviteCodes"]);
+    },
+    useErrorBoundary: true,
+    ...mutationOptions,
+  });
+};
+
+export { useCreateGroup, useJoinGroup, useCreateGroupInviteCode };

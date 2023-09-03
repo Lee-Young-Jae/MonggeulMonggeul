@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions, QueryClient } from "@tanstack/react-query";
 import { fetchGetUserGroups } from "@/apis/user.api";
-import { getGroup } from "@/apis/group.api";
+import { getGroup, getGroupInviteCodes } from "@/apis/group.api";
 import * as GroupType from "@/types/group";
 import { ErrorResponse } from "@/types/axios";
 
@@ -36,4 +36,19 @@ const useGetGroup = (
   );
 };
 
-export { useGetUserGroups, useGetGroup };
+const useGetGroupInviteCodes = (
+  groupCode: string,
+  queryOptions?: UseQueryOptions<GroupType.GroupInviteCode[], ErrorResponse>
+) => {
+  return useQuery<GroupType.GroupInviteCode[], ErrorResponse>(
+    ["GroupInviteCodes", groupCode],
+    () => getGroupInviteCodes(groupCode),
+    {
+      useErrorBoundary: true,
+      staleTime: 30000,
+      ...queryOptions,
+    }
+  );
+};
+
+export { useGetUserGroups, useGetGroup, useGetGroupInviteCodes };

@@ -58,7 +58,6 @@ const Group = () => {
   return (
     <GroupPage>
       <PageContent>
-        <span>사용할 기능을 선택하세요!</span>
         <FunctionList>
           {isLoading ? (
             <Loading></Loading>

@@ -27,7 +27,6 @@ const Appointment = () => {
   return (
     <GroupPage>
       <PageContent>
-        <div>약속을 잡아보세요</div>
         <Button onClick={onClickCreate}>약속 만들기</Button>
         {appointments !== undefined && (
           <AppointmentList appointments={appointments}></AppointmentList>

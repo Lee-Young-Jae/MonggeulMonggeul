@@ -18,12 +18,6 @@ const PollList = styled.div`
   margin: 1rem 0;
 `;
 
-const PollCreateTitle = styled.h1`
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-`;
-
 const PollPage = () => {
   const router = useRouter();
 
@@ -43,7 +37,6 @@ const PollPage = () => {
     <GroupPage>
       <PageContent>
         <div>
-          <PollCreateTitle>투표 목록</PollCreateTitle>
           <Button
             onClick={() => {
               router.push(`/groups/${router.query.groupcode}/poll/create`);

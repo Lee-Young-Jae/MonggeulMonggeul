@@ -87,9 +87,7 @@ const Menu = ({ visiable, setVisiable }: MenuProps) => {
   const [animating, setAnimating] = useState(false);
   const [localVisible, setLocalVisible] = useState(visiable);
 
-  const { data: userGroups } = useGetUserGroups({
-    staleTime: 30000,
-  });
+  const { data: userGroups } = useGetUserGroups({});
 
   const currentGroup = userGroups?.find(
     (group) => group.code === router.query.groupcode

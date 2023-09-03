@@ -20,13 +20,12 @@ const PollCreateForm = styled.div`
 `;
 
 const PollCreateTitleInput = styled.input`
-  width: 100%;
   border: none;
   border-bottom: 1px solid #ccc;
   font-family: inherit;
-  margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: 1.5rem;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;

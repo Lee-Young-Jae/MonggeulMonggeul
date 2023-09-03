@@ -10,4 +10,25 @@ type Group = {
 
 type createGroupRequest = Pick<Group, "name" | "code">;
 
-export type { Group, createGroupRequest };
+type GroupInviteCode = {
+  id: number;
+  code: string;
+  expiredAt: string;
+  status: string;
+  createdAt: string;
+  expireCount: number;
+  User: User;
+};
+
+type generateGroupInviteCodeRequest = {
+  groupCode: string;
+  expireTime: number;
+  expireCount: number;
+};
+
+export type {
+  Group,
+  createGroupRequest,
+  GroupInviteCode,
+  generateGroupInviteCodeRequest,
+};

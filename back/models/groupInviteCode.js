@@ -13,7 +13,11 @@ class GroupInviteCode extends Model {
           type: DataTypes.DATE,
           allowNull: false,
         },
-
+        expireCount: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
         status: {
           type: DataTypes.STRING(10),
           allowNull: false,

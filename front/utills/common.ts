@@ -54,3 +54,30 @@ export const addMinute = (date: Date, minute: number): Date => {
   result.setMinutes(result.getMinutes() + minute);
   return result;
 };
+
+/**
+ * 날짜를 받아 현재 시간과 비교하여 얼마만큼의 시간이 남았는지 반환하는 함수
+ * @param {Date} date - 날짜
+ * @returns {string} - 남은 시간
+ * @example
+ * const date = new Date("2021-08-01T00:00:00");
+ * const result = getRemainTime(date);
+ * console.log(result); // 1일 12시간 30분
+ * console.log(typeof result); // string
+ *
+ */
+export const getRemainTime = (date: Date): string => {
+  const now = new Date();
+  const diff = date.getTime() - now.getTime();
+
+  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minute = Math.floor((diff / (1000 * 60)) % 60);
+
+  if (diff < 0) return "만료";
+
+  if (day === 0 && hour === 0) return `${minute}분`;
+  if (day === 0) return `${hour}시간 ${minute}분`;
+
+  return `${day}일 ${hour}시간 ${minute}분`;
+};

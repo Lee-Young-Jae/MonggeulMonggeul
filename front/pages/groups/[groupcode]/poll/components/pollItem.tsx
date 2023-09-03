@@ -97,7 +97,6 @@ const PollItem = ({
 
   return (
     <PollItemStyle>
-      <div>공유하기 버튼</div>
       <div>{title}</div>
       <ProgressBar percentmax={userCount} percentcurrent={votedUserCount}>
         <p>

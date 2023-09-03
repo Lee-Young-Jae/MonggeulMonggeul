@@ -26,6 +26,7 @@ const useJoinGroup = (mutationOptions?: UseCustomMutationOptions<Group>) => {
   return useMutation<Group, ErrorResponse, string>(joinGroup, {
     onSuccess: () => {
       queryClient.invalidateQueries(["UserGroups"]);
+      queryClient.invalidateQueries(["Group"]);
     },
     useErrorBoundary: true,
     ...mutationOptions,

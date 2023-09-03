@@ -29,6 +29,15 @@ router.get("/:code", isLoggedIn, async (req, res) => {
       return res.status(409).json({ message: "유효한 모임을 선택해주세요." });
     }
 
+    // 가입한 모임인지 확인
+    const existJoinedGroup = await req.user.getGroups({
+      where: { code: req.params.code },
+    });
+
+    if (existJoinedGroup.length === 0) {
+      return res.status(404).json({ message: "가입된 모임이 아닙니다." });
+    }
+
     const group = await Group.findOne({
       where: { code: req.params.code },
       include: [
@@ -99,8 +108,18 @@ router.post("/join", isLoggedIn, async (req, res) => {
       res.status(404).send({ message: "모임 코드를 입력해주세요." });
     }
 
+    const existGroupCode = await GroupInviteCode.findOne({
+      where: { code: code, status: "valid" },
+    });
+
+    if (!existGroupCode) {
+      res
+        .status(404)
+        .send({ message: "코드가 존재하지 않거나 만료되었습니다." });
+    }
+
     const existGroup = await Group.findOne({
-      where: { code: code },
+      where: { id: existGroupCode.GroupId },
     });
 
     if (!existGroup) {
@@ -112,7 +131,14 @@ router.post("/join", isLoggedIn, async (req, res) => {
     });
 
     if (existGroup && existJoinedGroup.length === 0) {
+      // 초대 코드 사용 횟수 차감
+      existGroupCode.expireCount -= 1;
+      if (existGroupCode.expireCount === 0) {
+        existGroupCode.status = "invalid";
+      }
+      await existGroupCode.save();
       req.user.addGroup(existGroup);
+
       res.status(201).json(existGroup);
     } else {
       res

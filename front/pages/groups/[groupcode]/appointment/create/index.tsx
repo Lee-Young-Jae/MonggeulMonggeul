@@ -27,11 +27,15 @@ const DurationContainer = styled.div`
   align-items: center;
 `;
 
+const StyledInput = styled(Input)`
+  margin-top: 0;
+`;
+
 const SelectBoxWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30%;
+  width: 100%;
   border: 1px solid #f8c6d2;
   border-radius: 14px;
 `;
@@ -43,7 +47,7 @@ const AppointmentSubTitle = styled.label`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 5px;
 `;
 
@@ -170,9 +174,9 @@ const AppointmentCreate = () => {
 
         <AppointmentCreateContainer>
           <AppointmentSubTitle>제목</AppointmentSubTitle>
-          <Input value={title} onChange={onChangeTitle} />
+          <StyledInput value={title} onChange={onChangeTitle} />
           <AppointmentSubTitle>부제목</AppointmentSubTitle>
-          <Input value={subTitle} onChange={onChangeSubTitle} />
+          <StyledInput value={subTitle} onChange={onChangeSubTitle} />
           <AppointmentSubTitle>진행 시간 설정</AppointmentSubTitle>
           <DurationContainer>
             <SelectBoxWrapper>
@@ -181,29 +185,37 @@ const AppointmentCreate = () => {
                 onChange={(e) => {
                   setDuration({ ...duration, hours: ~~e.target.value });
                 }}
-                options={new Array(23).fill(0).map((_, index) => index)}
+                options={new Array(23).fill(0).map((_, index) => {
+                  const value = index + 1;
+                  return { value, label: `${value}` };
+                })}
               ></SelectBox>
-            </SelectBoxWrapper>
-            <span>시간</span>
-            <SelectBoxWrapper>
+              <span>시간</span>
               <SelectBox<number>
                 value={duration.minutes}
                 onChange={(e) => {
                   setDuration({ ...duration, minutes: ~~e.target.value });
                 }}
-                options={[0, 30]}
+                options={new Array(59).fill(0).map((_, index) => {
+                  const value = index + 1;
+                  return { value, label: `${value}` };
+                })}
               ></SelectBox>
+              <span>분 동안</span>
             </SelectBoxWrapper>
-            <span>분 동안</span>
           </DurationContainer>
 
           <AppointmentSubTitle>시작 시간</AppointmentSubTitle>
-          <Input value={startTime} onChange={onChangeStartTime} type="time" />
+          <StyledInput
+            value={startTime}
+            onChange={onChangeStartTime}
+            type="time"
+          />
           <AppointmentSubTitle>종료 시간</AppointmentSubTitle>
-          <Input value={endTime} onChange={onChangeEndTime} type="time" />
+          <StyledInput value={endTime} onChange={onChangeEndTime} type="time" />
           <AppointmentSubTitle>마감날짜</AppointmentSubTitle>
 
-          <Input
+          <StyledInput
             value={deadLine}
             onChange={(e) => {
               setDeadLine(e.target.value);

@@ -5,14 +5,20 @@ import ContentBox from "@/components/layout/ContentBox";
 
 import { useRouter } from "next/router";
 import SelectBox from "@/components/common/selectBox";
-import { useGetGroup } from "@/hooks/queries/group/useGet";
+import {
+  useGetGroup,
+  useGetGroupInviteCodes,
+} from "@/hooks/queries/group/useGet";
+import Button from "@/components/common/button";
+import { useCreateGroupInviteCode } from "@/hooks/queries/group/useCreate";
+import InviteCode from "./components/inviteCode";
 
-const StyledInviteTitle = styled.h1`
+const StyledTitle = styled.h1`
   font-size: 1.2rem;
   font-weight: bold;
 `;
 
-const StyledInviteDescription = styled.p`
+const StyledDescription = styled.p`
   margin-top: 0.5rem;
   font-size: 1rem;
   color: #666666;
@@ -36,54 +42,38 @@ const StyledFlexedSelectBox = styled.div`
   }
 `;
 
-const StyledInviteCode = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #000000;
-  background-color: #ffffff;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  box-sizing: border-box;
-  border: 1px solid #f8c6d2;
-
-  cursor: pointer;
-
-  &:hover {
-    background: linear-gradient(
-      40deg,
-      rgba(244, 53, 108, 0.01) 0%,
-      rgba(255, 0, 0, 0.03) 50%,
-      rgba(255, 154, 0, 0.01) 100%,
-      rgba(255, 255, 255, 1) 100%
-    );
-  }
-`;
-
 const InvitePage = () => {
   const router = useRouter();
   const { groupcode } = router.query;
   const { data: group } = useGetGroup(String(groupcode), {
     enabled: !!groupcode,
   });
+  const { mutate: mutateInviteCode } = useCreateGroupInviteCode();
+  const { data: inviteCodes } = useGetGroupInviteCodes(groupcode as string, {
+    enabled: !!groupcode,
+  });
 
   const [expireTime, setExpireTime] = useState(1);
   const [expireCount, setExpireCount] = useState(1);
+
+  const onClickGenerateCodeBtn = () => {
+    mutateInviteCode({
+      groupCode: String(groupcode),
+      expireTime,
+      expireCount,
+    });
+
+    alert("코드 생성");
+  };
 
   return (
     <GroupPage>
       <PageContent>
         <ContentBox>
-          <StyledInviteTitle>Invite People to {group?.name}</StyledInviteTitle>
-          <StyledInviteDescription>
+          <StyledTitle>Invite People to {group?.name}</StyledTitle>
+          <StyledDescription>
             참가자를 모임에 초대하기 위해 이 코드를 공유해 주세요!
-          </StyledInviteDescription>
+          </StyledDescription>
 
           <StyledFlexedSelectBox>
             <label>만료 시간</label>
@@ -111,7 +101,27 @@ const InvitePage = () => {
             />
           </StyledFlexedSelectBox>
 
-          <StyledInviteCode>{group?.code}</StyledInviteCode>
+          <Button onClick={onClickGenerateCodeBtn}>코드 생성</Button>
+        </ContentBox>
+        <ContentBox>
+          <StyledTitle>Active Codes</StyledTitle>
+          <StyledDescription>
+            {inviteCodes?.length === 0
+              ? "모임의 활성화된 초대 코드가 없습니다."
+              : "모임의 활성화된 초대 코드 목록입니다."}
+          </StyledDescription>
+          {inviteCodes?.map((inviteCode, index) => (
+            <InviteCode
+              key={inviteCode.id}
+              id={inviteCode.id}
+              User={inviteCode.User}
+              expiredAt={inviteCode.expiredAt}
+              expireCount={inviteCode.expireCount}
+              code={inviteCode.code}
+              createdAt={inviteCode.createdAt}
+              status={inviteCode.status}
+            />
+          ))}
         </ContentBox>
       </PageContent>
     </GroupPage>

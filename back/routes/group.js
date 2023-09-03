@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { Group, User } = require("../models");
+const { Group, User, GroupInviteCode } = require("../models");
 const { isLoggedIn } = require("./middlewares");
+const { generateRandomCode } = require("../utils/common");
+const { Op } = require("sequelize");
 
 // 유저의 모임 목록 send GET http://localhost:3010/group
 router.get("/", isLoggedIn, (req, res) => {
@@ -160,6 +162,97 @@ router.post("/leave", isLoggedIn, async (req, res) => {
     }
 
     res.status(404).send({ message: "유효한 모임이 아닙니다." });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// 모임 초대 코드 생성 POST http://localhost:3010/group/generate/invite-code
+router.post("/generate/invite-code", isLoggedIn, async (req, res) => {
+  try {
+    const { expireTime, expireCount, groupCode } = req.body;
+    if (!expireTime || expireTime === "") {
+      res
+        .status(404)
+        .send({ message: "유효한 초대 코드를 생성할 수 없습니다." });
+    }
+
+    const existGroup = await Group.findOne({
+      where: { code: groupCode },
+    });
+
+    if (!existGroup) {
+      res
+        .status(404)
+        .send({ message: "유효한 초대 코드를 생성할 수 없습니다." });
+    }
+
+    const existInviteCode = await GroupInviteCode.findAll({
+      where: { GroupId: existGroup.id, status: "valid" },
+    });
+
+    if (existInviteCode.length > 5) {
+      res
+        .status(404)
+        .send({ message: "너무 많은 초대 코드가 생성되었습니다." });
+    }
+
+    const hash = new Date().getTime().toString(36);
+    const code = generateRandomCode(hash + expireTime, 10 + expireCount);
+
+    const expiredAt = new Date();
+    expiredAt.setHours(expiredAt.getHours() + expireTime);
+
+    await GroupInviteCode.create({
+      code: code,
+      expiredAt: expiredAt,
+      GroupId: existGroup.id,
+      UserId: req.user.id,
+      expireCount,
+    }).then((inviteCode) => {
+      res.status(201).json(inviteCode);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// 모임의 활성화된 초대 코드 목록 GET http://localhost:3010/group/invite-code/
+router.get("/invite-code/:groupCode", isLoggedIn, async (req, res) => {
+  try {
+    const { groupCode } = req.params;
+
+    if (!groupCode || groupCode === "") {
+      res.status(404).send({ message: "유효한 초대 코드를 찾을 수 없습니다." });
+    }
+
+    const existGroup = await Group.findOne({
+      where: { code: groupCode },
+    });
+
+    if (!existGroup) {
+      res.status(404).send({ message: "유효한 초대 코드를 찾을 수 없습니다." });
+    }
+
+    const inviteCodes = await GroupInviteCode.findAll({
+      // user 포함
+      where: {
+        GroupId: existGroup.id,
+        status: "valid",
+        expiredAt: {
+          [Op.gt]: new Date(),
+        },
+      },
+
+      include: [
+        {
+          model: User,
+          attributes: ["name", "email", "profileImage"],
+        },
+      ],
+    });
+
+    res.status(200).json(inviteCodes);
   } catch (err) {
     console.error(err);
   }

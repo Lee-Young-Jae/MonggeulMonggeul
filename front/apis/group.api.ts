@@ -32,3 +32,23 @@ export const leaveGroup = async (
   });
   return response.data;
 };
+
+export const generateGroupInviteCode = async ({
+  groupCode,
+  expireTime,
+  expireCount,
+}: GroupType.generateGroupInviteCodeRequest): Promise<GroupType.GroupInviteCode> => {
+  const response = await axiosInstance.post(`/group/generate/invite-code`, {
+    groupCode,
+    expireTime,
+    expireCount,
+  });
+  return response.data;
+};
+
+export const getGroupInviteCodes = async (
+  groupCode: string
+): Promise<GroupType.GroupInviteCode[]> => {
+  const response = await axiosInstance.get(`/group/invite-code/${groupCode}`);
+  return response.data;
+};

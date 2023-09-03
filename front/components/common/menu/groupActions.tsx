@@ -46,8 +46,9 @@ const GroupActions = () => {
   const groupJoinHandler = async () => {
     const result = await joinGroup(groupJoinInputValue);
     if (result) {
-      window.alert("모임에 성공적으로 가입했습니다..");
-      router.push(`/groups/${groupJoinInputValue}`);
+      window.alert("모임에 성공적으로 가입했습니다.");
+      setGroupJoinModal(false);
+      router.push(`/groups/${result.code}`);
     }
   };
 

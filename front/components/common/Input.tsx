@@ -3,14 +3,22 @@ import styled, { css } from "styled-components";
 interface InputStyleProps {
   outlined?: "true" | "false";
   width?: "s" | "m" | "l";
+  align?: "left" | "center" | "right";
 }
 
 const InputStyle = styled.input<InputStyleProps>`
   border: none;
   outline: none;
   font-size: 1rem;
-  text-align: center;
-  margin-top: 1rem;
+  text-align: ${(props) =>
+    props.align === "left"
+      ? "left"
+      : props.align === "center"
+      ? "center"
+      : props.align === "right"
+      ? "right"
+      : "center"};
+
   border-radius: 14px;
   padding: 0.5rem;
   border: 1px solid #f8c6d2;
@@ -43,13 +51,20 @@ const InputStyle = styled.input<InputStyleProps>`
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   outlined?: boolean;
   width?: "s" | "m" | "l";
+  align?: "left" | "center" | "right";
 }
 
-const Input = ({ outlined, width = "l", ...props }: InputProps) => {
+const Input = ({
+  outlined,
+  width = "l",
+  align = "center",
+  ...props
+}: InputProps) => {
   return (
     <InputStyle
       outlined={outlined === true ? "true" : "false"}
       width={width}
+      align={align}
       {...props}
     ></InputStyle>
   );

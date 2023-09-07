@@ -18,6 +18,9 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
   cursor: pointer;
   color: white;
 
+  margin-left: ${(props) => (props.align === "left" ? "0" : "auto")};
+  margin-right: ${(props) => (props.align === "right" ? "0" : "auto")};
+
   background-color: ${(props) =>
     props.color === "default" ? "#f4356c" : "#ccc"};
 
@@ -61,12 +64,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   outlined?: boolean;
   size?: "s" | "m" | "l";
   color?: "default" | "unimportant";
+  align?: "left" | "center" | "right";
 }
 
 const Button = ({
   outlined,
   size,
   color = "default",
+  align = "center",
   ...props
 }: ButtonProps) => {
   return (
@@ -74,6 +79,7 @@ const Button = ({
       size={size}
       outlined={outlined === true ? "true" : "false"}
       color={color}
+      align={align}
       {...props}
     ></ButtonStyle>
   );

@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/button";
 import SelectBox from "@/components/common/selectBox";
+import ActionTip from "@/components/layout/ActionTip";
 const AppointmentCreateContainer = styled.div`
   margin-top: 20px;
   display: flex;
@@ -162,6 +163,9 @@ const AppointmentCreate = () => {
   return (
     <GroupPage>
       <PageContent>
+        <ActionTip>
+          약속을 투표할 <strong>시간의 범위</strong>를 선택해주세요!
+        </ActionTip>
         <Calendar
           endDate={endDate}
           startDate={startDate}

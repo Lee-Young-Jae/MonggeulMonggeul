@@ -8,6 +8,7 @@ const authRouter = require("./routes/auth");
 const pollRouter = require("./routes/poll");
 const appointmentRouter = require("./routes/appointment");
 const userRouter = require("./routes/user");
+const postRouter = require("./routes/post");
 const socket = require("./socket");
 
 // const port = 3010;
@@ -70,6 +71,7 @@ app.use("/auth", authRouter);
 app.use("/poll", pollRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 // 서버 기본 GET
 app.get("/", (req, res) => {

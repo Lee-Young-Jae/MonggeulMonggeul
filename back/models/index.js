@@ -10,6 +10,8 @@ const PollSubject = require("./pollSubject");
 const Appointment = require("./appointment");
 const AppointmentTimeVote = require("./appointmentTimeVote");
 const GroupInviteCode = require("./groupInviteCode");
+const Post = require("./post");
+const PostComment = require("./postComment");
 
 // node와 mySql연결
 const sequelize = new Sequelize(
@@ -31,6 +33,8 @@ db.PollSubject = PollSubject;
 db.Appointment = Appointment;
 db.AppointmentTimeVote = AppointmentTimeVote;
 db.GroupInviteCode = GroupInviteCode;
+db.Post = Post;
+db.PostComment = PostComment;
 
 // 모델 초기화
 Object.keys(db).forEach((modelName) => {

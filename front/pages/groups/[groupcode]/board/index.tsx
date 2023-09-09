@@ -14,7 +14,9 @@ const Label = styled.label`
 
 const Textarea = styled.textarea`
   width: 100%;
-  height: 150px;
+  // 내용에 따라 높이가 자동으로 늘어나도록
+  height: 120px;
+
   resize: none;
   border: 1px solid #f8c6d2;
   border-radius: 14px;

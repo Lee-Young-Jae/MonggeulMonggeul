@@ -53,4 +53,39 @@ router.get("/:groupcode", isLoggedIn, async (req, res) => {
   }
 });
 
+// 게시글 작성 POST http://localhost:3010/post/:groupcode
+router.post("/", isLoggedIn, async (req, res) => {
+  try {
+    const { groupCode } = req.body;
+
+    if (!groupCode || groupCode === "") {
+      return res.status(409).json({ message: "유효한 모임을 선택해주세요." });
+    }
+
+    // 가입한 모임인지 확인
+    const existJoinedGroup = await req.user.getGroups({
+      where: { code: groupCode },
+    });
+
+    if (existJoinedGroup.length === 0) {
+      return res.status(404).json({ message: "가입된 모임이 아닙니다." });
+    }
+
+    const { title, content } = req.body;
+
+    // 게시글 작성
+    const post = await Post.create({
+      title,
+      content,
+      groupId: existJoinedGroup[0].id,
+      userId: req.user.id,
+      like: 0,
+    });
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = router;

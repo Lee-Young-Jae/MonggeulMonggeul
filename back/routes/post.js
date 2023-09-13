@@ -12,6 +12,8 @@ router.get("/:groupcode", isLoggedIn, async (req, res) => {
       return res.status(409).json({ message: "유효한 모임을 선택해주세요." });
     }
 
+    console.log("groupcode : ", req.params.groupcode);
+
     // 가입한 모임인지 확인
     const existJoinedGroup = await req.user.getGroups({
       where: { code: req.params.groupcode },
@@ -25,7 +27,7 @@ router.get("/:groupcode", isLoggedIn, async (req, res) => {
 
     // 게시글 조회
     const posts = await Post.findAll({
-      where: { groupCode: req.params.groupcode },
+      where: { GroupId: existJoinedGroup[0].id },
       include: [
         {
           model: User,
@@ -43,7 +45,7 @@ router.get("/:groupcode", isLoggedIn, async (req, res) => {
         },
       ],
       order: [["createdAt", "DESC"]],
-      offset: parseInt(page) * parseInt(limit),
+      offset: 0 + parseInt(page) * parseInt(limit),
       limit: parseInt(limit),
     });
 
@@ -77,8 +79,8 @@ router.post("/", isLoggedIn, async (req, res) => {
     const post = await Post.create({
       title,
       content,
-      groupId: existJoinedGroup[0].id,
-      userId: req.user.id,
+      GroupId: existJoinedGroup[0].id,
+      UserId: req.user.id,
       like: 0,
     });
 

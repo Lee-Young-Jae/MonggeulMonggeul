@@ -2,9 +2,13 @@ import axiosInstance from "./config/axiosInstance";
 import * as BoardType from "@/types/board";
 
 export const getPosts = async (
-  groupCode: string
+  groupCode: string,
+  page: number,
+  limit: number
 ): Promise<BoardType.Post[]> => {
-  const response = await axiosInstance.get(`/post/${groupCode}`);
+  const response = await axiosInstance.get(
+    `/post/${groupCode}?page=${page}&limit=${limit}`
+  );
   return response.data;
 };
 

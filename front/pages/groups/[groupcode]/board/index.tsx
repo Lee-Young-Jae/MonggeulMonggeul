@@ -3,6 +3,9 @@ import Button from "@/components/common/button";
 import ActionTip from "@/components/layout/ActionTip";
 import ContentBox from "@/components/layout/ContentBox";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
+import { useCreatePost } from "@/hooks/queries/board/useCreate";
+import { useGetGroupPosts } from "@/hooks/queries/board/useGet";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
@@ -14,9 +17,7 @@ const Label = styled.label`
 
 const Textarea = styled.textarea`
   width: 100%;
-  // 내용에 따라 높이가 자동으로 늘어나도록
   height: 120px;
-
   resize: none;
   border: 1px solid #f8c6d2;
   border-radius: 14px;
@@ -70,6 +71,34 @@ const BoardCommentItem = styled.li`
 `;
 
 const Board = () => {
+  const router = useRouter();
+
+  const { groupcode } = router.query;
+
+  const page = 0;
+  const limit = 10;
+
+  const { data: boardList } = useGetGroupPosts(
+    groupcode as string,
+    page,
+    limit,
+    {
+      enabled: !!groupcode,
+    }
+  );
+
+  const { mutate: createBoard } = useCreatePost();
+
+  const handleCreateBoard = () => {
+    createBoard({
+      groupCode: groupcode as string,
+      title: "제목",
+      content: "내용",
+    });
+  };
+
+  console.log(boardList);
+
   return (
     <GroupPage>
       <PageContent>
@@ -82,7 +111,7 @@ const Board = () => {
           <br />
           <Label>Content</Label>
           <Textarea></Textarea>
-          <Button align="right" size="s">
+          <Button align="right" size="s" onClick={handleCreateBoard}>
             등록
           </Button>
         </ContentBox>

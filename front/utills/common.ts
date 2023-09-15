@@ -81,3 +81,31 @@ export const getRemainTime = (date: Date): string => {
 
   return `${day}일 ${hour}시간 ${minute}분`;
 };
+
+/**
+ *  시간을 받아 5분전 10분전 등으로 반환하는 함수
+ * @param {string} time - 시간
+ * @returns {string} - 5분전 10분전 등
+ * @example
+ * const time = "2021-08-01T00:00:00";
+ * const result = getBeforeTime(time);
+ * console.log(result); // 5분전
+ * console.log(typeof result); // string
+ *
+ */
+export const getBeforeTime = (time: string): string => {
+  const now = new Date();
+  const date = new Date(time);
+  const diff = now.getTime() - date.getTime();
+
+  const minute = Math.floor(diff / (1000 * 60));
+
+  if (minute < 1) return "방금 전";
+  if (minute < 60) return `${minute}분 전`;
+  if (minute < 60 * 24) return `${Math.floor(minute / 60)}시간 전`;
+  if (minute < 60 * 24 * 30) return `${Math.floor(minute / (60 * 24))}일 전`;
+  if (minute < 60 * 24 * 30 * 12)
+    return `${Math.floor(minute / (60 * 24 * 30))}달 전`;
+
+  return `${Math.floor(minute / (60 * 24 * 30 * 12))}년 전`;
+};

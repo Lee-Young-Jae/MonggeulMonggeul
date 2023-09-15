@@ -1,7 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { createPost } from "@/apis/board.api";
+import { createComment, createPost } from "@/apis/board.api";
 import { ErrorResponse, UseCustomMutationOptions } from "@/types/axios";
-import { Post, createPostRequest } from "@/types/board";
+import {
+  Post,
+  createCommentRequest,
+  createPostRequest,
+  Comment,
+} from "@/types/board";
 import { queryClient } from "@/apis/config/queryClient";
 
 const useCreatePost = (mutationOptions?: UseCustomMutationOptions<Post>) => {
@@ -14,4 +19,19 @@ const useCreatePost = (mutationOptions?: UseCustomMutationOptions<Post>) => {
   });
 };
 
-export { useCreatePost };
+const useCreateComment = (
+  mutationOptions?: UseCustomMutationOptions<Comment>
+) => {
+  return useMutation<Comment, ErrorResponse, createCommentRequest>(
+    createComment,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["GroupPosts"]);
+      },
+      useErrorBoundary: true,
+      ...mutationOptions,
+    }
+  );
+};
+
+export { useCreatePost, useCreateComment };

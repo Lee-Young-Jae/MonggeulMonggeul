@@ -11,7 +11,7 @@ type Post = {
   User: User;
   GroupId: number;
   Group: Group;
-  Comments: Comment[];
+  PostComments: Comment[];
 };
 
 type Comment = {
@@ -29,4 +29,8 @@ type createPostRequest = Pick<Post, "title" | "content"> & {
   groupCode: string;
 };
 
-export type { Post, Comment, createPostRequest };
+type createCommentRequest = Pick<Comment, "content"> & {
+  postId: number;
+};
+
+export type { Post, Comment, createPostRequest, createCommentRequest };

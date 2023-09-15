@@ -90,4 +90,41 @@ router.post("/", isLoggedIn, async (req, res) => {
   }
 });
 
+// 게시글 Comment 작성 POST http://localhost:3010/post/{postId}/comment
+router.post("/:postId/comment", isLoggedIn, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { content } = req.body;
+
+    // 게시글 조회
+    const existPost = await Post.findOne({
+      where: { id: postId },
+    });
+
+    if (!existPost) {
+      return res.status(404).json({ message: "존재하지 않는 게시글입니다." });
+    }
+
+    // 가입된 모임인지 확인
+    const existJoinedGroup = await req.user.getGroups({
+      where: { id: existPost.GroupId },
+    });
+
+    if (existJoinedGroup.length === 0) {
+      return res.status(404).json({ message: "가입된 모임이 아닙니다." });
+    }
+
+    // 댓글 작성
+    const postComment = await PostComment.create({
+      content,
+      PostId: postId,
+      UserId: req.user.id,
+    });
+
+    res.status(200).json(postComment);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = router;

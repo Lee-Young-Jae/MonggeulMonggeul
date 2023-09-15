@@ -24,3 +24,13 @@ export const createPost = async ({
   });
   return response.data;
 };
+
+export const createComment = async ({
+  postId,
+  content,
+}: BoardType.createCommentRequest): Promise<BoardType.Comment> => {
+  const response = await axiosInstance.post(`/post/${postId}/comment`, {
+    content,
+  });
+  return response.data;
+};

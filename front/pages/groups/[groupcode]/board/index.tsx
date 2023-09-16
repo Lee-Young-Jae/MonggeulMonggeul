@@ -3,11 +3,18 @@ import Button from "@/components/common/button";
 import ActionTip from "@/components/layout/ActionTip";
 import ContentBox from "@/components/layout/ContentBox";
 import { GroupPage, PageContent } from "@/components/layout/GroupLayout";
-import { useCreatePost } from "@/hooks/queries/board/useCreate";
+import Hr from "@/components/layout/Hr";
+import {
+  useCreateComment,
+  useCreatePost,
+} from "@/hooks/queries/board/useCreate";
 import { useGetGroupPosts } from "@/hooks/queries/board/useGet";
+import { getBeforeTime } from "@/utills/common";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
+import CommentBox from "./components/commentBox";
 
 const Label = styled.label`
   display: block;
@@ -16,30 +23,27 @@ const Label = styled.label`
 `;
 
 const Textarea = styled.textarea`
-  width: 100%;
-  height: 120px;
   resize: none;
+  padding: 1rem 1rem 1.5rem;
+  outline: none;
   border: 1px solid #f8c6d2;
+  width: 100%;
   border-radius: 14px;
-  padding: 0.5rem;
+  min-height: 20px;
   font-size: 1rem;
-  font-family: inherit;
-  //줄바꿈
-  white-space: pre-wrap;
-  //스크롤바
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-
+  line-height: 1.5;
   box-sizing: border-box;
+  transition: border-color 0.2s ease-in-out 0s;
+  font-family: inherit;
+`;
 
-  &:focus {
-    outline: none;
-  }
+const BoardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  &::placeholder {
+  & > p {
+    font-size: 0.8rem;
     color: #ccc;
   }
 `;
@@ -55,6 +59,28 @@ const BoardItem = styled.li`
   border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out 0s;
+
+  &:hover {
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
+    border-color: #f8c6d2;
+  }
+`;
+
+const BoardTitle = styled.h3`
+  margin-bottom: 1rem;
+  // 20자 이상일 경우 ... 표시
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #000;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const BoardComment = styled.ul`
@@ -68,6 +94,21 @@ const BoardCommentItem = styled.li`
   border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
+`;
+
+const UserProfile = styled.div`
+  display: flex;
+  align-items: center;
+  p {
+    margin-left: 0.5rem;
+  }
+`;
+
+const UserProfileImage = styled(Image)`
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 50%;
 `;
 
 const Board = () => {
@@ -88,12 +129,20 @@ const Board = () => {
   );
 
   const { mutate: createBoard } = useCreatePost();
+  const { mutate: createComment } = useCreateComment();
 
   const handleCreateBoard = () => {
     createBoard({
       groupCode: groupcode as string,
       title: "제목",
       content: "내용",
+    });
+  };
+
+  const handleCreateComment = (postId: number) => {
+    createComment({
+      postId,
+      content: "댓글내용",
     });
   };
 
@@ -130,6 +179,27 @@ const Board = () => {
         </ContentBox>
 
         <ContentBox>
+          {boardList?.map((board) => (
+            <BoardList key={board.id}>
+              <BoardItem>
+                <BoardHeader>
+                  <UserProfile>
+                    <UserProfileImage
+                      width={30}
+                      height={30}
+                      src={board.User.profileImage}
+                      alt={board.User.name}
+                    />
+                    <p>{board.User.name}</p>
+                  </UserProfile>
+                  <p>{getBeforeTime(board.createdAt)}</p>
+                </BoardHeader>
+                <Hr color="gray" />
+                <BoardTitle>{board.title}</BoardTitle>
+              </BoardItem>
+            </BoardList>
+          ))}
+
           <BoardList>
             <BoardItem>
               <h3>제목</h3>

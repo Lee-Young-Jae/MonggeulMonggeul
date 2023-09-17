@@ -7,6 +7,9 @@ interface Props {
 
 const StyledHr = styled.hr<Props>`
   border: none;
+  width: 100%;
+  height: 1px;
+  background-color: inherit;
   ${(props) =>
     props.color === "gray" &&
     `

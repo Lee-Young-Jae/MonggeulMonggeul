@@ -20,7 +20,7 @@ const InputStyle = styled.input<InputStyleProps>`
       : "center"};
 
   border-radius: 14px;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid #f8c6d2;
   font-family: inherit;
   width: 100%;

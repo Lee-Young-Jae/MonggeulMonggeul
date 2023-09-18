@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, ChangeEventHandler } from "react";
 
-type Elements = HTMLInputElement | HTMLSelectElement;
+type Elements = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 function useInput(
   initialValue = ""

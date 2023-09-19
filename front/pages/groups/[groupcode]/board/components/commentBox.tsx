@@ -43,20 +43,7 @@ const Header = styled.div`
   }
 `;
 
-const CommentList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const CommentItem = styled.li`
-  border: 1px solid #ccc;
-  border-radius: 14px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-`;
-
-const CommentBox = () => {
+const CommentItem = () => {
   return (
     <div>
       <Label>댓글</Label>
@@ -69,4 +56,4 @@ const CommentBox = () => {
   );
 };
 
-export default CommentBox;
+export default CommentItem;

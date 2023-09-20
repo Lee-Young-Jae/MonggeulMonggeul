@@ -12,9 +12,10 @@ import { useGetGroupPosts } from "@/hooks/queries/board/useGet";
 import { getBeforeTime } from "@/utills/common";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import CommentBox from "./components/commentBox";
+import useInput from "@/hooks/common/useInput";
 
 const Label = styled.label`
   display: block;
@@ -22,7 +23,7 @@ const Label = styled.label`
   font-size: 1rem;
 `;
 
-const Textarea = styled.textarea`
+const StyledTextarea = styled.textarea`
   resize: none;
   padding: 1rem 1rem 1.5rem;
   outline: none;
@@ -52,20 +53,6 @@ const BoardList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-`;
-
-const BoardItem = styled.li`
-  border: 1px solid #ccc;
-  border-radius: 14px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out 0s;
-
-  &:hover {
-    box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
-    border-color: #f8c6d2;
-  }
 `;
 
 const BoardTitle = styled.h3`
@@ -128,16 +115,30 @@ const Board = () => {
     }
   );
 
-  const { mutate: createBoard } = useCreatePost();
+  const { mutate: createBoard, isSuccess } = useCreatePost();
   const { mutate: createComment } = useCreateComment();
+
+  const [postTitle, postTitleHandler, resetPostTitle] = useInput("");
+  const [postContent, postContentHandler, resetPostContent] = useInput("");
 
   const handleCreateBoard = () => {
     createBoard({
       groupCode: groupcode as string,
-      title: "제목",
-      content: "내용",
+      title: postTitle,
+      content: postContent,
     });
+
+    resetPostTitle();
+    resetPostContent();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert("게시글이 등록되었습니다.");
+      resetPostTitle();
+      resetPostContent();
+    }
+  }, [isSuccess]);
 
   const handleCreateComment = (postId: number) => {
     createComment({
@@ -145,8 +146,6 @@ const Board = () => {
       content: "댓글내용",
     });
   };
-
-  console.log(boardList);
 
   return (
     <GroupPage>
@@ -156,10 +155,19 @@ const Board = () => {
             모임에 전하는 <strong>메세지</strong>를 적어주세요!
           </ActionTip>
           <Label>Title</Label>
-          <Input align="left" />
+          <Input
+            align="left"
+            placeholder="제목을 입력해주세요."
+            onChange={postTitleHandler}
+            maxLength={50}
+          />
           <br />
           <Label>Content</Label>
-          <Textarea></Textarea>
+          <StyledTextarea
+            placeholder="내용을 입력해주세요."
+            onChange={postContentHandler}
+            maxLength={300}
+          />
           <Button align="right" size="s" onClick={handleCreateBoard}>
             등록
           </Button>
@@ -178,70 +186,26 @@ const Board = () => {
           </ActionTip>
         </ContentBox>
 
-        <ContentBox>
-          {boardList?.map((board) => (
-            <BoardList key={board.id}>
-              <BoardItem>
-                <BoardHeader>
-                  <UserProfile>
-                    <UserProfileImage
-                      width={30}
-                      height={30}
-                      src={board.User.profileImage}
-                      alt={board.User.name}
-                    />
-                    <p>{board.User.name}</p>
-                  </UserProfile>
-                  <p>{getBeforeTime(board.createdAt)}</p>
-                </BoardHeader>
-                <Hr color="gray" />
-                <BoardTitle>{board.title}</BoardTitle>
-              </BoardItem>
-            </BoardList>
-          ))}
-
-          <BoardList>
-            <BoardItem>
-              <h3>제목</h3>
-              <p>내용</p>
-              <p>작성자</p>
-              <p>작성일</p>
-              <BoardComment>
-                <BoardCommentItem>
-                  <p>댓글내용</p>
-                  <p>작성자</p>
-                  <p>작성일</p>
-                </BoardCommentItem>
-              </BoardComment>
-            </BoardItem>
-            <BoardItem>
-              <h3>제목</h3>
-              <p>내용</p>
-              <p>작성자</p>
-              <p>작성일</p>
-              <BoardComment>
-                <BoardCommentItem>
-                  <p>댓글내용</p>
-                  <p>작성자</p>
-                  <p>작성일</p>
-                </BoardCommentItem>
-              </BoardComment>
-            </BoardItem>
-            <BoardItem>
-              <h3>제목</h3>
-              <p>내용</p>
-              <p>작성자</p>
-              <p>작성일</p>
-              <BoardComment>
-                <BoardCommentItem>
-                  <p>댓글내용</p>
-                  <p>작성자</p>
-                  <p>작성일</p>
-                </BoardCommentItem>
-              </BoardComment>
-            </BoardItem>
+        {boardList?.map((board) => (
+          <BoardList key={board.id}>
+            <ContentBox>
+              <BoardHeader>
+                <UserProfile>
+                  <UserProfileImage
+                    width={30}
+                    height={30}
+                    src={board.User.profileImage}
+                    alt={board.User.name}
+                  />
+                  <p>{board.User.name}</p>
+                </UserProfile>
+                <p>{getBeforeTime(board.createdAt)}</p>
+              </BoardHeader>
+              <Hr color="gray" />
+              <BoardTitle>{board.title}</BoardTitle>
+            </ContentBox>
           </BoardList>
-        </ContentBox>
+        ))}
 
         <div>
           <p>Todo</p>

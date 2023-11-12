@@ -71,30 +71,42 @@
 ## 🚗 Program Preview
 
 **1. 랜딩페이지**
-![1  랜딩페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/aeac49a1-d217-442e-bfb5-9ddd3e3a04e0)
-카카오 소셜 로그인 기능을 통해 손쉽게 서비스 이용이 가능합니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/aeac49a1-d217-442e-bfb5-9ddd3e3a04e0"  width="400" />
+
+`카카오 소셜 로그인 기능을 통해 손쉽게 서비스 이용이 가능합니다.`
 
 **2. 그룹 홈 / 그룹 메뉴**
-![2  그룹 홈](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/85983ba9-37e2-4b2b-bda1-a49f14c6f3b2)
-![7  메뉴](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/55e8a666-34e4-4e17-99a5-2bac07d40b69)
-메뉴 버튼 토글 시 네이티브 앱과 같은 애니메이션을 적용하였습니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/85983ba9-37e2-4b2b-bda1-a49f14c6f3b2"  width="400" />
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/55e8a666-34e4-4e17-99a5-2bac07d40b69"  width="400" />
+
+`메뉴 버튼 토글 시 네이티브 앱과 같은 애니메이션을 적용하였습니다.`
 
 **3. 투표 페이지**
-![3  투표페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/bdf572b0-1f83-4e08-b01e-8dbc0926fd7a)
-![3 1 투표페이지2](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/71926794-b2e1-4519-a3f7-c329dba816b8)
-![3 2 투표 생성페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/a6cf304d-e2fa-4b3c-a978-9de2879cbe99)
-투표를 생성하고 모임 내 다른 유저와 같이 투표가 가능합니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/bdf572b0-1f83-4e08-b01e-8dbc0926fd7a"  width="400" />
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/71926794-b2e1-4519-a3f7-c329dba816b8"  width="400" />
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/a6cf304d-e2fa-4b3c-a978-9de2879cbe99"  width="400" />
+
+`투표를 생성하고 모임 내 다른 유저와 같이 투표가 가능합니다.`
 
 **3. 약속 관리 페이지**
-![4  약속잡기 페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/1edfd159-e87b-4c94-afeb-5e7c22c6c81c)
-![4 1 약속잡기 페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/0d1e7b50-a740-47f0-a1df-27fc18cd4dda)
-약속을 생성하고 최적의 약속 시간을 찾습니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/1edfd159-e87b-4c94-afeb-5e7c22c6c81c"  width="400" />
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/0d1e7b50-a740-47f0-a1df-27fc18cd4dda"  width="400" />
+
+`약속을 생성하고 최적의 약속 시간을 찾습니다.`
 
 **4. 모임 채팅**
-![5  모임 채팅 페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/a2af637b-da92-4632-bade-ccce47622dbb)
-모임 내 프라이빗한 채팅 기능을 제공합니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/a2af637b-da92-4632-bade-ccce47622dbb"  width="400" />
+
+`모임 내 프라이빗한 채팅 기능을 제공합니다.`
 
 **5. 그룹 초대 페이지**
-![6  그룹 초대 페이지](https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/0657186c-99a2-4810-b677-44f9b08cc605)
-유효기한이 있는 초대 링크를 생성하고 다른 유저를 모임에 초대할 수 있습니다.
+
+<img src="https://github.com/Lee-Young-Jae/MonggeulMonggeul/assets/78532129/0657186c-99a2-4810-b677-44f9b08cc605"  width="400" />
+
+`유효기한이 있는 초대 링크를 생성하고 다른 유저를 모임에 초대할 수 있습니다.`
 

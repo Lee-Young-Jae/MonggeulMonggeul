@@ -1,6 +1,6 @@
 # MonggeulMonggeul
 
-몽글몽글(가칭)
+서비스 링크: [https://moim.monggeul.online/](https://moim.monggeul.online/)
 
 ## 📌 소개
 

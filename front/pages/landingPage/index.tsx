@@ -19,6 +19,7 @@ const LandingPageWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #ffffff;
+  font-display: swap;
 `;
 
 const MainSection = styled.div`

@@ -9,8 +9,9 @@
 ## 📃 기술 스택
 
 - Frontend: Next.js, TypeScript, React, react-query
-- Backend: Node.js, Express
+- Backend: Node.js, Express.js
 - Database: MySQL
+- DevOPS: AWS(Route 53, EC2)
 
 ## 📃 기능 목록
 
